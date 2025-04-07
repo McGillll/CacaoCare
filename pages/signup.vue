@@ -47,12 +47,11 @@
                 </div>
 
 
-                <div v-if="!state.fromDavao" class="mb-4">
-                <label class="block text-gray-700 font-medium mb-2" for="region-province-city">Region, Province</label>
-                <!-- Region, Province, City (Side by Side) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div v-if="!state.fromDavao">
+                <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
                     <!-- Region Dropdown -->
                     <div>
+                        <label class="block text-gray-700 font-medium mb-2" for="region">Region</label>
                         <select
                             id="region"
                             v-model="selectedRegion"
@@ -69,6 +68,7 @@
 
                     <!-- Province Dropdown -->
                     <div>
+                        <label class="block text-gray-700 font-medium mb-2" for="province">Province</label>
                         <select
                             id="province"
                             v-model="selectedProvince"
