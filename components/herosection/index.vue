@@ -18,10 +18,33 @@
                 <p class="text-base sm:text-lg mb-6">
                     Empower your farming journey with AI-powered disease detection. Take the first step toward healthier crops and higher yields.
                 </p>
-                <button class="bg-green-500 text-white hover:bg-green-600 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg w-full">
+                <button @click="downloadApp" class="bg-green-500 text-white hover:bg-green-600 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg w-full">
                     Download the App
                 </button>
             </div>
         </div>
     </header>
 </template>
+<script setup lang="ts">
+import { downloadLinkService } from '~/composables/api/sevices/DownloadLinkService';
+
+
+const state = reactive({
+    downloadLink: ''
+})
+
+function downloadApp(){
+    window.location.href = state.downloadLink
+}
+
+onMounted(async()=>{
+    try{
+        const response = await downloadLinkService.getLatestVersion();
+        if(response.data){
+            state.downloadLink = response.data[0].download_link
+        }
+    }catch(error){
+
+    }
+})
+</script>
