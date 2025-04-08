@@ -9,6 +9,11 @@
                 <span class="flex-grow">Incorrect username or password</span>
                 <button @click="closeError" class="text-white font-bold">X</button>
             </div>
+            <!-- Login Message -->
+            <div v-if="state.login" class="flex items-center bg-green-500 text-white px-4 py-2 rounded mb-4">
+                <span class="flex-grow">You are logged in!</span>
+                <button @click="loginClose" class="text-white font-bold">X</button>
+            </div>
 
             <h1 class="text-3xl font-bold text-center text-teal-700 mb-6">Sign In</h1>
             <form @submit.prevent="handleLogin">
@@ -63,17 +68,20 @@ import { authService } from '~/composables/api/sevices/AuthService';
 import type { User } from '~/composables/model/User';
 const state = reactive({
     user: {} as User,
-    showError: false
+    showError: false,
+    login: false
 });
 
 async function handleLogin() {
     try{
+        state.showError = false
         const formData = new FormData();
         formData.append('email', state.user.email)
         formData.append('password', state.user.password)
         const response = await authService.login(formData);
         if(response.data){
             localStorage.setItem("_token", response?.token) 
+            loginClose();
         }
     }catch(error: any){
         state.showError = true
@@ -82,5 +90,8 @@ async function handleLogin() {
 
 function closeError(){
     state.showError = !state.showError
+}
+function loginClose(){
+    state.login = !state.login
 }
 </script>
