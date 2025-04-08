@@ -3,6 +3,7 @@
     <HeadTitle title="CacaoCare - Sign In" />
     <NavigationLandingpage />
     <section class="min-h-screen flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
+        <Spinner v-if="state.isLoading" :size=35 />
         <div class="container mx-auto bg-white text-gray-700 p-10 rounded-lg shadow-lg max-w-lg">
             <!-- Error Message -->
             <div v-if="state.showError" class="flex items-center bg-red-500 text-white px-4 py-2 rounded mb-4">
@@ -66,21 +67,25 @@
 <script setup lang="ts">
 import { authService } from '~/composables/api/sevices/AuthService';
 import { redirectService } from '~/composables/function/Redirect';
+import { reverseValue } from '~/composables/function/ReverseValue';
 import type { User } from '~/composables/model/User';
 const state = reactive({
     user: {} as User,
     showError: false,
-    login: false
+    login: false,
+    isLoading: false
 });
 
 async function handleLogin() {
     try{
+        state.isLoading = reverseValue.reverseBool(state.isLoading);
         state.showError = false
         const formData = new FormData();
         formData.append('email', state.user.email)
         formData.append('password', state.user.password)
         const response = await authService.login(formData);
         if(response.data){
+            state.isLoading = reverseValue.reverseBool(state.isLoading)
             if(response.data.email_verified_at){
                 localStorage.setItem("_token", response?.token) 
                 loginClose();
@@ -93,6 +98,7 @@ async function handleLogin() {
         }
     }catch(error: any){
         state.showError = true
+        state.isLoading = reverseValue.reverseBool(state.isLoading);
     }
 }
 

@@ -4,6 +4,7 @@
     <NavigationLandingpage />
     <section class="min-h-screen py-20 flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
         <div class="container mx-auto bg-white text-gray-700 p-10 rounded-lg shadow-lg max-w-lg">
+            <Spinner v-if="state.isLoading" :size="35"/>
             <h1 class="text-3xl font-bold text-center text-teal-700 mb-6">Sign Up</h1>
             <form @submit.prevent="handleSubmit">
                 <!-- Email -->
@@ -144,7 +145,8 @@ import type { User } from '~/composables/model/User';
 const state = reactive({
     user: {} as User,
     fromDavao: false,
-    errors: {} as any
+    errors: {} as any,
+    isLoading: false
 });
 
 const regions = ref([{} as Region]);
@@ -239,6 +241,7 @@ function isFromDavao(){
 
 // Handle form submission
 async function handleSubmit(){
+    changeLoading()
     state.user.region = selectedRegion.value.name
     state.user.province = selectedProvince.value.name
     state.user.city = selectedCity.value.name
@@ -257,9 +260,15 @@ async function handleSubmit(){
         if(response){
             navigateTo('/verification')
             localStorage.setItem("email", state.user.email)
+            changeLoading()
         }
     }catch(error: any){
         state.errors = error.errors
+        changeLoading()
     }
 };
+
+const changeLoading = () =>{
+    state.isLoading = !state.isLoading
+}
 </script>
