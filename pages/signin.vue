@@ -72,6 +72,9 @@ async function handleLogin() {
         formData.append('email', state.user.email)
         formData.append('password', state.user.password)
         const response = await authService.login(formData);
+        if(response.data){
+            localStorage.setItem("_token", response?.token) 
+        }
     }catch(error: any){
         state.showError = true
     }
