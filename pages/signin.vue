@@ -65,6 +65,7 @@
 
 <script setup lang="ts">
 import { authService } from '~/composables/api/sevices/AuthService';
+import { redirectService } from '~/composables/function/Redirect';
 import type { User } from '~/composables/model/User';
 const state = reactive({
     user: {} as User,
@@ -80,8 +81,15 @@ async function handleLogin() {
         formData.append('password', state.user.password)
         const response = await authService.login(formData);
         if(response.data){
-            localStorage.setItem("_token", response?.token) 
-            loginClose();
+            if(response.data.email_verified_at){
+                localStorage.setItem("_token", response?.token) 
+                loginClose();
+                if(response.data.role === 'admin'){
+                    navigateTo('admin')
+                }else{
+                    navigateTo('user')
+                }
+            }
         }
     }catch(error: any){
         state.showError = true
