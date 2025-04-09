@@ -14,9 +14,8 @@
                             <XMarkIcon v-else class="block size-6" aria-hidden="true" />
                         </DisclosureButton>
                     </div>
-                    <div class="flex shrink-0 items-center mr-auto">
+                    <div @click="navigateTo('/')" class="flex shrink-0 items-center mr-auto">
                         <img 
-                            @click="navigateTo('/')"
                             class="h-8 w-8 w-auto"
                             src="/assets/img/cacao_care_logo.jpg"
                             alt="CacaoCare"
