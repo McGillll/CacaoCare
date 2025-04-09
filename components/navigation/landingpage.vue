@@ -17,10 +17,11 @@
                     <div class="flex shrink-0 items-center mr-auto">
                         <img 
                             @click="navigateTo('/')"
-                            class="h-8 w-auto"
-                            src=""
+                            class="h-8 w-8 w-auto"
+                            src="/assets/img/cacao_care_logo.jpg"
                             alt="CacaoCare"
                         />
+                        <span class="ml-2 text-xl text-white font-extrabold" >CacaoCare</span>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                         <!-- Buttons Section -->
