@@ -1,5 +1,5 @@
 <template>
     <div class="w-min-screen text-center">
-        Admin Dashboard
+        Gi update ni alyssa
     </div>
 </template>
