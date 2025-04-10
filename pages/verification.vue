@@ -4,7 +4,7 @@
     <NavigationLandingpage />
     <section class="min-h-screen flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
         <div class="container mx-auto bg-white text-gray-700 p-10 rounded-lg shadow-lg max-w-lg">
-            <h1 class="text-3xl font-bold text-center text-teal-700 mb-6">Verify Your Email</h1>
+            <h1 class="text-3xl font-bold text-center text-teal-700 mb-6">Please Verify Your Email</h1>
             <p class="mb-6 text-center">
                 We've sent a verification link to
                 <strong>{{ email }}</strong>.<br />

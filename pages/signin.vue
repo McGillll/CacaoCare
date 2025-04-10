@@ -85,14 +85,20 @@ async function handleLogin() {
         formData.append('password', state.user.password)
         const response = await authService.login(formData);
         if(response.data){
-            state.isLoading = reverseValue.reverseBool(state.isLoading)
             if(response.data.email_verified_at){
+                state.isLoading = reverseValue.reverseBool(state.isLoading)
                 localStorage.setItem("_token", response?.token) 
                 loginClose();
                 if(response.data.role === 'admin'){
                     navigateTo('admin')
                 }else{
                     navigateTo('user')
+                }
+            }else{
+                const response = await authService.resendVerification(formData);
+                state.isLoading = reverseValue.reverseBool(state.isLoading)
+                if(response.message){
+                    navigateTo('verification');
                 }
             }
         }

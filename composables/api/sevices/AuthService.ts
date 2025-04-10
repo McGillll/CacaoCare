@@ -9,6 +9,10 @@ class AuthService extends BaseAPIService {
         return await this.request('auth/logout', "POST");
     }
 
+    async resendVerification(params: Object): Promise<any> {
+        return await this.request('auth/resend-verification', "POST", params);
+    }
+
     async createUser(params: object): Promise<any> {
         return await this.request('/auth/register', "POST", params);
     }
