@@ -1,80 +1,81 @@
+<script setup>
+import { ref, computed } from 'vue'
+import UserTable from '@/components/admin/UserTable.vue'
+
+const searchEmail = ref('')
+const filterStatus = ref('')
+const filterLocation = ref('')
+
+const users = ref([
+  { id: 1, email: 'alyssa@gmail.com', active: true, location: 'Davao' },
+  { id: 2, email: 'maria@hotmail.com', active: false, location: 'Panabo' },
+  { id: 3, email: 'pedro@yahoo.com', active: true, location: 'Panabo' },
+  { id: 4, email: 'ana@gmail.com', active: false, location: 'Carmen' },
+])
+
+const uniqueLocations = computed(() => {
+  return [...new Set(users.value.map((u) => u.location))]
+})
+
+const filteredUsers = computed(() => {
+  return users.value.filter((user) => {
+    const matchesEmail = user.email
+      .toLowerCase()
+      .includes(searchEmail.value.toLowerCase())
+
+    const matchesStatus =
+      filterStatus.value === ''
+        ? true
+        : filterStatus.value === 'active'
+        ? user.active
+        : !user.active
+
+    const matchesLocation =
+      filterLocation.value === ''
+        ? true
+        : user.location === filterLocation.value
+
+    return matchesEmail && matchesStatus && matchesLocation
+  })
+})
+
+function toggleStatus(user) {
+  user.active = !user.active
+}
+</script>
+
 <template>
-    <div class="bg-white shadow rounded-lg p-6">
-      <h2 class="text-2xl font-bold mb-4">Farmer Management</h2>
-  
-      <!-- Search Bar -->
-      <div class="mb-4">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search by email..."
-          class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
-      </div>
-  
-      <!-- User Table -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border border-gray-200 rounded-lg">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="p-3">Email</th>
-              <th class="p-3">Status</th>
-              <th class="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="farmer in filteredFarmers" :key="farmer.id" class="border-t">
-              <td class="p-3">{{ farmer.name }}</td>
-              <td class="p-3">{{ farmer.email }}</td>
-              <td class="p-3">
-                <span
-                  :class="[
-                    farmer.active ? 'text-green-600' : 'text-gray-500 italic'
-                  ]"
-                >
-                  {{ farmer.active ? 'Active' : 'Inactive' }}
-                </span>
-              </td>
-              <td class="p-3">
-                <button
-                  @click="toggleStatus(farmer)"
-                  class="text-sm px-3 py-1 rounded-md text-white"
-                  :class="farmer.active ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'"
-                >
-                  {{ farmer.active ? 'Set Inactive' : 'Set Active' }}
-                </button>
-              </td>
-            </tr>
-            <tr v-if="filteredFarmers.length === 0">
-              <td colspan="4" class="p-3 text-center text-gray-500">No farmers found.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="p-4 space-y-4">
+    <h1 class="text-2xl font-bold">User Management</h1>
+
+    <!-- Filters -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <input
+        v-model="searchEmail"
+        type="text"
+        placeholder="Search by email"
+        class="border p-2 rounded w-full"
+      />
+
+      <select v-model="filterStatus" class="border p-2 rounded w-full">
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+
+      <select v-model="filterLocation" class="border p-2 rounded w-full">
+        <option value="">All Locations</option>
+        <option
+          v-for="loc in uniqueLocations"
+          :key="loc"
+          :value="loc"
+        >
+          {{ loc }}
+        </option>
+      </select>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, computed } from 'vue'
-  
-  // Mock data
-  const farmers = ref([
-    { id: 1, name: 'Juan dela Cruz', email: 'juan@example.com', active: true },
-    { id: 2, name: 'Maria Santos', email: 'maria@example.com', active: true },
-    { id: 3, name: 'Pedro Reyes', email: 'pedro@example.com', active: false },
-  ])
-  
-  const searchQuery = ref('')
-  
-  const filteredFarmers = computed(() =>
-    farmers.value.filter(f =>
-      f.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      f.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  )
-  
-  function toggleStatus(farmer) {
-    farmer.active = !farmer.active
-  }
-  </script>
-  
+
+    <!-- User Table -->
+    <UserTable :users="filteredUsers" @toggle-status="toggleStatus" />
+  </div>
+</template>
