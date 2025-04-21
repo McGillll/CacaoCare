@@ -38,7 +38,7 @@
                                         {{ scan.farmerName || 'Anonymous Farmer' }}
                                     </p>
                                     <p class="text-xs text-gray-500">
-                                        {{ formatDate(scan.date) }}
+                                        {{ formatDate(scan.date) }} • {{ scan.location || 'Unknown Location' }}
                                     </p>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                         </div>
                         <div>
                             <h3 class="text-sm font-medium text-red-800">
-                                Priority Alert: {{ priorityAlert.title }}
+                                {{ priorityAlert.title }}
                             </h3>
                             <div class="mt-1 text-sm text-red-700">
                                 <p>{{ priorityAlert.recommendation }}</p>
@@ -124,19 +124,18 @@ const hasScans = computed(() => scanStats.value.total > 0)
 const recentScans = ref([])
 
 const blackPodAlert = ref({
-    title: 'Black Pod Rot in Your Area!',
-    recommendation: 'Prune infected pods + apply fungicide.',
-    severity: 'high'
-})
-
-const frostyPodAlert = ref({
-    title: 'Frosty Pod Rot Outbreak',
-    recommendation: 'Remove and burn infected pods immediately. Apply copper-based fungicides preventatively.',
-    severity: 'high'
+    title: '',
+    recommendation: '',
+    severity: 'info'
 })
 
 const priorityAlert = computed(() => {
-    return blackPodAlert.value
+    const location = recentScans.value[0]?.location || 'your region'
+    return {
+        title: `Preventive Advisory for ${location}`,
+        recommendation: 'Regularly inspect your cacao trees for early signs of disease. Black Pod Rot often appears during humid or rainy seasons.',
+        severity: 'info'
+    }
 })
 
 const formatDate = (dateString) => {
@@ -152,7 +151,7 @@ const handleResize = () => {
     if (isLargeScreen.value) sidebarOpen.value = true
 }
 
-onMounted(async () => {
+onMounted(() => {
     handleResize()
     window.addEventListener('resize', handleResize)
 
@@ -170,7 +169,8 @@ onMounted(async () => {
                 confidence: 92,
                 date: '2025-04-25',
                 farmerName: 'Thalia Gonzalez',
-                farmerAvatar: ''
+                farmerAvatar: '',
+                location: 'Bukidnon, Philippines'
             },
             {
                 id: 2,
@@ -179,7 +179,8 @@ onMounted(async () => {
                 confidence: 87,
                 date: '2025-04-24',
                 farmerName: 'Michael Smith',
-                farmerAvatar: ''
+                farmerAvatar: '',
+                location: 'Zamboanga, Philippines'
             },
             {
                 id: 3,
@@ -188,7 +189,8 @@ onMounted(async () => {
                 confidence: 95,
                 date: '2025-04-23',
                 farmerName: 'Vince Jay',
-                farmerAvatar: ''
+                farmerAvatar: '',
+                location: 'Negros Occidental, Philippines'
             },
         ]
     }, 500)
