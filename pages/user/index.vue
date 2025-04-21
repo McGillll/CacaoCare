@@ -1,45 +1,75 @@
 <template>
     <div class="min-h-screen bg-gray-50 flex flex-col">
-        <Header />
+        <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
-        <div class="flex flex-1">
-            <Sidebar />
-            
-            <main class="flex-1 p-6">
+        <div class="flex flex-1 relative">
 
+            <transition name="sidebar">
+                <Sidebar v-if="sidebarOpen || isLargeScreen"
+                    class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64" />
+            </transition>
+
+            <div v-if="sidebarOpen && !isLargeScreen" class="fixed inset-0 z-40 bg-black bg-opacity-30"
+                @click="sidebarOpen = false" />
+
+            <main class="flex-1 p-4 sm:p-6">
                 <!-- Summary Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <Card title="Pods Scanned" :value="hasScans ? scanStats.total : '--'" icon="scan"
-                        :loading="false" />
-                    <Card title="Healthy" :value="hasScans ? scanStats.healthy : '--'" icon="healthy"
-                        :loading="false" />
-                    <Card title="Diseased" :value="hasScans ? scanStats.diseased : '--'" icon="diseased"
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <Card title="Pods Scanned" :value="hasScans ? scanStats.total : ''" icon="scan" :loading="false" />
+                    <Card title="Healthy" :value="hasScans ? scanStats.healthy : ''" icon="healthy" :loading="false" />
+                    <Card title="Diseased" :value="hasScans ? scanStats.diseased : ''" icon="diseased"
                         :loading="false" />
                 </div>
 
-                <!-- Scans -->
+                <!-- Pod Scans -->
                 <div class="bg-white p-4 rounded-lg shadow mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-semibold">Recent Pod Scans</h2>
-                        <NuxtLink v-if="hasScans" to="/user/upload" class="text-sm text-green-600 hover:underline">
-                            Upload New
-                        </NuxtLink>
+                    <h2 class="text-lg font-semibold mb-4">Recent Pod Scans</h2>
+
+                    <div class="space-y-4 md:space-y-0 md:flex md:overflow-x-auto md:pb-4 md:space-x-4">
+                        <div v-for="(scan, index) in recentScans.slice(0, 3)" :key="scan.id"
+                            class="border rounded-lg overflow-hidden min-w-full md:min-w-[280px] flex-shrink-0 bg-white">
+
+                            <!-- Profile -->
+                            <div class="flex items-center p-3 border-b">
+                                <img :src="scan.farmerAvatar || ''" class="w-8 h-8 rounded-full mr-3"
+                                    :alt="`${scan.farmerName}'s avatar`" />
+                                <div>
+                                    <p class="font-medium text-sm">
+                                        {{ scan.farmerName || 'Anonymous Farmer' }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        {{ formatDate(scan.date) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Scan -->
+                            <div class="relative">
+                                <img :src="scan.imageUrl || ''" class="w-full h-48 object-cover"
+                                    :alt="`${scan.status} cacao pod`" />
+                                <div class="absolute top-2 right-2 px-2 py-1 rounded text-xs font-medium" :class="{
+                                    'bg-green-100 text-green-800': scan.status === 'Healthy',
+                                    'bg-red-100 text-red-800': scan.status === 'Black Pod',
+                                    'bg-blue-100 text-blue-800': scan.status === 'Frosty Pod'
+                                }">
+                                    {{ scan.status }} ({{ scan.confidence }}%)
+                                </div>
+                            </div>
+
+                            <!-- Details -->
+                            <div class="p-3">
+                                <button class="text-green-600 text-xs font-medium hover:underline">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div v-if="recentScans.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        <ScanThumbnail v-for="scan in recentScans" :key="scan.id" :scan="scan" />
-                    </div>
-                    <div v-else class="text-center py-8 text-gray-500">
-                        <p>No scans available yet</p>
-                        <NuxtLink to="/user/upload" class="mt-2 inline-block text-green-600 hover:underline">
-                            Upload your first pod image
-                        </NuxtLink>
-                    </div>
                 </div>
 
-                <!-- Priority Alert (no scans = hidden) -->
+                <!-- Alert -->
                 <div v-if="hasScans" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow mb-6">
-                    <div class="flex items-start">
+                    <div class="flex items-start space-x-3">
                         <div class="flex-shrink-0">
                             <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -47,28 +77,26 @@
                                     clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <div class="ml-3">
+                        <div>
                             <h3 class="text-sm font-medium text-red-800">
                                 Priority Alert: {{ priorityAlert.title }}
                             </h3>
                             <div class="mt-1 text-sm text-red-700">
-                                <p>Recommended: {{ priorityAlert.recommendation }}</p>
+                                <p>{{ priorityAlert.recommendation }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-4">
+                <!-- CTA Button -->
+                <div class="flex justify-start">
                     <NuxtLink to="/user/treatment-guide"
-                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition text-sm sm:text-base">
                         View Treatment Guide
                     </NuxtLink>
-                    <button @click="downloadReport" :disabled="!hasScans"
-                        class="px-4 py-2 border border-green-600 text-green-600 rounded-md hover:bg-green-50 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                        Download Full Report
-                    </button>
                 </div>
             </main>
+
         </div>
 
         <Footer />
@@ -76,11 +104,14 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Header from '@/components/user/Header.vue'
 import Sidebar from '@/components/user/Sidebar.vue'
 import Footer from '@/components/user/Footer.vue'
 import Card from '@/components/user/SummaryCards.vue'
-import Scans from '~/components/user/Scans.vue'
+
+const sidebarOpen = ref(false)
+const isLargeScreen = ref(false)
 
 const scanStats = ref({
     total: 0,
@@ -104,17 +135,96 @@ const frostyPodAlert = ref({
     severity: 'high'
 })
 
-const downloadReport = () => {
-    if (!hasScans.value) return
-    console.log('Downloading report...')
+const priorityAlert = computed(() => {
+    return blackPodAlert.value
+})
+
+const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    })
+}
+
+const handleResize = () => {
+    isLargeScreen.value = window.innerWidth >= 768
+    if (isLargeScreen.value) sidebarOpen.value = true
 }
 
 onMounted(async () => {
-    scanStats.value = {
-        total: 0,
-        healthy: 0,
-        diseased: 0
-    }
-    recentScans.value = []
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    setTimeout(() => {
+        scanStats.value = {
+            total: 24,
+            healthy: 18,
+            diseased: 6
+        }
+        recentScans.value = [
+            {
+                id: 1,
+                imageUrl: '',
+                status: 'Healthy',
+                confidence: 92,
+                date: '2025-04-25',
+                farmerName: 'Thalia Gonzalez',
+                farmerAvatar: ''
+            },
+            {
+                id: 2,
+                imageUrl: '',
+                status: 'Black Pod',
+                confidence: 87,
+                date: '2025-04-24',
+                farmerName: 'Michael Smith',
+                farmerAvatar: ''
+            },
+            {
+                id: 3,
+                imageUrl: '',
+                status: 'Healthy',
+                confidence: 95,
+                date: '2025-04-23',
+                farmerName: 'Vince Jay',
+                farmerAvatar: ''
+            },
+        ]
+    }, 500)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
 })
 </script>
+
+<style>
+.sidebar-enter-active,
+.sidebar-leave-active {
+    transition: transform 0.3s ease;
+}
+
+.sidebar-enter-from,
+.sidebar-leave-to {
+    transform: translateX(-100%);
+}
+
+::-webkit-scrollbar {
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
