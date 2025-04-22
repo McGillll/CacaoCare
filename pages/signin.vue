@@ -66,7 +66,6 @@
 
 <script setup lang="ts">
 import { authService } from '~/composables/api/sevices/AuthService';
-import { redirectService } from '~/composables/function/Redirect';
 import { reverseValue } from '~/composables/function/ReverseValue';
 import type { User } from '~/composables/model/User';
 const state = reactive({
@@ -97,7 +96,7 @@ async function handleLogin() {
             }else{
                 const response = await authService.resendVerification(formData);
                 state.isLoading = reverseValue.reverseBool(state.isLoading)
-                if(response.message){
+                if(response){
                     navigateTo('verification');
                 }
             }
