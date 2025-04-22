@@ -21,7 +21,6 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <SummaryCard title="Total Registered Farmers" value="1,245" value-class="text-xl font-semibold text-green-700" />
           <SummaryCard title="New Uploaded Images (24h)" value="32" value-class="text-xl font-semibold text-red-600" />
-          <SummaryCard title="App Downloads" value="528" value-class="text-xl font-semibold text-blue-600" />
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
