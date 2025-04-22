@@ -8,5 +8,6 @@ export interface User{
     province: string,
     city: string,
     barangay: string,
-    role: string
+    role: string,
+    active: string
 }

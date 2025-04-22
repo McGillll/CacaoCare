@@ -18,7 +18,7 @@ class AuthService extends BaseAPIService {
     }
 
     async getCurrentUser(): Promise<any> {
-        return await this.request(`user/`, "GET");
+        return await this.request(`current/user`, "GET");
     }
 }
 

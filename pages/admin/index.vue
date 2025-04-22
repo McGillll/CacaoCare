@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50 flex flex-col">
-    <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+    <Header :user="state.user" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
     <div class="flex flex-1 relative">
       <!-- Sidebar & Overlay -->
@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import Header from '@/components/admin/Header.vue'
 import Sidebar from '@/components/admin/Sidebar.vue'
@@ -45,9 +45,16 @@ import SummaryCard from '@/components/admin/SummaryCard.vue'
 import ChartCard from '@/components/admin/ChartCard.vue'
 import RecentActions from '@/components/admin/RecentActions.vue'
 import Footer from '@/components/admin/Footer.vue'
+import { authService } from '~/composables/api/sevices/AuthService'
+import { redirectService } from '~/composables/function/Redirect'
+import type { User } from '~/composables/model/User'
 
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)
+
+const state = reactive({
+  user: {} as User
+})
 
 const handleResize = () => {
   isLargeScreen.value = window.innerWidth >= 768
@@ -57,7 +64,20 @@ const handleResize = () => {
 onMounted(() => {
   handleResize()
   window.addEventListener('resize', handleResize)
+  fetchCurrentUser()
 })
+
+async function fetchCurrentUser(){
+  try{
+    const response = await authService.getCurrentUser()
+    if(response.data){
+      state.user = response.data
+      redirectService.checkUserPrevillage(state.user.role)
+    }
+  }catch(error : any){
+
+  }
+}
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)

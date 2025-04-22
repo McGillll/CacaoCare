@@ -29,12 +29,12 @@
         class="flex items-center gap-2 focus:outline-none"
       >
         <img
-          src="https://th.bing.com/th/id/OIP.AkxARqDewIKerw_sMtZxZAHaHa?rs=1&pid=ImgDetMain"
+          :src=props.user.profile
           alt="Admin Avatar"
           class="w-8 h-8 rounded-full"
         />
         <div class="text-sm hidden md:block">
-          <p class="font-medium">Admin Name</p>
+          <p class="font-medium">Admin</p>
         </div>
       </button>
 
@@ -60,15 +60,23 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import type { User } from '~/composables/model/User'
 
 const $route = useRoute()
 const dropdownOpen = ref(false)
 
+const props = defineProps({
+  user: {
+    type: Object ,
+    required: true
+  }
+})
+
 const logout = () => {
-  // Implement logout logic here
-  console.log('Logging out...')
+  localStorage.clear()
+  navigateTo("/signin")
 }
 </script>
