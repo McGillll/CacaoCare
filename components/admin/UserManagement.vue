@@ -80,6 +80,26 @@ const searchEmail = ref('')
 const filterStatus = ref('')
 const filterLocation = ref('')
 
+const state = reactive({
+  users: [{} as User] as any 
+})
+
+onMounted(()=>{
+  fetchUser()  
+})
+
+async function fetchUser(){
+  try{
+    const response = await userService.getAllUser()
+    console.log(response.data)
+    if(response.data){
+
+    }
+  }catch(error: any){
+
+  }
+}
+
 const users = ref([
   { id: 1, email: 'alyssa@gmail.com', active: true, location: 'Davao' },
   { id: 2, email: 'maria@hotmail.com', active: false, location: 'Panabo' },
