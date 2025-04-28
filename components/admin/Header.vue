@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { authService } from '~/composables/api/sevices/AuthService'
 import type { User } from '~/composables/model/User'
 
 const $route = useRoute()
@@ -75,7 +76,8 @@ const props = defineProps({
   }
 })
 
-const logout = () => {
+const logout = async() => {
+  const response = await authService.logout()
   localStorage.clear()
   navigateTo("/signin")
 }
