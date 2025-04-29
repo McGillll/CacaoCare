@@ -59,7 +59,7 @@
                             <!-- Details -->
                             <div class="p-3">
                                 <button class="text-green-600 text-xs font-medium hover:underline">
-                                    View Details
+                                    View
                                 </button>
                             </div>
                         </div>
@@ -103,101 +103,126 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Header from '@/components/user/Header.vue'
 import Sidebar from '@/components/user/Sidebar.vue'
 import Footer from '@/components/user/Footer.vue'
 import Card from '@/components/user/SummaryCards.vue'
 
-const sidebarOpen = ref(false)
-const isLargeScreen = ref(false)
+interface Scan {
+  id: number
+  imageUrl: string
+  status: 'Healthy' | 'Black Pod' | 'Frosty Pod'
+  confidence: number
+  date: string
+  farmerName: string
+  farmerAvatar: string
+  location: string
+}
 
-const scanStats = ref({
-    total: 0,
-    healthy: 0,
-    diseased: 0
+interface Alert {
+  title: string
+  recommendation: string
+  severity: 'info' | 'warning' | 'danger'
+}
+
+interface ScanStats {
+  total: number
+  healthy: number
+  diseased: number
+}
+
+const sidebarOpen = ref<boolean>(false)
+const isLargeScreen = ref<boolean>(false)
+
+const scanStats = ref<ScanStats>({
+  total: 0,
+  healthy: 0,
+  diseased: 0
+})
+
+const recentScans = ref<Scan[]>([])
+
+const blackPodAlert = ref<Alert>({
+  title: '',
+  recommendation: '',
+  severity: 'info'
 })
 
 const hasScans = computed(() => scanStats.value.total > 0)
 
-const recentScans = ref([])
-
-const blackPodAlert = ref({
-    title: '',
-    recommendation: '',
+const priorityAlert = computed<Alert>(() => {
+  const location = recentScans.value[0]?.location || 'your region'
+  return {
+    title: `Preventive Advisory for ${location}`,
+    recommendation:
+      'Regularly inspect your cacao trees for early signs of disease. Black pod rot often appears during humid or rainy seasons.',
     severity: 'info'
+  }
 })
 
-const priorityAlert = computed(() => {
-    const location = recentScans.value[0]?.location || 'your region'
-    return {
-        title: `Preventive Advisory for ${location}`,
-        recommendation: 'Regularly inspect your cacao trees for early signs of disease. Black Pod Rot often appears during humid or rainy seasons.',
-        severity: 'info'
-    }
-})
-
-const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-    })
+const formatDate = (dateString: string): string => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
 }
 
 const handleResize = () => {
-    isLargeScreen.value = window.innerWidth >= 768
-    if (isLargeScreen.value) sidebarOpen.value = true
+  isLargeScreen.value = window.innerWidth >= 768
+  if (isLargeScreen.value) sidebarOpen.value = true
 }
 
 onMounted(() => {
-    handleResize()
-    window.addEventListener('resize', handleResize)
+  handleResize()
+  window.addEventListener('resize', handleResize)
 
-    setTimeout(() => {
-        scanStats.value = {
-            total: 24,
-            healthy: 18,
-            diseased: 6
-        }
-        recentScans.value = [
-            {
-                id: 1,
-                imageUrl: '',
-                status: 'Healthy',
-                confidence: 92,
-                date: '2025-04-25',
-                farmerName: 'Thalia Gonzalez',
-                farmerAvatar: '',
-                location: 'Bukidnon, Philippines'
-            },
-            {
-                id: 2,
-                imageUrl: '',
-                status: 'Black Pod',
-                confidence: 87,
-                date: '2025-04-24',
-                farmerName: 'Michael Smith',
-                farmerAvatar: '',
-                location: 'Zamboanga, Philippines'
-            },
-            {
-                id: 3,
-                imageUrl: '',
-                status: 'Healthy',
-                confidence: 95,
-                date: '2025-04-23',
-                farmerName: 'Vince Jay',
-                farmerAvatar: '',
-                location: 'Negros Occidental, Philippines'
-            },
-        ]
-    }, 500)
+  setTimeout(() => {
+    scanStats.value = {
+      total: 24,
+      healthy: 18,
+      diseased: 6
+    }
+
+    recentScans.value = [
+      {
+        id: 1,
+        imageUrl: '',
+        status: 'Healthy',
+        confidence: 92,
+        date: '2025-04-25',
+        farmerName: 'Thalia Gonzalez',
+        farmerAvatar: '',
+        location: 'Bukidnon, Philippines'
+      },
+      {
+        id: 2,
+        imageUrl: '',
+        status: 'Black Pod',
+        confidence: 87,
+        date: '2025-04-24',
+        farmerName: 'Michael Smith',
+        farmerAvatar: '',
+        location: 'Zamboanga, Philippines'
+      },
+      {
+        id: 3,
+        imageUrl: '',
+        status: 'Healthy',
+        confidence: 95,
+        date: '2025-04-23',
+        farmerName: 'Vince Jay',
+        farmerAvatar: '',
+        location: 'Negros Occidental, Philippines'
+      }
+    ]
+  }, 500)
 })
 
 onUnmounted(() => {
-    window.removeEventListener('resize', handleResize)
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
