@@ -7,7 +7,7 @@
         <div class="flex items-center justify-between mb-6">
           <h1 class="text-2xl font-semibold text-gray-800">Account Settings</h1>
           <button @click="goBack"
-            class="text-sm font-medium text-gray-600 hover:text-green-700 px-4 py-2 rounded-md hover:bg-gray-100">
+            class="text-sm font-medium text-gray-600 px-4 py-2 rounded-md">
             Back
           </button>
         </div>
