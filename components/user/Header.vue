@@ -17,10 +17,6 @@
     </div>
 
     <div class="flex items-center gap-6">
-      <div class="hidden md:block text-gray-600">
-        Welcome, <span class="font-medium">{{ userName }}</span>!
-      </div>
-
       <!-- Notifications -->
       <button class="hover:text-green-600 relative">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,23 +50,24 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const dropdownOpen = ref(false)
-const userName = ref('User')
+const dropdownOpen = ref<boolean>(false)
+const userName = ref<string>('User')
 
-const toggleDropdown = () => {
+const toggleDropdown = (): void => {
   dropdownOpen.value = !dropdownOpen.value
 }
 
-const logout = () => {
+const logout = (): void => {
   console.log('Logging out...')
   dropdownOpen.value = false
 }
 
-const handleClickOutside = (event) => {
-  if (!event.target.closest('.relative')) {
+const handleClickOutside = (event: MouseEvent): void => {
+  const target = event.target as Element | null  
+  if (target && !target.closest('.relative')) {
     dropdownOpen.value = false
   }
 }
