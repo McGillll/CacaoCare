@@ -1,96 +1,157 @@
 <template>
-    <div class="min-h-screen bg-gray-50 flex flex-col">
-        <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+  <div class="min-h-screen bg-gray-50 flex flex-col">
+    <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
-        <div class="flex flex-1 relative">
-            <transition name="sidebar">
-                <Sidebar v-if="sidebarOpen || isLargeScreen"
-                    class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64" />
-            </transition>
-            <div v-if="sidebarOpen && !isLargeScreen" class="fixed inset-0 z-40 bg-black bg-opacity-30"
-                @click="sidebarOpen = false" />
+    <div class="flex flex-1 relative">
+      <transition name="sidebar">
+        <Sidebar 
+          v-if="sidebarOpen || isLargeScreen"
+          class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64" 
+        />
+      </transition>
 
-            <main class="flex-1 p-4 sm:p-6 overflow-y-auto">
-                <!-- Search + Sort -->
-                <div class="flex flex-col gap-4 mb-6">
-                    <SearchBar :searchTerm="searchTerm" :filterStatus="filterStatus"
-                        @update:searchTerm="searchTerm = $event" @update:filterStatus="filterStatus = $event" />
-                    <FilterControls :modelValue="filterStatus" :sortBy="sortBy"
-                        @update:modelValue="filterStatus = $event" @sort="sortBy = $event" />
-                </div>
+      <div 
+        v-if="sidebarOpen && !isLargeScreen" 
+        class="fixed inset-0 z-40 bg-black bg-opacity-30" 
+        @click="sidebarOpen = false" 
+      />
 
-                <!-- Scans -->
-                <div v-if="filteredScans.length > 0">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                        <div v-for="scan in paginatedScans" :key="scan.id"
-                            class="bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden">
-                            <!-- Profile -->
-                            <div class="flex items-center p-4 border-b">
-                                <img :src="scan.userAvatar || '/default-avatar.jpg'" class="w-8 h-8 rounded-full mr-3"
-                                    :alt="`${scan.userName}'s avatar`" />
-                                <div>
-                                    <p class="font-medium text-sm">{{ scan.userName }}</p>
-                                    <p class="text-xs text-gray-500">
-                                        {{ formatDate(scan.uploadedAt) }} • {{ scan.location }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Image + Status -->
-                            <div class="relative">
-                                <img :src="scan.imageUrl || '/default-pod.jpg'" class="w-full h-48 object-cover"
-                                    :alt="`${scan.status} cacao pod`" />
-                                <div class="absolute top-2 right-2 px-2 py-1 rounded text-xs font-medium" :class="{
-                                    'bg-green-100 text-green-800': scan.status === 'Healthy',
-                                    'bg-red-100 text-red-800': scan.status === 'Black Pod',
-                                    'bg-blue-100 text-blue-800': scan.status === 'Frosty Pod'
-                                }">
-                                    {{ scan.status }} ({{ scan.confidence }}%)
-                                </div>
-                            </div>
-
-                            <!-- View Button -->
-                            <div class="p-3">
-                                <button class="text-green-600 text-xs font-medium hover:underline">
-                                    View
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="flex justify-center items-center space-x-4 mt-6">
-                        <button @click="prevPage" :disabled="currentPage === 1"
-                            class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                            Previous
-                        </button>
-                        <span class="text-gray-600 text-sm">Page {{ currentPage }} of {{ totalPages }}</span>
-                        <button @click="nextPage" :disabled="currentPage === totalPages"
-                            class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                            Next
-                        </button>
-                    </div>
-                </div>
-
-                <!-- If Empty -->
-                <div v-else class="bg-white border rounded-lg p-8 text-center text-gray-500 flex flex-col items-center">
-                    <div class="mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="currentColor"
-                            stroke-width="1.5" viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            <line x1="11" y1="8" x2="11" y2="14" />
-                            <line x1="8" y1="11" x2="14" y2="11" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold">No scans found</h3>
-                    <p class="mt-1">Try adjusting your search or filter criteria.</p>
-                </div>
-            </main>
+      <main :class="['flex-1 p-4 sm:p-6 overflow-y-auto transition-all duration-300', showModal ? 'blur-sm' : '']">
+        <!-- Search + Sort -->
+        <div class="flex flex-col gap-4 mb-6">
+          <SearchBar 
+            :searchTerm="searchTerm" 
+            :filterStatus="filterStatus"
+            @update:searchTerm="searchTerm = $event" 
+            @update:filterStatus="filterStatus = $event" 
+          />
+          <FilterControls 
+            :modelValue="filterStatus" 
+            :sortBy="sortBy"
+            @update:modelValue="filterStatus = $event" 
+            @sort="sortBy = $event" 
+          />
         </div>
 
-        <Footer />
+        <!-- Scans -->
+        <div v-if="filteredScans.length > 0">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <div 
+              v-for="scan in paginatedScans" 
+              :key="scan.id"
+              class="bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden"
+            >
+              <!-- Profile -->
+              <div class="flex items-center p-4 border-b">
+                <img 
+                  :src="scan.userAvatar || '/default-avatar.jpg'" 
+                  class="w-8 h-8 rounded-full mr-3" 
+                  :alt="`${scan.userName}'s avatar`" 
+                />
+                <div>
+                  <p class="font-medium text-sm">{{ scan.userName }}</p>
+                  <p class="text-xs text-gray-500">
+                    {{ formatDate(scan.uploadedAt) }} • {{ scan.location }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Image + Status -->
+              <div class="relative">
+                <img 
+                  :src="scan.imageUrl || '/default-pod.jpg'" 
+                  class="w-full h-48 object-cover"
+                  :alt="`${scan.status} cacao pod`" 
+                />
+                <div 
+                  class="absolute top-2 right-2 px-2 py-1 rounded text-xs font-medium"
+                  :class="{
+                    'bg-green-100 text-green-800': scan.status === 'Healthy',
+                    'bg-red-100 text-red-800': scan.status === 'Black Pod',
+                    'bg-blue-100 text-blue-800': scan.status === 'Frosty Pod'
+                  }"
+                >
+                  {{ scan.status }} ({{ scan.confidence }}%)
+                </div>
+              </div>
+
+              <!-- View Button -->
+              <div class="p-3">
+                <button 
+                  @click="openScanDetails(scan)" 
+                  class="text-green-600 text-xs font-medium hover:underline"
+                >
+                  View
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex justify-center items-center space-x-4 mt-6">
+            <button 
+              @click="prevPage" 
+              :disabled="currentPage === 1"
+              class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <span class="text-gray-600 text-sm">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button 
+              @click="nextPage" 
+              :disabled="currentPage === totalPages"
+              class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- If Empty -->
+        <div 
+          v-else 
+          class="bg-white border rounded-lg p-8 text-center text-gray-500 flex flex-col items-center"
+        >
+          <div class="mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="currentColor"
+              stroke-width="1.5" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold">No scans found</h3>
+          <p class="mt-1">Try adjusting your search or filter criteria.</p>
+        </div>
+      </main>
     </div>
+
+    <Footer />
+
+    <!-- Modal for scan details -->
+    <transition name="fade">
+      <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white overflow-hidden shadow-lg w-11/12 max-w-md relative">
+          <button 
+            @click="closeModal" 
+            class="absolute top-2 right-2 text-white hover:text-gray-300"
+          >
+            &times;
+          </button>
+          <img 
+            :src="selectedScan?.imageUrl || '/default-pod.jpg'" 
+            class="w-full object-cover h-[320px]" 
+          />
+          <div class="p-2">
+            <p class="text-gray-500 text-xs px-4 py-2 text-left">
+              Uploaded on: {{ selectedScan ? formatDate(selectedScan.uploadedAt) : '' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -112,21 +173,19 @@ interface Scan {
   uploadedAt: string
 }
 
-const sidebarOpen = ref<boolean>(false)
-const isLargeScreen = ref<boolean>(false)
+const sidebarOpen = ref(false)
+const isLargeScreen = ref(false)
 
-const currentPage = ref<number>(1)
+const currentPage = ref(1)
 const scansPerPage = 6
+const searchTerm = ref('')
+const filterStatus = ref('all')
+const sortBy = ref('newest')
 
-const searchTerm = ref<string>('')
-const filterStatus = ref<string>('all')
-const sortBy = ref<string>('newest')
-
-// Sample data
 const allScans = ref<Scan[]>([
   {
     id: 1,
-    imageUrl: '',
+    imageUrl: 'https://scitechdaily.com/images/Cacao-Pod-on-Tree.jpg', //sample
     userAvatar: '',
     userName: 'John Perez',
     location: 'Davao, Philippines',
@@ -186,10 +245,9 @@ const allScans = ref<Scan[]>([
   }
 ])
 
-// Diseased status
-const diseaseStatuses: string[] = ['Black Pod', 'Frosty Pod']
+const diseaseStatuses = ['Black Pod', 'Frosty Pod']
 
-const filteredScans = computed<Scan[]>(() => {
+const filteredScans = computed(() => {
   return allScans.value
     .filter(scan => {
       const matchSearch =
@@ -211,19 +269,14 @@ const filteredScans = computed<Scan[]>(() => {
     })
 })
 
-const totalPages = computed<number>(() => Math.ceil(filteredScans.value.length / scansPerPage))
-const paginatedScans = computed<Scan[]>(() => {
+const totalPages = computed(() => Math.ceil(filteredScans.value.length / scansPerPage))
+const paginatedScans = computed(() => {
   const start = (currentPage.value - 1) * scansPerPage
   return filteredScans.value.slice(start, start + scansPerPage)
 })
 
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++
-}
-
-const prevPage = () => {
-  if (currentPage.value > 1) currentPage.value--
-}
+const nextPage = () => currentPage.value < totalPages.value && currentPage.value++
+const prevPage = () => currentPage.value > 1 && currentPage.value--
 
 watch([searchTerm, filterStatus, sortBy], () => {
   currentPage.value = 1
@@ -243,22 +296,43 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
 
-const formatDate = (d: string): string =>
+const formatDate = (d: string) =>
   new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
-const openScanDetails = (scan: Scan): void => {
-  console.log('Open details for', scan)
+const selectedScan = ref<Scan | null>(null)
+const showModal = ref(false)
+
+const openScanDetails = (scan: Scan) => {
+  selectedScan.value = scan
+  showModal.value = true
+}
+
+const closeModal = () => {
+  showModal.value = false
 }
 </script>
 
 <style>
 .sidebar-enter-active,
 .sidebar-leave-active {
-    transition: transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
-
 .sidebar-enter-from,
 .sidebar-leave-to {
-    transform: translateX(-100%);
+  transform: translateX(-100%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.blur-sm {
+  filter: blur(4px);
+  transition: filter 0.3s ease;
 }
 </style>
