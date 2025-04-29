@@ -15,13 +15,16 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/vue/24/solid'
 
-defineProps({
-    modelValue: String,
-    sortBy: String
-})
+defineProps<{
+  modelValue: string;
+  sortBy: string;
+}>()
 
-defineEmits(['update:modelValue', 'sort'])
+defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+  (e: 'sort', value: string): void;
+}>()
 </script>

@@ -19,15 +19,12 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  scan: {
-    type: Object,
-    required: true
-  }
-});
+<script setup lang="ts">
+const props = defineProps<{
+  scan: Record<string, any>;
+}>();
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',

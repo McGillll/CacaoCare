@@ -6,10 +6,10 @@
                     d="M9.5 3a6.5 6.5 0 0 1 5.184 10.461l4.327 4.326-1.414 1.414-4.326-4.327A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9a4.5 4.5 0 0 0 0-9z" />
             </svg>
             <input :value="searchTerm" type="text" placeholder="Search"
-                @input="$emit('update:searchTerm', $event.target.value)" />
+                @input="handleSearchInput" />
         </div>
 
-        <select :value="filterStatus" @change="$emit('update:filterStatus', $event.target.value)" class="status-filter">
+        <select :value="filterStatus" @change="handleStatusChange" class="status-filter">
             <option value="all">All Statuses</option>
             <option value="Healthy">Healthy</option>
             <option value="Diseased">Diseased</option>
@@ -17,13 +17,32 @@
     </div>
 </template>
 
-<script setup>
-defineProps({
-    searchTerm: String,
-    filterStatus: String
-});
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
 
-defineEmits(['update:searchTerm', 'update:filterStatus']);
+const props = defineProps<{
+  searchTerm: string;
+  filterStatus: string;
+}>();
+
+const emit = defineEmits<{
+  (event: 'update:searchTerm', value: string): void;
+  (event: 'update:filterStatus', value: string): void;
+}>();
+
+const handleSearchInput = (event: Event) => {
+  const target = event.target as HTMLInputElement | null;
+  if (target) {
+    emit('update:searchTerm', target.value);
+  }
+};
+
+const handleStatusChange = (event: Event) => {
+  const target = event.target as HTMLSelectElement | null;
+  if (target) {
+    emit('update:filterStatus', target.value);
+  }
+};
 </script>
 
 <style scoped>
