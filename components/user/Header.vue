@@ -1,16 +1,14 @@
 <template>
   <header class="bg-white shadow p-4 flex justify-between items-center">
-
     <div class="flex items-center gap-4">
-
-      <button class="md:hidden text-gray-600" @click="$emit('toggle-sidebar')">
+      <button v-if="showSidebarToggle" class="md:hidden text-gray-600" @click="$emit('toggle-sidebar')">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
 
       <!-- Logo -->
-      <div @click="navigateTo('/')" class="flex shrink-0 items-center mr-auto">
+      <div class="flex shrink-0 items-center mr-auto select-none pointer-events-none">
         <img class="h-8 w-8 w-auto" src="/assets/img/cacao_care_logo.jpg" alt="CacaoCare" />
         <span class="ml-2 text-xl text-green-700 font-extrabold">CacaoCare</span>
       </div>
@@ -53,21 +51,27 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const dropdownOpen = ref<boolean>(false)
-const userName = ref<string>('User')
+defineProps({
+  showSidebarToggle: {
+    type: Boolean,
+    default: true
+  }
+})
 
-const toggleDropdown = (): void => {
+const dropdownOpen = ref(false)
+
+const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
 }
 
-const logout = (): void => {
+const logout = () => {
   console.log('Logging out...')
   dropdownOpen.value = false
 }
 
-const handleClickOutside = (event: MouseEvent): void => {
-  const target = event.target as Element | null  
-  if (target && !target.closest('.relative')) {
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as Element
+  if (!target.closest('.relative')) {
     dropdownOpen.value = false
   }
 }
