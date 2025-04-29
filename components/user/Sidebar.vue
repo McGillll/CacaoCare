@@ -13,7 +13,7 @@
         </li>
 
         <li>
-          <NuxtLink :to="`/user/upload`" class="sidebar-link" :class="{ active: isActive('/user/upload') }">
+          <NuxtLink :to="`/user/scanimage`" class="sidebar-link" :class="{ active: isActive('/user/scanimage') }">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
               <path
                 d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm0 2h12v5l-2.5-2.5a1 1 0 00-1.414 0L9 11l-2.086-2.086a1 1 0 00-1.414 0L4 10V5z" />
@@ -23,7 +23,8 @@
         </li>
 
         <li>
-          <NuxtLink :to="`/user/treatment`" class="sidebar-link" :class="{ active: isActive('/user/treatment') }">
+          <NuxtLink :to="`/user/treatment-guide`" class="sidebar-link"
+            :class="{ active: isActive('/user/treatment-guide') }">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
               <path
                 d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
@@ -58,12 +59,12 @@
   </aside>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const isActive = (path) => {
+const isActive = (path: string): boolean => {
   return route.path === path
 }
 </script>
