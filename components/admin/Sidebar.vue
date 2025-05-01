@@ -21,7 +21,7 @@
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/user/app-updates" class="sidebar-link">
+          <NuxtLink to="/admin/AppUpdates" class="sidebar-link">
             <ArrowUpTrayIcon class="h-5 w-5 mr-3" />
             App Updates
           </NuxtLink>

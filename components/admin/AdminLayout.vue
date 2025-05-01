@@ -19,6 +19,17 @@
 
       <!-- Page Content -->
       <main class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
+        <!-- Title & Action -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 class="text-2xl font-semibold text-gray-800">
+            <slot name="title" />
+          </h1>
+          <div>
+            <slot name="actions" />
+          </div>
+        </div>
+
+        <!-- Main slot content -->
         <slot />
       </main>
     </div>
@@ -57,10 +68,12 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.sidebar-enter-active, .sidebar-leave-active {
+.sidebar-enter-active,
+.sidebar-leave-active {
   transition: transform 0.3s ease;
 }
-.sidebar-enter-from, .sidebar-leave-to {
+.sidebar-enter-from,
+.sidebar-leave-to {
   transform: translateX(-100%);
 }
 </style>
