@@ -41,7 +41,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id" class="text-center">
+          <tr v-for="user in filteredUsers" :key="user.id" class="text-center">
             <td class="p-2 border">{{ user.email }}</td>
             <td class="p-2 border">
               <span :class="user.active ? 'text-green-600' : 'text-red-600'">
@@ -52,7 +52,10 @@
             <td class="p-2 border">
               <button
                 @click="$emit('toggle-status', user)"
-                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                :class="[
+                  'text-white px-3 py-1 rounded',
+                  user.active ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
+                ]"
               >
                 {{ user.active ? 'Set Inactive' : 'Set Active' }}
               </button>
