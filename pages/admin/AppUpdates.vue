@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout :user="user">
+  <AdminLayout :user="state.user">
     <template #title>App Updates</template>
 
     <template #actions>
@@ -78,20 +78,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import AdminLayout from '@/components/admin/AdminLayout.vue'
+import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
 import type { User } from '~/composables/model/User'
 
-const user = ref<User>({
-  id: 1,
-  uuid: 'uuid-123',
-  email: 'admin@example.com',
-  password: '',
-  name: 'Admin',
-  profile: '/default-avatar.png',
-  role: 'admin',
-  created_at: '',
-  updated_at: ''
+const state = reactive({
+  user: {} as User
+})
+  
+onMounted(async ()=>{
+  try{
+    state.user = await fetchCurrentUser(state.user);
+  }catch(error:any){}
 })
 
 const showModal = ref(false)
