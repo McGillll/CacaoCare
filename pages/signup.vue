@@ -7,6 +7,19 @@
             <Spinner v-if="state.isLoading" :size="35"/>
             <h1 class="text-3xl font-bold text-center text-teal-700 mb-6">Sign Up</h1>
             <form @submit.prevent="handleSubmit">
+                <!-- Username -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2" for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        v-model="state.user.username"
+                        class="w-full border border-teal-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        placeholder="Enter your email"
+                        required
+                    />
+                    <FormError v-if="state.errors?.username" :error="state.errors?.username?.[0]"/>
+                </div>
                 <!-- Email -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
@@ -249,6 +262,7 @@ async function handleSubmit(){
     
     try{
         const formData = new FormData();
+        formData.append('username', state.user.username);
         formData.append('email', state.user.email);
         formData.append('password', state.user.password);
         formData.append('region', state.user.region)
