@@ -49,6 +49,7 @@ import { redirectService } from '~/composables/function/Redirect'
 import type { User } from '~/composables/model/User'
 import { userService } from '~/composables/api/sevices/UserService'
 import { cacaoServices } from '~/composables/api/sevices/CacaoService'
+import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
 
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)
@@ -66,10 +67,12 @@ const handleResize = () => {
   if (isLargeScreen.value) sidebarOpen.value = true
 }
 
-onMounted(() => {
+onMounted(async() => {
   handleResize()
   window.addEventListener('resize', handleResize)
-  fetchCurrentUser()
+  try{
+    state.user =  await fetchCurrentUser(state.user);
+  }catch(error: any){}
   fetchTotalUser()
   fetchTodayUpload()
 })
@@ -97,17 +100,17 @@ async function fetchTotalUser(){
   }
 }
 
-async function fetchCurrentUser(){
-  try{
-    const response = await authService.getCurrentUser()
-    if(response.data){
-      state.user = response.data
-      redirectService.checkUserPrevillage(state.user.role)
-    }
-  }catch(error : any){
+// async function fetchCurrentUser(){
+//   try{
+//     const response = await authService.getCurrentUser()
+//     if(response.data){
+//       state.user = response.data
+//       redirectService.checkUserPrevillage(state.user.role)
+//     }
+//   }catch(error : any){
 
-  }
-}
+//   }
+// }
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
