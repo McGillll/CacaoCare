@@ -143,10 +143,35 @@
             :src="selectedScan?.imageUrl || '/default-pod.jpg'" 
             class="w-full object-cover h-[320px]" 
           />
-          <div class="p-2">
-            <p class="text-gray-500 text-xs px-4 py-2 text-left">
-              Uploaded on: {{ selectedScan ? formatDate(selectedScan.uploadedAt) : '' }}
-            </p>
+          <div class="p-4">
+            <!-- Scan Information -->
+            <div class="flex justify-between items-center mb-3">
+              <div>
+                <p class="font-medium text-sm">{{ selectedScan?.userName }}</p>
+                <p class="text-xs text-gray-500">
+                  Uploaded on: {{ selectedScan ? formatDate(selectedScan.uploadedAt) : '' }} 
+                </p>
+              </div>
+              <div 
+                class="px-2 py-1 rounded text-xs font-medium"
+                :class="{
+                  'bg-green-100 text-green-800': selectedScan?.status === 'Healthy',
+                  'bg-red-100 text-red-800': selectedScan?.status === 'Black Pod',
+                  'bg-blue-100 text-blue-800': selectedScan?.status === 'Frosty Pod'
+                }"
+              >
+                {{ selectedScan?.status }} ({{ selectedScan?.confidence }}%)
+              </div>
+            </div>
+
+            <p class="text-sm text-gray-600 font-medium mb-2 mt-7">Caption:</p>
+
+            <!-- Caption Box -->
+            <div class="p-6 border rounded-md">
+              <p class="text-sm text-gray-500">
+                {{ selectedScan?.caption || 'No caption provided.' }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -171,6 +196,7 @@ interface Scan {
   status: string
   confidence: number
   uploadedAt: string
+  caption: string | null 
 }
 
 const sidebarOpen = ref(false)
@@ -185,13 +211,14 @@ const sortBy = ref('newest')
 const allScans = ref<Scan[]>([
   {
     id: 1,
-    imageUrl: 'https://scitechdaily.com/images/Cacao-Pod-on-Tree.jpg', //sample
+    imageUrl: 'https://scitechdaily.com/images/Cacao-Pod-on-Tree.jpg',
     userAvatar: '',
     userName: 'John Perez',
     location: 'Davao, Philippines',
     status: 'Healthy',
     confidence: 91,
-    uploadedAt: '2025-04-17'
+    uploadedAt: '2025-04-17',
+    caption: 'A healthy cacao pod.'
   },
   {
     id: 2,
@@ -201,7 +228,8 @@ const allScans = ref<Scan[]>([
     location: 'Bukidnon, Philippines',
     status: 'Black Pod',
     confidence: 82,
-    uploadedAt: '2025-04-16'
+    uploadedAt: '2025-04-16',
+    caption: ''
   },
   {
     id: 3,
@@ -211,7 +239,8 @@ const allScans = ref<Scan[]>([
     location: 'Zamboanga, Philippines',
     status: 'Frosty Pod',
     confidence: 79,
-    uploadedAt: '2025-04-15'
+    uploadedAt: '2025-04-15',
+    caption: ''
   },
   {
     id: 4,
@@ -221,7 +250,8 @@ const allScans = ref<Scan[]>([
     location: 'Negros Occidental, Philippines',
     status: 'Healthy',
     confidence: 94,
-    uploadedAt: '2025-04-14'
+    uploadedAt: '2025-04-14',
+    caption: ''
   },
   {
     id: 5,
@@ -231,7 +261,8 @@ const allScans = ref<Scan[]>([
     location: 'Cotabato, Philippines',
     status: 'Healthy',
     confidence: 88,
-    uploadedAt: '2025-04-13'
+    uploadedAt: '2025-04-13',
+    caption: ''
   },
   {
     id: 6,
@@ -241,7 +272,8 @@ const allScans = ref<Scan[]>([
     location: 'Leyte, Philippines',
     status: 'Black Pod',
     confidence: 85,
-    uploadedAt: '2025-04-12'
+    uploadedAt: '2025-04-12',
+    caption: ''
   }
 ])
 
@@ -332,7 +364,6 @@ const closeModal = () => {
 }
 
 .blur-sm {
-  filter: blur(4px);
-  transition: filter 0.3s ease;
+  filter: blur(5px);
 }
 </style>
