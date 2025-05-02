@@ -2,10 +2,16 @@
     <NuxtLayout />
     <HeadTitle title="CacaoCare - Signup" />
     <NavigationLandingpage />
-    <section class="min-h-screen py-20 flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
-        <div class="container mx-auto bg-white text-gray-700 p-10 rounded-lg shadow-lg max-w-lg">
+    <section class="relative min-h-screen py-20 flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
+        <div class="absolute inset-0 w-full h-full z-0">
+            <img class="object-cover w-full h-full" :src="Background" alt="">
+        </div>
+        <div class="bg-black opacity-40 absolute inset-0 w-full h-full z-0"/>
+        <div class="bg-green-700 opacity-5 absolute inset-0 w-full h-full z-0" />
+        <div class="bg-yellow-900 opacity-5 absolute inset-0 w-full h-full z-0" />
+        <div class="z-20 container mx-auto bg-white text-gray-700 p-10 rounded-lg shadow-lg max-w-lg">
             <Spinner v-if="state.isLoading" :size="35"/>
-            <h1 class="text-3xl font-bold text-center text-teal-700 mb-6">Sign Up</h1>
+            <h1 class="text-3xl font-bold text-center text-green-700 mb-6">Sign Up</h1>
             <form @submit.prevent="handleSubmit">
                 <!-- Username -->
                 <div class="mb-4">
@@ -14,7 +20,7 @@
                         type="text"
                         id="username"
                         v-model="state.user.username"
-                        class="w-full border border-teal-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Enter your email"
                         required
                     />
@@ -27,7 +33,7 @@
                         type="email"
                         id="email"
                         v-model="state.user.email"
-                        class="w-full border border-teal-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Enter your email"
                         required
                     />
@@ -41,7 +47,7 @@
                         type="password"
                         id="password"
                         v-model="state.user.password"
-                        class="w-full border border-teal-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Create a password"
                         required
                     />
@@ -55,7 +61,7 @@
                         <input
                             type="checkbox"
                             v-model="state.fromDavao"
-                            class="form-checkbox ml-4 h-4 m;-auto w-4 text-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            class="form-checkbox ml-4 h-4 m;-auto w-4 text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                     </label>
                 </div>
@@ -70,7 +76,7 @@
                             id="region"
                             v-model="selectedRegion"
                             @change="fetchProvinces"
-                            class="w-full border border-teal-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         >
                             <option value="" disabled selected>Select Region</option>
@@ -87,7 +93,7 @@
                             id="province"
                             v-model="selectedProvince"
                             @change="fetchCities"
-                            class="w-full border border-teal-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         >
                             <option value="" disabled selected>Select Province</option>
@@ -105,7 +111,7 @@
                     id="city"
                     v-model="selectedCity"
                     @change="fetchBarangays"
-                    class="w-full border border-teal-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                 >
                     <option value="" disabled selected>Select City</option>
@@ -120,7 +126,7 @@
                 <select
                     id="barangay"
                     v-model="selectedBarangay"
-                    class="w-full border border-teal-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                 >
                     <option value="" disabled selected>Select Barangay</option>
@@ -132,7 +138,7 @@
                 <!-- Submit Button -->
                 <button
                     type="submit"
-                    class="bg-teal-500 text-white font-bold px-6 py-2 rounded-lg w-full hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    class="bg-green-500 text-white font-bold px-6 py-2 rounded-lg w-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                     Sign Up
                 </button>
@@ -140,7 +146,7 @@
 
             <!-- Already Have an Account -->
             <div class="text-center mt-6">
-                <NuxtLink to="/signin" class="text-teal-500 hover:underline">
+                <NuxtLink to="/signin" class="text-green-500 hover:underline">
                     Already have an account? Log in
                 </NuxtLink>
             </div>
@@ -154,6 +160,8 @@ import { reactive, ref, onMounted } from 'vue';
 import { authService } from '~/composables/api/sevices/AuthService';
 import { getBarangays, getCities, getProvinces, getRegions, type Barangay, type City, type Province, type Region } from '~/composables/api/sevices/psgcApiService';
 import type { User } from '~/composables/model/User';
+import Background from '~/assets/img/herosection_background.jpg'
+
 
 const state = reactive({
     user: {} as User,

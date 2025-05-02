@@ -1,13 +1,14 @@
 <template>
-    <NuxtLayout />
-    <HeadTitle title="CacaoCare" />
-    <NavigationLandingpage />
-    <div class="min-h-screen flex flex-col">
-        <Herosection />
-        <Featuresection />
-        <Contactsection />
-        <Footer />
-    </div>
+    <NuxtLayout name="app">
+
+        <HeadTitle title="CacaoCare" />
+        <div class="min-h-screen flex flex-col">
+            <Herosection />
+            <Featuresection />
+            <Contactsection />
+            <Footer />
+        </div>
+    </NuxtLayout>
   </template>
   <script lang="ts" setup>
   import { NavigationLandingpage } from '#components';

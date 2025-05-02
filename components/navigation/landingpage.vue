@@ -1,86 +1,59 @@
 <template>
-    <Disclosure as="nav" class="bg-gray-800 shadow-sm" v-slot="{ open }">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="flex h-16 justify-between">
-                <div class="flex w-full">
-                    <div class="mr-2 flex items-center sm:hidden">
-                        <!-- Mobile menu button -->
-                        <DisclosureButton
-                            class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden focus:ring-inset"
-                        >
-                            <span class="absolute -inset-0.5" />
-                            <span class="sr-only">Open main menu</span>
-                            <Bars3Icon v-if="!open" class="block size-6" aria-hidden="true" />
-                            <XMarkIcon v-else class="block size-6" aria-hidden="true" />
-                        </DisclosureButton>
-                    </div>
-                    <div @click="navigateTo('/')" class="flex shrink-0 items-center mr-auto">
-                        <img 
-                            class="h-8 w-8 w-auto"
-                            src="/assets/img/cacao_care_logo.jpg"
-                            alt="CacaoCare"
-                        />
-                        <span class="ml-2 text-xl text-white font-extrabold" >CacaoCare</span>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <!-- Buttons Section -->
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                            <!-- Sign In Link -->
-                            <div class="py-2 px-4">
-                                <NuxtLink
-                                    to="signin"
-                                    class="-mx-2 block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 hover:text-gray-200 transition"
-                                >
-                                    Sign In
-                                </NuxtLink>
-                            </div>
-
-                            <!-- Get Started Button -->
-                            <button
-                                @click="navigateTo('signup')"
-                                class="bg-green-500 text-white hover:bg-green-600 font-semibold px-4 py-2 rounded-md shadow-lg transition"
-                            >
-                                Get Started
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="mr-2 flex items-center sm:hidden">
-                    <!-- Get Started Button -->
-                    <button
-                        @click="navigateTo('signup')"
-                        class="bg-green-500 text-white hover:bg-green-600 font-semibold px-4 py-2 w-max rounded-md shadow-lg transition"
-                    >
-                        Get Started
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <DisclosurePanel class="sm:hidden">
-            <div class="space-y-1 pt-2 pb-3">
-                <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
-                <DisclosureButton
-                    @click="navigateTo('signin')"
-                    as="p"
-                    class="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pr-4 pl-3 text-base font-medium text-indigo-700"
+    <div class="flex items-center justify-between py-3 pr-5 md:pr-10 md:pl-5 bg-neutral-50 shadow-lg">
+      <div class="mr-auto">
+          <img class="object-cover h-10 w-24 px-3 ml-10 md:ml-0" :src="Logo" alt="Logo" />
+      </div>
+      <div class="md:hidden flex items-center">
+            <!-- Get Started Button -->
+            <button
+                @click="navigateTo('signup')"
+                class="bg-green-500 text-white hover:bg-green-600 font-semibold px-4 py-2 w-max rounded-md shadow-lg transition"
                 >
-                    Sign in
-                </DisclosureButton>
-            </div>
-        </DisclosurePanel>
-    </Disclosure>
-</template>
+                Get Started
+            </button>
+        </div>
+        
+      <button
+        class="md:hidden text-orange-400 transition-transform duration-300 ease-in-out"
+        @click="menuOpen = !menuOpen"
+      >
+        <XMarkIcon class="absolute top-4 left-3 size-8" :class="{ 'opacity-100': menuOpen, 'opacity-0 pointer-events-none': !menuOpen }" />
+        <Bars3Icon class="absolute top-4 left-3 size-8" :class="{ 'opacity-100': !menuOpen, 'opacity-0 pointer-events-none': menuOpen }" />
+      </button>
+  
+      <!-- Navigation Links (Desktop) -->
+      <div class="hidden md:flex items-center h-full space-x-4">
+        <NuxtLink to="/" class="font-semibold hover:bg-green-500 py-2 px-3 transition-all duraion-300 rounded-lg">Home</NuxtLink>
+        <NuxtLink to="/signin" class="font-semibold hover:bg-green-500 py-2 px-3 transition-all duraion-300 rounded-lg">Sign in</NuxtLink>
+        <div class="mr-2 flex items-center">
+            <!-- Get Started Button -->
+            <button
+                @click="navigateTo('signup')"
+                class="bg-green-500 text-white hover:bg-green-600 font-semibold px-4 py-2 w-max rounded-md shadow-lg transition"
+                >
+                Get Started
+            </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Mobile Menu -->
+    <div class="fixed top-15 left-0 w-full h-full transition-opacity duration-300 ease-in-out"
+      :class="{ 'opacity-100': menuOpen, 'opacity-0 pointer-events-none': !menuOpen }">
+      <div class="absolute inset-0 bg-black opacity-50 z-80"></div>
+      <div class="absolute z-10 flex py-2 w-full flex-col gap-2 top-0 right-0 h-fit w-full bg-neutral-200 shadow-inner transform transition-transform duration-300 ease-in-out"
+        :class="{ 'translate-y-0': menuOpen, '-translate-y-full': !menuOpen }">
+        <NuxtLink to="/" class="text-base font-semibold w-full hover:bg-green-500 hover:text-neutral-50 transition-all duration-300" @click="menuOpen = false">Home</NuxtLink>
+        <NuxtLink to="/signin" class="text-base font-semibold w-full hover:bg-green-500 hover:text-neutral-50 transition-all duration-300" @click="menuOpen = false">Sign in</NuxtLink>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref, computed } from 'vue';
+  import { XMarkIcon, Bars3Icon } from '@heroicons/vue/24/solid';
+  import Logo from '~/assets/img/cacao_care_logo1.jpg'
+  const menuOpen = ref(false);
 
-<script setup>
-import {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-} from '@headlessui/vue';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-</script>
+  
+  </script>
