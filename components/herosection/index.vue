@@ -43,7 +43,7 @@ onMounted(async()=>{
     try{
         const response = await downloadLinkService.getLatestVersion();
         if(response.data){
-            state.downloadLink = response.data[0].download_link
+            state.downloadLink = response.data.download_link
             state.linkNotReady = false
         }
     }catch(error){

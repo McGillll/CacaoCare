@@ -1,9 +1,16 @@
 import BaseAPIService from "../BaseApiService";
-import { authService } from "./AuthService";
 
 class UserService extends BaseAPIService {
     async getAllUser(): Promise<any> {
         return await this.request('/user', 'GET')
+    }
+
+    async getUserSignTodayCount(): Promise<any>{
+        return await this.request('/user/count/today', 'GET')
+    }
+
+    async getUserCount(): Promise<any>{
+        return await this.request('/user/count/all', 'GET')
     }
 }
 

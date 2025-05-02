@@ -19,7 +19,7 @@
         <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <SummaryCard title="Total Registered Farmers" value="1,245" value-class="text-xl font-semibold text-green-700" />
+          <SummaryCard title="Total Registered Farmers" :isLoading=state.totalUserLoading :value=state.totalUser value-class="text-xl font-semibold text-green-700" />
           <SummaryCard title="New Uploaded Images (24h)" value="32" value-class="text-xl font-semibold text-red-600" />
         </div>
 
@@ -47,12 +47,16 @@ import Footer from '@/components/admin/Footer.vue'
 import { authService } from '~/composables/api/sevices/AuthService'
 import { redirectService } from '~/composables/function/Redirect'
 import type { User } from '~/composables/model/User'
+import { userService } from '~/composables/api/sevices/UserService'
 
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)
 
 const state = reactive({
-  user: {} as User
+  user: {} as User,
+  totalUser: 0,
+  totalUserLoading: true,
+
 })
 
 const handleResize = () => {
@@ -64,7 +68,17 @@ onMounted(() => {
   handleResize()
   window.addEventListener('resize', handleResize)
   fetchCurrentUser()
+  fetchTotalUser()
 })
+
+async function fetchTotalUser(){
+  try{
+
+    
+  }catch(error: any){
+
+  }
+}
 
 async function fetchCurrentUser(){
   try{

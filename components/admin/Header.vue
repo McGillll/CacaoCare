@@ -24,20 +24,22 @@
 
     <!-- Admin Dropdown -->
     <div class="relative">
-      <button
-        @click="dropdownOpen = !dropdownOpen"
-        class="flex items-center gap-2 focus:outline-none"
-      >
-        <img
+      <div>
+          <button
+          @click="dropdownOpen = !dropdownOpen"
+          class="flex items-center gap-2 focus:outline-none"
+          >
+          <img
           :src=props.user.profile
           alt="Admin Avatar"
           class="w-8 h-8 rounded-full"
-        />
-        <div class="text-sm hidden md:block">
-          <p class="font-medium">Admin</p>
-        </div>
-      </button>
-
+          />
+          <div class="text-sm hidden md:block">
+            <p class="font-medium">{{ props.user.username }}</p>
+          </div>
+        </button>
+      </div>
+      
       <!-- Dropdown menu -->
       <div
         v-if="dropdownOpen"

@@ -1,6 +1,7 @@
 <template>
     <div class="bg-white p-4 shadow rounded-lg">
       <p class="text-sm text-gray-500">{{ title }}</p>
+      <SpinnerElement v-if="props.isLoading" :size="25" />
       <p :class="valueClass">{{ value }}</p>
     </div>
   </template>
@@ -9,6 +10,6 @@
   const props = defineProps({
     title: String,
     value: [String, Number],
-    valueClass: String,
+    isLoading: Boolean
   })
   </script>
