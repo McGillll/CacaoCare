@@ -9,8 +9,8 @@
           class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64"
         />
       </transition>
-      <div v-if="sidebarOpen && !isLargeScreen" class="fixed inset-0 z-40 bg-black bg-opacity-30" 
-        @click="sidebarOpen = false" />
+      <div v-if="sidebarOpen && !isLargeScreen" class="fixed inset-0 z-40 bg-black bg-opacity-30"
+           @click="sidebarOpen = false" />
 
       <main :class="['flex-1 p-4 sm:p-6 overflow-y-auto transition-all duration-300', modalOpen ? 'blur-sm' : '']">
         <!-- Summary Cards -->
@@ -39,10 +39,10 @@
               <div class="relative">
                 <img :src="scan.imageUrl || ''" class="w-full h-48 object-cover" :alt="`${scan.status} cacao pod`" />
                 <div class="absolute top-2 right-2 px-2 py-1 rounded text-xs font-medium" :class="{
-                    'bg-green-100 text-green-800': scan.status === 'Healthy',
-                    'bg-red-100 text-red-800': scan.status === 'Black Pod',
-                    'bg-blue-100 text-blue-800': scan.status === 'Frosty Pod'
-                  }">
+                        'bg-green-100 text-green-800': scan.status === 'Healthy',
+                        'bg-red-100 text-red-800': scan.status === 'Black Pod',
+                        'bg-blue-100 text-blue-800': scan.status === 'Frosty Pod'
+                      }">
                   {{ scan.status }} ({{ scan.confidence }}%)
                 </div>
               </div>
@@ -92,10 +92,30 @@
           &times;
         </button>
         <img :src="selectedScan?.imageUrl || '/default-pod.jpg'" class="w-full object-cover h-[320px]" />
-        <div class="p-2">
-          <p class="text-gray-500 text-xs px-4 py-2 text-left">
-            Uploaded on: {{ selectedScan ? formatDate(selectedScan.date) : '' }}
-          </p>
+        <div class="p-4">
+          <div class="flex justify-between items-center mb-3">
+            <div>
+              <p class="font-medium text-sm">{{ selectedScan?.farmerName || 'Anonymous Farmer' }}</p>
+              <p class="text-xs text-gray-500">
+                Uploaded on: {{ selectedScan ? formatDate(selectedScan.date) : '' }}
+              </p>
+            </div>
+            <div class="px-2 py-1 rounded text-xs font-medium"
+                 :class="{
+                    'bg-green-100 text-green-800': selectedScan?.status === 'Healthy',
+                    'bg-red-100 text-red-800': selectedScan?.status === 'Black Pod',
+                    'bg-blue-100 text-blue-800': selectedScan?.status === 'Frosty Pod'
+                  }">
+              {{ selectedScan?.status }} ({{ selectedScan?.confidence }}%)
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-600 font-medium mb-2 mt-7">Caption:</p>
+          <div class="p-6 border rounded-md">
+            <p class="text-sm text-gray-500">
+              {{ selectedScan?.caption || 'No caption provided.' }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -118,6 +138,7 @@ interface Scan {
   farmerName: string
   farmerAvatar: string
   location: string
+  caption?: string | null
 }
 
 interface Alert {
@@ -132,8 +153,9 @@ interface ScanStats {
   diseased: number
 }
 
-const sidebarOpen = ref<boolean>(false)
-const isLargeScreen = ref<boolean>(false)
+const sidebarOpen = ref(false)
+const isLargeScreen = ref(false)
+const modalOpen = ref(false)
 
 const scanStats = ref<ScanStats>({
   total: 0,
@@ -142,12 +164,7 @@ const scanStats = ref<ScanStats>({
 })
 
 const recentScans = ref<Scan[]>([])
-
-const blackPodAlert = ref<Alert>({
-  title: '',
-  recommendation: '',
-  severity: 'info'
-})
+const selectedScan = ref<Scan | null>(null)
 
 const hasScans = computed(() => scanStats.value.total > 0)
 
@@ -174,9 +191,6 @@ const handleResize = () => {
   if (isLargeScreen.value) sidebarOpen.value = true
 }
 
-const modalOpen = ref(false)
-const selectedScan = ref<Scan | null>(null)
-
 const openModal = (scan: Scan) => {
   selectedScan.value = scan
   modalOpen.value = true
@@ -201,13 +215,14 @@ onMounted(() => {
     recentScans.value = [
       {
         id: 1,
-        imageUrl: 'https://scitechdaily.com/images/Cacao-Pod-on-Tree.jpg', //sample
+        imageUrl: 'https://scitechdaily.com/images/Cacao-Pod-on-Tree.jpg',
         status: 'Healthy',
         confidence: 92,
         date: '2025-04-25',
         farmerName: 'Thalia Gonzalez',
         farmerAvatar: '',
-        location: 'Bukidnon, Philippines'
+        location: 'Bukidnon, Philippines',
+        caption: ''
       },
       {
         id: 2,
@@ -217,7 +232,8 @@ onMounted(() => {
         date: '2025-04-24',
         farmerName: 'Michael Smith',
         farmerAvatar: '',
-        location: 'Zamboanga, Philippines'
+        location: 'Zamboanga, Philippines',
+        caption: ''
       },
       {
         id: 3,
@@ -227,7 +243,8 @@ onMounted(() => {
         date: '2025-04-23',
         farmerName: 'Vince Jay',
         farmerAvatar: '',
-        location: 'Negros Occidental, Philippines'
+        location: 'Negros Occidental, Philippines',
+        caption: ''
       }
     ]
   }, 500)
