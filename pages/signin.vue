@@ -75,6 +75,8 @@ import { authService } from '~/composables/api/sevices/AuthService';
 import { reverseValue } from '~/composables/function/ReverseValue';
 import type { User } from '~/composables/model/User';
 import Background from '~/assets/img/herosection_background.jpg'
+import { fetchCurrentUser } from '~/composables/function/GetCurrentUser';
+import { redirectService } from '~/composables/function/Redirect';
 
 const state = reactive({
     user: {} as User,
@@ -115,6 +117,15 @@ async function handleLogin() {
     }
 }
 
+
+
+onMounted(async()=>{
+   state.user = await fetchCurrentUser(state.user);
+   if(state.user){
+    redirectService.checkAdminPrevillage(state.user.role)
+    redirectService.checkUserPrevillage(state.user.role)
+   }
+})
 function closeError(){
     state.showError = !state.showError
 }
