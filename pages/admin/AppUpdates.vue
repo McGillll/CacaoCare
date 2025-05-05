@@ -1,4 +1,5 @@
 <template>
+  <HeadTitle title="CacaoCare" />
   <NuxtLayout />
   <AdminLayout :user="state.user">
     <template #title>App Updates</template>
@@ -25,7 +26,7 @@
             :key="index"
             class="border-b pb-2"
             >
-            <DownloadLinksCard :downloadLink="downloadLink"/>
+            <DownloadLinksCard @click="downloadApp(downloadLink.download_link)" :downloadLink="downloadLink" class="hover:bg-green-100 transition-all duration-500"/>
           </li>
         </ul>
       </div>
@@ -117,6 +118,10 @@ const state = reactive({
   isSaving: false,
   isSaved: false
 })
+
+function downloadApp(downloadLink : string){
+    window.open(downloadLink, '_blank');
+}
   
 onMounted(()=>{
   fetchUser();
