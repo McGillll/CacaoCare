@@ -82,7 +82,7 @@ const state = reactive({
     user: {} as User,
     showError: false,
     login: false,
-    isLoading: false
+    isLoading: true
 });
 
 async function handleLogin() {
@@ -121,6 +121,7 @@ async function handleLogin() {
 
 onMounted(async()=>{
    state.user = await fetchCurrentUser(state.user);
+   state.isLoading = false
    if(state.user){
     redirectService.checkAdminPrevillage(state.user.role)
     redirectService.checkUserPrevillage(state.user.role)
