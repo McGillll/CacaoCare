@@ -20,8 +20,8 @@
       <main class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
         <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <SummaryCard title="Total Registered Farmers" :isLoading=state.totalUserLoading :value=state.totalUser value-class="text-xl font-semibold text-green-700" />
+        <div class="flex w-full  gap-4">
+          <SummaryCard @click="navigateTo('admin/UserManagement')" title="Total Registered Farmers" :isLoading=state.totalUserLoading :value=state.totalUser value-class="text-xl font-semibold text-green-700" />
           <SummaryCard title="New Uploaded Images (24h)" :isLoading="state.totalUploadedCacaoTodayLoading" :value=state.totalUploadedCacaoToday value-class="text-xl font-semibold text-red-600" />
         </div>
 
@@ -69,15 +69,20 @@ const handleResize = () => {
   if (isLargeScreen.value) sidebarOpen.value = true
 }
 
-onMounted(async() => {
+onMounted(() => {
   handleResize()
   window.addEventListener('resize', handleResize)
-  try{
-    state.user =  await fetchCurrentUser(state.user);
-  }catch(error: any){}
+  fetchUser()
   fetchTotalUser()
   fetchTodayUpload()
 })
+
+async function fetchUser() {
+  try{
+    state.user = await fetchCurrentUser(state.user);
+    redirectService.checkUserPrevillage(state.user.role)
+  }catch(error: any){}
+}
 
 async function fetchTodayUpload() {
   try{

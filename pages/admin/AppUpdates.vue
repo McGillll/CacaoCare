@@ -107,6 +107,7 @@ import AdminLayout from '@/components/admin/AdminLayout.vue'
 import DownloadLinksCard from '~/components/admin/DownloadLinksCard.vue'
 import { downloadLinkService } from '~/composables/api/sevices/DownloadLinkService'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
+import { redirectService } from '~/composables/function/Redirect'
 import type { DownLoadLink } from '~/composables/model/DownloadLinks'
 import type { User } from '~/composables/model/User'
 
@@ -131,6 +132,7 @@ onMounted(()=>{
 async function fetchUser(){
   try{
     state.user = await fetchCurrentUser(state.user);
+    redirectService.checkUserPrevillage(state.user.role)
   }
   catch(error:any){}
 }
