@@ -14,7 +14,7 @@
         </div>
         
       <button
-        class="md:hidden text-orange-400 transition-transform duration-300 ease-in-out"
+        class="md:hidden text-green-400 transition-transform duration-300 ease-in-out"
         @click="menuOpen = !menuOpen"
       >
         <XMarkIcon class="absolute top-4 left-3 size-8" :class="{ 'opacity-100': menuOpen, 'opacity-0 pointer-events-none': !menuOpen }" />

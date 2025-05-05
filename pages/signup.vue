@@ -20,7 +20,7 @@
                         type="text"
                         id="username"
                         v-model="state.user.username"
-                        class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Enter your email"
                         required
                         />
@@ -33,7 +33,7 @@
                         type="email"
                         id="email"
                         v-model="state.user.email"
-                        class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Enter your email"
                         required
                         />
@@ -47,7 +47,7 @@
                         type="password"
                         id="password"
                         v-model="state.user.password"
-                        class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Create a password"
                         required
                         />
@@ -61,7 +61,7 @@
                             <input
                             type="checkbox"
                             v-model="state.fromDavao"
-                            class="form-checkbox ml-4 h-4 m;-auto w-4 text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            class="transition-all duration-500 form-checkbox ml-4 h-4 m;-auto w-4 text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
                             />
                         </label>
                     </div>
@@ -76,7 +76,7 @@
                                 id="region"
                                 v-model="selectedRegion"
                                 @change="fetchProvinces"
-                                class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                                 required
                                 >
                                 <option value="" disabled selected>Select Region</option>
@@ -93,7 +93,7 @@
                             id="province"
                             v-model="selectedProvince"
                             @change="fetchCities"
-                            class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                             >
                             <option value="" disabled selected>Select Province</option>
@@ -111,7 +111,7 @@
                     id="city"
                     v-model="selectedCity"
                     @change="fetchBarangays"
-                    class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                     >
                     <option value="" disabled selected>Select City</option>
@@ -126,7 +126,7 @@
                 <select
                 id="barangay"
                 v-model="selectedBarangay"
-                class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
                 >
                 <option value="" disabled selected>Select Barangay</option>
@@ -138,7 +138,7 @@
         <!-- Submit Button -->
         <button
         type="submit"
-        class="bg-green-500 text-white font-bold px-6 py-2 rounded-lg w-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        class="transition-all duration-500 bg-green-500 text-white font-bold px-6 py-2 rounded-lg w-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
         >
         Sign Up
     </button>

@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white shadow p-4 flex justify-between items-center relative">
+  <header class="bg-white shadow px-10 py-4 flex justify-between items-center relative">
     <div class="flex items-center gap-4">
       <!-- Mobile Menu Button -->
       <button class="md:hidden text-gray-600" @click="$emit('toggle-sidebar')">
@@ -10,7 +10,9 @@
       </button>
 
       <!-- Brand -->
-      <div class="text-xl font-semibold text-green-700">CacaoCare</div>
+      <div class="mr-auto">
+          <img class="object-cover h-10 w-auto md:ml-0" :src="Logo" alt="Logo" />
+      </div>
 
       <!-- Back to Dashboard Button -->
       <router-link
@@ -27,16 +29,16 @@
       <div>
           <button
           @click="dropdownOpen = !dropdownOpen"
-          class="flex items-center gap-2 focus:outline-none"
+          class="flex items-center gap-4 focus:outline-none"
           >
+          <div class="text-sm hidden md:block">
+            <p class="font-medium">{{ state.user.username }}</p>
+          </div>
           <img
           :src=state.user.profile
           alt="Admin Avatar"
           class="w-8 h-8 rounded-full"
           />
-          <div class="text-sm hidden md:block">
-            <p class="font-medium">{{ state.user.username }}</p>
-          </div>
         </button>
       </div>
       
@@ -69,6 +71,7 @@ import { authService } from '~/composables/api/sevices/AuthService'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
 import { redirectService } from '~/composables/function/Redirect'
 import type { User } from '~/composables/model/User'
+import Logo from '~/assets/img/cacao_care_logo1.jpg'
 
 const $route = useRoute()
 const dropdownOpen = ref(false)
