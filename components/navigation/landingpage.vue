@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center justify-between py-3 pr-5 md:pr-10 md:pl-5 bg-neutral-50 shadow-lg">
       <div class="mr-auto">
-          <img class="object-cover h-10 w-24 px-3 ml-10 md:ml-0" :src="Logo" alt="Logo" />
+          <img class="object-cover h-10 w-auto px-3 ml-10 md:ml-0" :src="Logo" alt="Logo" />
       </div>
       <div class="md:hidden flex items-center">
             <!-- Get Started Button -->
