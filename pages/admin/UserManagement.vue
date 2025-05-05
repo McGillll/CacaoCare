@@ -1,4 +1,5 @@
 <template>]
+  <HeadTitle title="CacaoCare" />
   <NuxtLayout />
   <AdminLayout :user="state.user">
     <UserManagement />

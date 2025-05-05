@@ -1,4 +1,5 @@
 <template>
+  <HeadTitle title="CacaoCare" />
   <NuxtLayout />
   <div class="min-h-screen bg-gray-50 flex flex-col">
     <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />

@@ -1,4 +1,5 @@
 <template>
+  <HeadTitle title="CacaoCare" />
   <NuxtLayout />
     <div class="p-6 max-w-3xl mx-auto">
       <h2 class="text-2xl font-semibold text-gray-800 mb-4">Admin Settings</h2>
