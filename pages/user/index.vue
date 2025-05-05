@@ -16,48 +16,50 @@
       <main :class="['flex-1 p-4 sm:p-6 overflow-y-auto transition-all duration-300', modalOpen ? 'blur-sm' : '']">
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          <Card title="Pods Scanned" :value="hasScans ? scanStats.total : ''" icon="scan" :loading="false" />
-          <Card title="Healthy" :value="hasScans ? scanStats.healthy : ''" icon="healthy" :loading="false" />
-          <Card title="Diseased" :value="hasScans ? scanStats.diseased : ''" icon="diseased" :loading="false" />
+          <Card title="Pods Scanned" :value="state.status ? state.status.all : ''" icon="scan" :isLoading="state.fetchingStatusCount" />
+          <Card title="Healthy" :value="state.status ? state.status.healthy : ''" icon="healthy" :isLoading="state.fetchingStatusCount" />
+          <Card title="Diseased" :value="state.status ? state.status.diseased : ''" icon="diseased" :isLoading="state.fetchingStatusCount" />
         </div>
 
         <!-- Pod Scans -->
         <div class="bg-white p-4 rounded-lg shadow mb-6">
           <h2 class="text-lg font-semibold mb-4">Recent Pod Scans</h2>
 
-          <div class="space-y-4 md:space-y-0 md:flex md:overflow-x-auto md:pb-4 md:space-x-4">
-            <div v-for="(scan, index) in recentScans.slice(0, 3)" :key="scan.id" class="border rounded-lg overflow-hidden min-w-full md:min-w-[280px] flex-shrink-0 bg-white">
+          <div class="space-y-4 md:space-y-0 md:flex md:overflow-x-auto md:pb-4 md:mx-4 md:gap-4 md:p-5"> 
+            <div v-if="state.fetchingRecent" class="w-full h-full flex justify-center items-center">
+              <SpinnerElement  :size="40"/>
+            </div>
+            <div
+            @click="openModal(cacao)"
+            v-else 
+            v-for="(cacao, index) in state.cacaos" :key="index" 
+            class="border rounded-lg shadow-md overflow-hidden min-w-full md:min-w-[280px] flex-shrink-0 bg-white hover:scale-105 transition-all duration-500">
               <!-- Profile -->
               <div class="flex items-center p-3 border-b">
-                <img :src="scan.farmerAvatar || ''" class="w-8 h-8 rounded-full mr-3" :alt="`${scan.farmerName}'s avatar`" />
+                <img :src="cacao.profile || ''" class="w-8 h-8 rounded-full mr-3" :alt="`${cacao.username}'s avatar`" />
                 <div>
-                  <p class="font-medium text-sm">{{ scan.farmerName || 'Anonymous Farmer' }}</p>
-                  <p class="text-xs text-gray-500">{{ formatDate(scan.date) }} • {{ scan.location || 'Unknown Location' }}</p>
+                  <p class="font-medium text-sm">{{ cacao.username || 'Anonymous Farmer' }}</p>
+                  <p class="text-xs text-gray-500">{{ formatDate(cacao.created_at) }} • {{ cacao.barangay + " " + cacao.city || 'Unknown Location' }}</p>
                 </div>
               </div>
 
               <!-- Scan -->
-              <div class="relative">
-                <img :src="scan.imageUrl || ''" class="w-full h-48 object-cover" :alt="`${scan.status} cacao pod`" />
+              <div class="relative mb-8">
+                <img :src="cacao.photo || ''" class="w-full h-48 object-cover" :alt="`${cacao.label} cacao pod`" />
                 <div class="absolute top-2 right-2 px-2 py-1 rounded text-xs font-medium" :class="{
-                        'bg-green-100 text-green-800': scan.status === 'Healthy',
-                        'bg-red-100 text-red-800': scan.status === 'Black Pod',
-                        'bg-blue-100 text-blue-800': scan.status === 'Frosty Pod'
+                        'bg-green-100 text-green-800': cacao.label === 'Healthy Pod',
+                        'bg-red-100 text-red-800': cacao.label === 'Black Pod Rot',
+                        'bg-blue-100 text-blue-800': cacao.label === 'Frosty Pod Rot'
                       }">
-                  {{ scan.status }} ({{ scan.confidence }}%)
+                  {{ cacao.label }} ({{ cacao.confidence }})
                 </div>
-              </div>
-
-              <!-- Details -->
-              <div class="p-3">
-                <button class="text-green-600 text-xs font-medium hover:underline" @click="openModal(scan)">View</button>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Alert -->
-        <div v-if="hasScans" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow mb-6">
+        <div v-if="!state.fetchingRecent" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow mb-6">
           <div class="flex items-start space-x-3">
             <div class="flex-shrink-0">
               <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -88,38 +90,43 @@
   <!-- Modal for scan details -->
   <transition name="fade">
     <div v-if="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div class="bg-white overflow-hidden shadow-lg w-11/12 max-w-md relative">
-        <button @click="closeModal" class="absolute top-2 right-2 text-white hover:text-gray-300">
-          &times;
-        </button>
-        <img :src="selectedScan?.imageUrl || '/default-pod.jpg'" class="w-full object-cover h-[320px]" />
-        <div class="p-4">
-          <div class="flex justify-between items-center mb-3">
-            <div>
-              <p class="font-medium text-sm">{{ selectedScan?.farmerName || 'Anonymous Farmer' }}</p>
-              <p class="text-xs text-gray-500">
-                Uploaded on: {{ selectedScan ? formatDate(selectedScan.date) : '' }}
+
+        <div class="bg-white overflow-hidden shadow-lg w-11/12 max-w-md relative rounded">
+          <div class="w-full flex justify-end">
+            <button @click="closeModal" class="mx-3 my-1">
+              &times;
+            </button>
+          </div>
+          <div class="w-full bg-neutral-50">
+            <img :src="state.selected?.photo || '/default-pod.jpg'" class="w-full object-contain mt-4 h-[320px]" />
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-center mb-3">
+              <div>
+                <p class="font-medium text-sm">{{ state.selected?.username || 'Anonymous Farmer' }}</p>
+                <p class="text-xs text-gray-500">
+                  Uploaded on: {{ state.selected ? formatDate(state.selected.created_at) : '' }}
+                </p>
+              </div>
+              <div class="px-2 py-1 rounded text-xs font-medium"
+                  :class="{
+                      'bg-green-100 text-green-800': state.selected?.label === 'Healthy',
+                      'bg-red-100 text-red-800': state.selected?.label === 'Black Pod',
+                      'bg-blue-100 text-blue-800': state.selected?.label === 'Frosty Pod'
+                    }">
+                {{ state.selected?.label }} ({{ state.selected?.confidence }}%)
+              </div>
+            </div>
+
+            <p class="text-sm text-gray-600 font-medium mb-2 mt-7">Caption:</p>
+            <div class="p-6 border rounded-md">
+              <p class="text-sm text-gray-500">
+                {{ state.selected?.caption || 'No caption provided.' }}
               </p>
             </div>
-            <div class="px-2 py-1 rounded text-xs font-medium"
-                 :class="{
-                    'bg-green-100 text-green-800': selectedScan?.status === 'Healthy',
-                    'bg-red-100 text-red-800': selectedScan?.status === 'Black Pod',
-                    'bg-blue-100 text-blue-800': selectedScan?.status === 'Frosty Pod'
-                  }">
-              {{ selectedScan?.status }} ({{ selectedScan?.confidence }}%)
-            </div>
-          </div>
-
-          <p class="text-sm text-gray-600 font-medium mb-2 mt-7">Caption:</p>
-          <div class="p-6 border rounded-md">
-            <p class="text-sm text-gray-500">
-              {{ selectedScan?.caption || 'No caption provided.' }}
-            </p>
           </div>
         </div>
       </div>
-    </div>
   </transition>
 </template>
 
@@ -129,18 +136,20 @@ import Header from '@/components/user/Header.vue'
 import Sidebar from '@/components/user/Sidebar.vue'
 import Footer from '@/components/user/Footer.vue'
 import Card from '@/components/user/SummaryCards.vue'
+import type { Cacao } from '~/composables/model/Cacao'
+import { cacaoServices } from '~/composables/api/sevices/CacaoService'
 
-interface Scan {
-  id: number
-  imageUrl: string
-  status: 'Healthy' | 'Black Pod' | 'Frosty Pod'
-  confidence: number
-  date: string
-  farmerName: string
-  farmerAvatar: string
-  location: string
-  caption?: string | null
-}
+const state = reactive({
+  cacaos: [{} as Cacao],
+  selected: {} as Cacao,
+  status: {
+    healthy:0,
+    diseased:0,
+    all:0
+  },
+  fetchingRecent: true,
+  fetchingStatusCount: true
+})
 
 interface Alert {
   title: string
@@ -164,13 +173,11 @@ const scanStats = ref<ScanStats>({
   diseased: 0
 })
 
-const recentScans = ref<Scan[]>([])
-const selectedScan = ref<Scan | null>(null)
 
 const hasScans = computed(() => scanStats.value.total > 0)
 
 const priorityAlert = computed<Alert>(() => {
-  const location = recentScans.value[0]?.location || 'your region'
+  const location = state.cacaos[0]?.city || 'your city'
   return {
     title: `Preventive Advisory for ${location}`,
     recommendation:
@@ -192,64 +199,45 @@ const handleResize = () => {
   if (isLargeScreen.value) sidebarOpen.value = true
 }
 
-const openModal = (scan: Scan) => {
-  selectedScan.value = scan
+const openModal = (cacao: Cacao) => {
+  state.selected = cacao
   modalOpen.value = true
 }
 
 const closeModal = () => {
   modalOpen.value = false
-  selectedScan.value = null
 }
 
 onMounted(() => {
   handleResize()
   window.addEventListener('resize', handleResize)
-
-  setTimeout(() => {
-    scanStats.value = {
-      total: 24,
-      healthy: 18,
-      diseased: 6
-    }
-
-    recentScans.value = [
-      {
-        id: 1,
-        imageUrl: 'https://scitechdaily.com/images/Cacao-Pod-on-Tree.jpg',
-        status: 'Healthy',
-        confidence: 92,
-        date: '2025-04-25',
-        farmerName: 'Thalia Gonzalez',
-        farmerAvatar: '',
-        location: 'Bukidnon, Philippines',
-        caption: ''
-      },
-      {
-        id: 2,
-        imageUrl: '',
-        status: 'Black Pod',
-        confidence: 87,
-        date: '2025-04-24',
-        farmerName: 'Michael Smith',
-        farmerAvatar: '',
-        location: 'Zamboanga, Philippines',
-        caption: ''
-      },
-      {
-        id: 3,
-        imageUrl: '',
-        status: 'Healthy',
-        confidence: 95,
-        date: '2025-04-23',
-        farmerName: 'Vince Jay',
-        farmerAvatar: '',
-        location: 'Negros Occidental, Philippines',
-        caption: ''
-      }
-    ]
-  }, 500)
+  fetchCacaoRecent()
+  fetchCacaoStatusCount()
 })
+
+async function fetchCacaoRecent() {
+  try{
+    const response = await cacaoServices.getRecent()
+    if(response.data.cacao){
+      state.cacaos = response.data.cacao
+      state.fetchingRecent = false
+    }
+  }catch(error: any){
+
+  }
+}
+
+async function fetchCacaoStatusCount() {
+  try{
+    const response = await cacaoServices.getStatusCount()
+    if(response.data){
+      state.status.healthy = response.data.healthy
+      state.status.diseased = response.data.diseased
+      state.status.all = response.data.all
+      state.fetchingStatusCount = false
+    }
+  }catch(error: any){}
+}
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)

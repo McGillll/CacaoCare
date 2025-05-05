@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="bg-white p-4 rounded-lg shadow">
     <div class="flex items-center">
       <div class="mr-3 p-2 rounded-full bg-opacity-20" :class="circleColor">
@@ -14,7 +14,8 @@
       </div>
       <div>
         <h3 class="text-sm text-gray-500">{{ title }}</h3>
-        <p class="text-2xl font-bold">{{ value }}</p>
+        <SpinnerElement v-if="props.isLoading" :size="30"/>
+        <p v-else class="text-2xl font-bold">{{ value }}</p>
       </div>
     </div>
   </div>
@@ -25,6 +26,7 @@ type IconType = 'scan' | 'healthy' | 'diseased'
 
 const props = defineProps<{
   title: string
+  isLoading: boolean
   value: string | number
   icon?: IconType
 }>()
