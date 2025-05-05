@@ -1,4 +1,5 @@
-<template>
+<template>]
+  <NuxtLayout />
   <AdminLayout :user="state.user">
     <UserManagement />
   </AdminLayout>

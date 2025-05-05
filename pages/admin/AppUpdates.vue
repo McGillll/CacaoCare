@@ -1,4 +1,5 @@
 <template>
+  <NuxtLayout />
   <AdminLayout :user="state.user">
     <template #title>App Updates</template>
 

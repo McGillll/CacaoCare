@@ -1,4 +1,5 @@
 <template>
+  <NuxtLayout />
   <div class="min-h-screen bg-gray-50 flex flex-col">
     <Header :user="state.user" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 

@@ -2,7 +2,7 @@
     <HeadTitle title="CacaoCare - Sign In" />
     <NuxtLayout name="app">
         <section class="relative min-h-screen flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
-            <div class="absolute inset-0 w-full h-full z-0">
+        <div class="absolute inset-0 w-full h-full z-0">
             <img class="object-cover w-full h-full" :src="Background" alt="">
         </div>
         <div class="bg-black opacity-40 absolute inset-0 w-full h-full z-0"/>

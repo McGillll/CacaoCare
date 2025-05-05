@@ -1,101 +1,101 @@
 <template> 
-    <NuxtLayout />
-    <HeadTitle title="CacaoCare - Signup" />
-    <NavigationLandingpage />
-    <section class="relative min-h-screen py-20 flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
-        <div class="absolute inset-0 w-full h-full z-0">
-            <img class="object-cover w-full h-full" :src="Background" alt="">
-        </div>
-        <div class="bg-black opacity-40 absolute inset-0 w-full h-full z-0"/>
-        <div class="bg-green-700 opacity-5 absolute inset-0 w-full h-full z-0" />
-        <div class="bg-yellow-900 opacity-5 absolute inset-0 w-full h-full z-0" />
-        <div class="z-20 container mx-auto bg-white text-gray-700 p-10 rounded-lg shadow-lg max-w-lg">
-            <Spinner v-if="state.isLoading" :size="35"/>
-            <h1 class="text-3xl font-bold text-center text-green-700 mb-6">Sign Up</h1>
-            <form @submit.prevent="handleSubmit">
-                <!-- Username -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2" for="username">Username</label>
-                    <input
+    <NuxtLayout name="app">
+
+        <HeadTitle title="CacaoCare - Signup" />
+        <section class="relative min-h-screen py-20 flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
+            <div class="absolute inset-0 w-full h-full z-0">
+                <img class="object-cover w-full h-full" :src="Background" alt="">
+            </div>
+            <div class="bg-black opacity-40 absolute inset-0 w-full h-full z-0"/>
+            <div class="bg-green-700 opacity-5 absolute inset-0 w-full h-full z-0" />
+            <div class="bg-yellow-900 opacity-5 absolute inset-0 w-full h-full z-0" />
+            <div class="z-20 container mx-auto bg-white text-gray-700 p-10 rounded-lg shadow-lg max-w-lg">
+                <Spinner v-if="state.isLoading" :size="35"/>
+                <h1 class="text-3xl font-bold text-center text-green-700 mb-6">Sign Up</h1>
+                <form @submit.prevent="handleSubmit">
+                    <!-- Username -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2" for="username">Username</label>
+                        <input
                         type="text"
                         id="username"
                         v-model="state.user.username"
                         class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Enter your email"
                         required
-                    />
-                    <FormError v-if="state.errors?.username" :error="state.errors?.username?.[0]"/>
-                </div>
-                <!-- Email -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
-                    <input
+                        />
+                        <FormError v-if="state.errors?.username" :error="state.errors?.username?.[0]"/>
+                    </div>
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
+                        <input
                         type="email"
                         id="email"
                         v-model="state.user.email"
                         class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Enter your email"
                         required
-                    />
-                    <FormError v-if="state.errors?.email" :error="state.errors?.email?.[0]"/>
-                </div>
-
-                <!-- Password -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-medium mb-2" for="password">Password</label>
-                    <input
+                        />
+                        <FormError v-if="state.errors?.email" :error="state.errors?.email?.[0]"/>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2" for="password">Password</label>
+                        <input
                         type="password"
                         id="password"
                         v-model="state.user.password"
                         class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Create a password"
                         required
-                    />
-                    <FormError v-if="state.errors?.password" error="Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."/>
-                </div>
-                
-                <!-- Checkbox -->
-                <div class="mb-4 w-full">
-                    <label @click="isFromDavao" class="inline-flex items-center text-gray-700 font-medium">
-                        <span>From Davao?</span>
-                        <input
+                        />
+                        <FormError v-if="state.errors?.password" error="Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."/>
+                    </div>
+                    
+                    <!-- Checkbox -->
+                    <div class="mb-4 w-full">
+                        <label @click="isFromDavao" class="inline-flex items-center text-gray-700 font-medium">
+                            <span>From Davao?</span>
+                            <input
                             type="checkbox"
                             v-model="state.fromDavao"
                             class="form-checkbox ml-4 h-4 m;-auto w-4 text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                    </label>
-                </div>
-
-
-                <div v-if="!state.fromDavao">
-                <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
-                    <!-- Region Dropdown -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-2" for="region">Region</label>
-                        <select
-                            id="region"
-                            v-model="selectedRegion"
-                            @change="fetchProvinces"
-                            class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                            required
-                        >
-                            <option value="" disabled selected>Select Region</option>
-                            <option v-for="region in regions" :key="region.code" :value="region">
-                                {{ region.name }}
-                            </option>
-                        </select>
+                            />
+                        </label>
                     </div>
-
-                    <!-- Province Dropdown -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-2" for="province">Province</label>
-                        <select
+                    
+                    
+                    <div v-if="!state.fromDavao">
+                        <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+                            <!-- Region Dropdown -->
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2" for="region">Region</label>
+                                <select
+                                id="region"
+                                v-model="selectedRegion"
+                                @change="fetchProvinces"
+                                class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                required
+                                >
+                                <option value="" disabled selected>Select Region</option>
+                                <option v-for="region in regions" :key="region.code" :value="region">
+                                    {{ region.name }}
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <!-- Province Dropdown -->
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2" for="province">Province</label>
+                            <select
                             id="province"
                             v-model="selectedProvince"
                             @change="fetchCities"
                             class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
-                        >
+                            >
                             <option value="" disabled selected>Select Province</option>
                             <option v-for="province in provinces" :key="province.code" :value="province">
                                 {{ province.name }}
@@ -113,7 +113,7 @@
                     @change="fetchBarangays"
                     class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
-                >
+                    >
                     <option value="" disabled selected>Select City</option>
                     <option v-for="city in cities" :key="city.code" :value="city">
                         {{ city.name }}
@@ -124,35 +124,36 @@
             <div class="mb-4">
                 <label class="block text-gray-700 font-medium mb-2" for="barangay">Barangay</label>
                 <select
-                    id="barangay"
-                    v-model="selectedBarangay"
-                    class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    required
+                id="barangay"
+                v-model="selectedBarangay"
+                class="w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                required
                 >
-                    <option value="" disabled selected>Select Barangay</option>
-                    <option v-for="barangay in barangays" :key="barangay.code" :value="barangay">
-                        {{ barangay.name }}
-                    </option>
-                </select>
-            </div>
-                <!-- Submit Button -->
-                <button
-                    type="submit"
-                    class="bg-green-500 text-white font-bold px-6 py-2 rounded-lg w-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                    Sign Up
-                </button>
-            </form>
-
-            <!-- Already Have an Account -->
-            <div class="text-center mt-6">
-                <NuxtLink to="/signin" class="text-green-500 hover:underline">
-                    Already have an account? Log in
-                </NuxtLink>
-            </div>
+                <option value="" disabled selected>Select Barangay</option>
+                <option v-for="barangay in barangays" :key="barangay.code" :value="barangay">
+                    {{ barangay.name }}
+                </option>
+            </select>
         </div>
-    </section>
-    <Footer />
+        <!-- Submit Button -->
+        <button
+        type="submit"
+        class="bg-green-500 text-white font-bold px-6 py-2 rounded-lg w-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+        Sign Up
+    </button>
+</form>
+
+<!-- Already Have an Account -->
+<div class="text-center mt-6">
+    <NuxtLink to="/signin" class="text-green-500 hover:underline">
+        Already have an account? Log in
+    </NuxtLink>
+</div>
+</div>
+</section>
+<Footer />
+</NuxtLayout>
 </template>
 
 <script setup lang="ts">
