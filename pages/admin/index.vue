@@ -99,6 +99,7 @@ async function fetchTotalUser(){
 }
 
 onUnmounted(() => {
+
   window.removeEventListener('resize', handleResize)
 })
 </script>

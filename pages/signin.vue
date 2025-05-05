@@ -75,10 +75,7 @@ import { authService } from '~/composables/api/sevices/AuthService';
 import { reverseValue } from '~/composables/function/ReverseValue';
 import type { User } from '~/composables/model/User';
 import Background from '~/assets/img/herosection_background.jpg'
-import { fetchCurrentUser } from '~/composables/function/GetCurrentUser';
 import { redirectService } from '~/composables/function/Redirect';
-import { useUserStore } from '~/composables/model/globalVar';
-
 const state = reactive({
     user: {} as User,
     showError: false,
@@ -88,7 +85,7 @@ const state = reactive({
 
 async function handleLogin() {
     try{
-        state.isLoading = reverseValue.reverseBool(state.isLoading);
+        state.isLoading = true
         state.showError = false
         const formData = new FormData();
         formData.append('email', state.user.email)
@@ -96,10 +93,10 @@ async function handleLogin() {
         const response = await authService.login(formData);
         if(response.data){
             if(response.data.email_verified_at){
-                state.isLoading = reverseValue.reverseBool(state.isLoading)
+                state.isLoading = false
                 localStorage.setItem("_token", response?.token) 
-                const user = useUserStore()
-                user.setUser({username: state.user.username, profile: state.user.profile})
+                localStorage.setItem("username", response.data.username);
+                localStorage.setItem("profile", response.data.profile)
                 loginClose();
                 if(response.data.role === 'admin'){
                     navigateTo('admin')
@@ -123,12 +120,18 @@ async function handleLogin() {
 
 
 onMounted(async()=>{
-   state.user = await fetchCurrentUser(state.user);
-   state.isLoading = false
-   if(state.user){
-    redirectService.checkAdminPrevillage(state.user.role)
-    redirectService.checkUserPrevillage(state.user.role)
-   }
+    if(!localStorage.getItem('_token')){
+        state.isLoading = false
+    }
+    try{
+        const response = await authService.getCurrentUser()
+        if(response.data){
+            redirectService.checkAdminPrevillage(response.data.role)
+            redirectService.checkUserPrevillage(response.data.role)
+        }
+    }catch(error: any){
+        state.isLoading = false
+    }
 })
 function closeError(){
     state.showError = !state.showError

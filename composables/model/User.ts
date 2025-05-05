@@ -1,7 +1,7 @@
 export interface User{
     id: Number,
     uuid: string,
-    username:string,
+    username:string | null,
     email: string,
     password: string,
     profile: string,
