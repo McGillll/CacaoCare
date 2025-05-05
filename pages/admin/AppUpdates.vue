@@ -1,7 +1,7 @@
 <template>
   <HeadTitle title="CacaoCare" />
   <NuxtLayout />
-  <AdminLayout :user="state.user">
+  <AdminLayout >
     <template #title>App Updates</template>
 
     <template #actions>
@@ -125,17 +125,9 @@ function downloadApp(downloadLink : string){
 }
   
 onMounted(()=>{
-  fetchUser();
   fetchAllDownloadLinks()
 })
 
-async function fetchUser(){
-  try{
-    state.user = await fetchCurrentUser(state.user);
-    redirectService.checkUserPrevillage(state.user.role)
-  }
-  catch(error:any){}
-}
 async function fetchAllDownloadLinks(){
   try{
     const response = await downloadLinkService.getAllDownloadLink()

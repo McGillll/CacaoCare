@@ -15,22 +15,11 @@
     </div>
 
     <div class="flex items-center gap-6">
-      <!-- Notifications -->
-      <button class="hover:text-green-600 relative">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-        <span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"></span>
-      </button>
-
       <!-- Profile Dropdown -->
       <div class="relative">
         <button @click="toggleDropdown" class="flex items-center gap-2 focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-              d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
+          <img :src="state.user.profile" :alt="state.user.username">
+          <span class="font-bold">{{ state.user.username }}</span>
         </button>
 
         <div v-if="dropdownOpen"
@@ -50,12 +39,18 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
+import type { User } from '~/composables/model/User'
 
 defineProps({
   showSidebarToggle: {
     type: Boolean,
     default: true
   }
+})
+
+const state = reactive({
+  user: {} as User
 })
 
 const dropdownOpen = ref(false)
@@ -78,7 +73,16 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
+  fetchUser()
+
 })
+
+async function fetchUser() {
+  try{
+    state.user = await fetchCurrentUser(state.user) 
+  } catch(error: any){}
+}
+
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)

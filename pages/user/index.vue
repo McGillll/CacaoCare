@@ -139,10 +139,14 @@ import Footer from '@/components/user/Footer.vue'
 import Card from '@/components/user/SummaryCards.vue'
 import type { Cacao } from '~/composables/model/Cacao'
 import { cacaoServices } from '~/composables/api/sevices/CacaoService'
+import type { User } from '~/composables/model/User'
+import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
+import { redirectService } from '~/composables/function/Redirect'
 
 const state = reactive({
   cacaos: [{} as Cacao],
   selected: {} as Cacao,
+  user: {} as User,
   status: {
     healthy:0,
     diseased:0,
@@ -158,24 +162,10 @@ interface Alert {
   severity: 'info' | 'warning' | 'danger'
 }
 
-interface ScanStats {
-  total: number
-  healthy: number
-  diseased: number
-}
-
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)
 const modalOpen = ref(false)
 
-const scanStats = ref<ScanStats>({
-  total: 0,
-  healthy: 0,
-  diseased: 0
-})
-
-
-const hasScans = computed(() => scanStats.value.total > 0)
 
 const priorityAlert = computed<Alert>(() => {
   const location = state.cacaos[0]?.city || 'your city'

@@ -2,7 +2,7 @@
   <HeadTitle title="CacaoCare" />
   <NuxtLayout />
   <div class="min-h-screen bg-gray-50 flex flex-col">
-    <Header :user="state.user" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+    <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
     <div class="flex flex-1 relative">
       <!-- Sidebar & Overlay -->
@@ -72,18 +72,9 @@ const handleResize = () => {
 onMounted(() => {
   handleResize()
   window.addEventListener('resize', handleResize)
-  fetchUser()
   fetchTotalUser()
   fetchTodayUpload()
 })
-
-async function fetchUser() {
-  try{
-    state.user = await fetchCurrentUser(state.user);
-    redirectService.checkUserPrevillage(state.user.role)
-  }catch(error: any){}
-}
-
 async function fetchTodayUpload() {
   try{
     const response = await cacaoServices.getUploadedToday()
@@ -106,18 +97,6 @@ async function fetchTotalUser(){
 
   }
 }
-
-// async function fetchCurrentUser(){
-//   try{
-//     const response = await authService.getCurrentUser()
-//     if(response.data){
-//       state.user = response.data
-//       redirectService.checkUserPrevillage(state.user.role)
-//     }
-//   }catch(error : any){
-
-//   }
-// }
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)

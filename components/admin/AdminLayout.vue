@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50 flex flex-col">
-    <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" :user="user" />
+    <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
     <div class="flex flex-1 relative">
       <!-- Sidebar & Overlay -->
@@ -43,11 +43,6 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import Header from '@/components/admin/Header.vue'
 import Sidebar from '@/components/admin/Sidebar.vue'
 import Footer from '@/components/admin/Footer.vue'
-import type { User } from '~/composables/model/User'
-
-defineProps<{
-  user: User
-}>()
 
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)

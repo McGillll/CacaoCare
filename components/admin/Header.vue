@@ -30,12 +30,12 @@
           class="flex items-center gap-2 focus:outline-none"
           >
           <img
-          :src=props.user.profile
+          :src=state.user.profile
           alt="Admin Avatar"
           class="w-8 h-8 rounded-full"
           />
           <div class="text-sm hidden md:block">
-            <p class="font-medium">{{ props.user.username }}</p>
+            <p class="font-medium">{{ state.user.username }}</p>
           </div>
         </button>
       </div>
@@ -66,17 +66,27 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { authService } from '~/composables/api/sevices/AuthService'
+import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
+import { redirectService } from '~/composables/function/Redirect'
 import type { User } from '~/composables/model/User'
 
 const $route = useRoute()
 const dropdownOpen = ref(false)
 
-const props = defineProps({
-  user: {
-    type: Object ,
-    required: true
-  }
+const state = reactive({
+  user: {} as User
 })
+
+onMounted(()=>{
+  fetchUser()
+})
+
+async function fetchUser() {
+  try{
+    state.user = await fetchCurrentUser(state.user) 
+    redirectService.checkUserPrevillage(state.user.role)
+  } catch(error: any){}
+}
 
 const logout = async() => {
   const response = await authService.logout()
