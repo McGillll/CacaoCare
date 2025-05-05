@@ -1,4 +1,4 @@
-<template>]
+<template>
   <HeadTitle title="CacaoCare" />
   <NuxtLayout />
   <AdminLayout >
