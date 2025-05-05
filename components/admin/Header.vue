@@ -72,6 +72,7 @@ import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
 import { redirectService } from '~/composables/function/Redirect'
 import type { User } from '~/composables/model/User'
 import Logo from '~/assets/img/cacao_care_logo1.jpg'
+import { useUserStore } from '~/composables/model/globalVar'
 
 const $route = useRoute()
 const dropdownOpen = ref(false)
@@ -81,6 +82,9 @@ const state = reactive({
 })
 
 onMounted(()=>{
+  const user = useUserStore()
+  state.user.username = user.username
+  state.user.profile = user.profile
   fetchUser()
 })
 

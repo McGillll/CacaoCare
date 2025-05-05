@@ -77,6 +77,7 @@ import type { User } from '~/composables/model/User';
 import Background from '~/assets/img/herosection_background.jpg'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser';
 import { redirectService } from '~/composables/function/Redirect';
+import { useUserStore } from '~/composables/model/globalVar';
 
 const state = reactive({
     user: {} as User,
@@ -97,6 +98,8 @@ async function handleLogin() {
             if(response.data.email_verified_at){
                 state.isLoading = reverseValue.reverseBool(state.isLoading)
                 localStorage.setItem("_token", response?.token) 
+                const user = useUserStore()
+                user.setUser({username: state.user.username, profile: state.user.profile})
                 loginClose();
                 if(response.data.role === 'admin'){
                     navigateTo('admin')

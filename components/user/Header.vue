@@ -53,7 +53,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
 import type { User } from '~/composables/model/User'
-import Logo from "~/assets/img/cacao_care_logo1.jpg"
+import Logo from '~/assets/img/cacao_care_logo1.jpg';
+import { useUserStore } from '~/composables/model/globalVar';
 
 defineProps({
   showSidebarToggle: {
@@ -86,8 +87,10 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
+  const user = useUserStore()
+  state.user.username = user.username
+  state.user.profile = user.profile
   fetchUser()
-
 })
 
 async function fetchUser() {
