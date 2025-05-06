@@ -18,7 +18,25 @@
       <h2 class="text-lg font-medium mb-2">History</h2>
       <div class="mx-5">
         <div v-if="state.isFetching" class="w-full flex justify-center">
-          <SpinnerElement :size="30"/>
+          <div class="bg-white shadow-md sm:rounded-lg w-full">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="sm:flex sm:items-start sm:justify-between">
+                <div>
+                  <!-- Skeleton for title -->
+                  <div class="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+                  <!-- Skeleton for description -->
+                  <div class="mt-2 space-y-2">
+                    <div class="h-3 w-48 bg-gray-200 rounded animate-pulse"></div>
+                    <div class="h-3 w-40 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                </div>
+                <div class="mt-5 sm:mt-0 sm:ml-6 sm:flex sm:shrink-0 sm:items-center">
+                  <!-- Skeleton for button -->
+                  <div class="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <ul v-else class="space-y-5 mt-10">
             <li

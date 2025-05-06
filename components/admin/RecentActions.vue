@@ -1,19 +1,19 @@
 <template>
     <div class="bg-white p-4 shadow rounded-lg">
       <h2 class="text-lg font-semibold mb-4">Recent Actions</h2>
-      <ul class="space-y-2 text-sm text-gray-700">
-        <li class="flex">✅
-          <SpinnerElement v-if="state.fetchingLatestDate" :size="20"/>
+      <ul class="space-y-2 flex flex-col  text-sm text-gray-700">
+        <li class="flex items-center">✅
+          <div v-if="state.fetchingLatestDate" class="w-full h-6 rounded animate-pulse bg-gray-200"/>
           <p v-else>
              Last app update pushed on {{state.latestDate}} 
           </p></li>
-        <li class="flex">👥
-          <SpinnerElement v-if="state.fetchingTotalSignUp" :size="20"/>
+        <li class="flex items-center">👥
+          <div v-if="state.fetchingTotalSignUp" class="w-full h-6 rounded animate-pulse bg-gray-200"/>
           <p v-else>
              {{state.totalSignUps}} new farmer sign-ups today
           </p> </li>
         <li class="flex items-center">⚠️
-          <SpinnerElement v-if="state.fetchingMostDisease" :size="20"/>
+          <div v-if="state.fetchingMostDisease" class="w-full h-6 rounded animate-pulse bg-gray-200"/>
           <p v-else>
              Urgent Alert: {{ state.mostDisease.label }} outbreak in {{ state.mostDisease.city }}
           </p></li>

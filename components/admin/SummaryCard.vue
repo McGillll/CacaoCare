@@ -1,8 +1,10 @@
 <template>
-    <div class="bg-white p-4 shadow rounded-lg w-full hover:bg-green-100 transition-all duration-500">
+    <div class="bg-white p-4 h-fit shadow rounded-lg w-full hover:bg-green-100 transition-all duration-500">
       <p class="text-sm text-gray-500">{{ title }}</p>
-      <SpinnerElement v-if="props.isLoading" :size="25" />
-      <p v-else :class="valueClass">{{ value }}</p>
+      <div class="w-full h-7">
+        <div v-if="props.isLoading" class="w-full h-full rounded bg-gray-200 animate-pulse"/>
+        <p v-else :class="valueClass">{{ value }}</p>
+      </div>
     </div>
   </template>
   
