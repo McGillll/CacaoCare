@@ -13,6 +13,10 @@ class CacaoService extends BaseAPIService {
         return await this.request('/cacao/status/count', 'GET')
     }
 
+    async getStatusCountByUser(id: Object):Promise<any>{
+        return await this.request(`/cacao/upload/count/${id}`, 'GET')
+    }
+
     async getHighestDiseaseWithinTheWeek():Promise<any>{
         return await this.request('/cacao/disease/weeks', 'GET')
     }

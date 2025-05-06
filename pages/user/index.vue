@@ -17,7 +17,7 @@
       <main :class="['flex-1 p-4 sm:p-6 overflow-y-auto transition-all duration-300', modalOpen ? 'blur-sm' : '']">
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          <Card title="Pods Scanned" :value="state.status ? state.status.all : ''" icon="scan" :isLoading="state.fetchingStatusCount" />
+          <Card title="My Uploads" :value="state.status ? state.status.all : ''" icon="scan" :isLoading="state.fetchingStatusCount" />
           <Card title="Healthy" :value="state.status ? state.status.healthy : ''" icon="healthy" :isLoading="state.fetchingStatusCount" />
           <Card title="Diseased" :value="state.status ? state.status.diseased : ''" icon="diseased" :isLoading="state.fetchingStatusCount" />
         </div>
@@ -226,9 +226,12 @@ const closeModal = () => {
   modalOpen.value = false
 }
 
-onMounted(() => {
+onMounted(async() => {
   handleResize()
   window.addEventListener('resize', handleResize)
+  try{
+    state.user = await fetchCurrentUser(state.user)
+  }catch(error:any){}
   fetchCacaoRecent()
   fetchCacaoStatusCount()
 })
@@ -247,7 +250,7 @@ async function fetchCacaoRecent() {
 
 async function fetchCacaoStatusCount() {
   try{
-    const response = await cacaoServices.getStatusCount()
+    const response = await cacaoServices.getStatusCountByUser(state.user.id)
     if(response.data){
       state.status.healthy = response.data.healthy
       state.status.diseased = response.data.diseased

@@ -36,6 +36,10 @@
 
         <div v-if="dropdownOpen"
           class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+          <NuxtLink to="/user/myprofile"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+            My Profile
+          </NuxtLink>
           <NuxtLink to="/user/settings"
             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
             Settings

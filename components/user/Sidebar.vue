@@ -16,16 +16,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
               <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm0 2h12v5l-2.5-2.5a1 1 0 00-1.414 0L9 11l-2.086-2.086a1 1 0 00-1.414 0L4 10V5z" />
             </svg>
-            Pod Scans
-          </NuxtLink>
-        </li>
-
-        <li>
-          <NuxtLink :to="`/user/myscans`" class="sidebar-link" :class="{ active: isActive('/user/myscans') }">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
-              <path fill="currentColor" fill-rule="evenodd" d="M12 7a5 5 0 00-5 5 5 5 0 0010 0 5 5 0 00-5-5zm0 8a3 3 0 11-.001-6.001A3 3 0 0112 15zM20 4h-4.586l-1-1H9.586l-1 1H4a2 2 0 00-2 2v14a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zM4 18V6h16v12H4z" clip-rule="evenodd" />
-            </svg>
-            My Scans
+            Pod Feed
           </NuxtLink>
         </li>
 
