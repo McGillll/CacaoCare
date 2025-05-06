@@ -94,6 +94,7 @@ async function fetchUser() {
 }
 
 const logout = async() => {
+  dropdownOpen.value = false
   const response = await authService.logout()
   navigateTo("/signin")
   localStorage.clear()

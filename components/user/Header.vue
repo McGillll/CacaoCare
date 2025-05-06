@@ -54,6 +54,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
 import type { User } from '~/composables/model/User'
 import Logo from '~/assets/img/cacao_care_logo1.jpg';
+import { authService } from '~/composables/api/sevices/AuthService';
 
 defineProps({
   showSidebarToggle: {
@@ -72,9 +73,11 @@ const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
 }
 
-const logout = () => {
-  console.log('Logging out...')
+const logout = async() => {
   dropdownOpen.value = false
+  const response = await authService.logout()
+  navigateTo("/signin")
+  localStorage.clear()
 }
 
 const handleClickOutside = (event: MouseEvent) => {
