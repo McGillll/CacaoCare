@@ -12,10 +12,12 @@
           <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
         </svg>
       </div>
-      <div>
-        <h3 class="text-sm text-gray-500">{{ title }}</h3>
-        <SpinnerElement v-if="props.isLoading" :size="30"/>
-        <p v-else class="text-2xl font-bold">{{ value }}</p>
+      <div class="w-full ">
+        <h3 class="text-sm font-medium text-gray-900/40">{{ title }}</h3>
+        <div class="grow h-7">
+          <div v-if="props.isLoading" class="w-full h-full rounded bg-gray-200 animate-pulse"/>
+          <p v-else class="text-2xl font-bold">{{ value }}</p>
+        </div>
       </div>
     </div>
   </div>
