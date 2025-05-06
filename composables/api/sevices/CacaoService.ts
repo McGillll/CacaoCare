@@ -16,6 +16,10 @@ class CacaoService extends BaseAPIService {
     async getHighestDiseaseWithinTheWeek():Promise<any>{
         return await this.request('/cacao/disease/weeks', 'GET')
     }
+
+    async getCacaoFeed(param: FormData) : Promise<any>{
+        return await this.request(`/cacao/feed/${param.get('order')}/${param.get('filter')} ?username=${param.get('username')}&page=${param.get('page')}`, 'GET')
+    }
 }
 
 export const cacaoServices = new CacaoService();
