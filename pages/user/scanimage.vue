@@ -189,7 +189,7 @@
               &times;
             </button>
           </div>
-          <div class="w-full bg-neutral-50">
+          <div class="w-full bg-neutral-100 shadow-inner">
             <img :src="state.selectedPost.photo || '/default-pod.jpg'" class="w-full object-contain mt-4 h-[320px]" />
           </div>
           <div class="p-4">
@@ -206,7 +206,7 @@
                       'bg-red-100 text-red-800': state.selectedPost?.label === 'Black Pod',
                       'bg-blue-100 text-blue-800': state.selectedPost?.label === 'Frosty Pod'
                     }">
-                {{ state.selectedPost?.label }} ({{ state.selectedPost?.confidence }}%)
+                {{ state.selectedPost?.label }} ({{ state.selectedPost?.confidence }})
               </div>
             </div>
 

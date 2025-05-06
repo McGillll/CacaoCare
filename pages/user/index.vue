@@ -125,8 +125,8 @@
               &times;
             </button>
           </div>
-          <div class="w-full bg-neutral-50">
-            <img :src="state.selected?.photo || '/default-pod.jpg'" class="w-full object-contain mt-4 h-[320px]" />
+          <div class="w-full bg-neutral-100 shadow-inner">
+            <img :src="state.selected?.photo || '/default-pod.jpg'" class="w-full object-contain  h-[320px]" />
           </div>
           <div class="p-4">
             <div class="flex justify-between items-center mb-3">
@@ -142,7 +142,7 @@
                       'bg-red-100 text-red-800': state.selected?.label === 'Black Pod',
                       'bg-blue-100 text-blue-800': state.selected?.label === 'Frosty Pod'
                     }">
-                {{ state.selected?.label }} ({{ state.selected?.confidence }}%)
+                {{ state.selected?.label }} ({{ state.selected?.confidence }})
               </div>
             </div>
 
