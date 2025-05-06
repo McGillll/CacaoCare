@@ -113,7 +113,7 @@ async function handleLogin() {
         }
     }catch(error: any){
         state.showError = true
-        state.isLoading = reverseValue.reverseBool(state.isLoading);
+        state.isLoading = false;
     }
 }
 
@@ -122,6 +122,7 @@ async function handleLogin() {
 onMounted(async()=>{
     if(!localStorage.getItem('_token')){
         state.isLoading = false
+        return
     }
     try{
         const response = await authService.getCurrentUser()
