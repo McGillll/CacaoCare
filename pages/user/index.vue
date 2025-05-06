@@ -27,9 +27,28 @@
           <h2 class="text-lg font-semibold mb-4">Recent Pod Scans</h2>
 
           <div class="space-y-4 md:space-y-0 md:flex md:overflow-x-auto md:pb-4 md:mx-4 md:gap-4 md:p-5"> 
-            <div v-if="state.fetchingRecent" class="w-full h-full flex justify-center items-center">
-              <SpinnerElement  :size="40"/>
+            <!--Skeleton Loader-->
+            <div 
+              v-if="state.fetchingRecent" 
+              v-for="n in 3" :key=n
+              class="border rounded-lg shadow-md overflow-hidden min-w-full md:min-w-[280px] flex-shrink-0 bg-white animate-pulse p-4"
+            >
+              <!-- Profile Skeleton -->
+              <div class="flex items-center p-3 border-b">
+                <div class="w-8 h-8 bg-gray-300 rounded-full mr-3"></div>
+                <div>
+                  <div class="h-4 w-24 bg-gray-300 rounded mb-2"></div>
+                  <div class="h-3 w-32 bg-gray-300 rounded"></div>
+                </div>
+              </div>
+
+              <!-- Image Skeleton -->
+              <div class="relative mb-8">
+                <div class="w-full h-48 bg-gray-300 rounded"></div>
+                <div class="absolute top-2 right-2 px-2 py-1 rounded bg-gray-300 h-4 w-24"></div>
+              </div>
             </div>
+            <!--Actual-->
             <div
             @click="openModal(cacao)"
             v-else 
@@ -54,6 +73,14 @@
                       }">
                   {{ cacao.label }} ({{ cacao.confidence }})
                 </div>
+              </div>
+              <div class="p-3">
+                <button 
+                  @click="openModal(cacao)" 
+                  class="text-green-600 text-xs font-medium hover:underline"
+                >
+                  View
+                </button>
               </div>
             </div>
           </div>
