@@ -20,9 +20,12 @@
       <main class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
         <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
 
-        <div class="flex w-full  gap-4">
-          <SummaryCard @click="navigateTo('admin/UserManagement')" title="Total Registered Farmers" :isLoading=state.totalUserLoading :value=state.totalUser value-class="text-xl font-semibold text-green-700" />
-          <SummaryCard title="New Uploaded Images (24h)" :isLoading="state.totalUploadedCacaoTodayLoading" :value=state.totalUploadedCacaoToday value-class="text-xl font-semibold text-red-600" />
+        <div class="flex flex-wrap w-full justify-between gap-4">
+          <SummaryCard @click="navigateTo('admin/UserManagement')" title="Total Registered Farmers" :isLoading=state.totalUserLoading :value=state.totalUser value-class="text-xl font-semibold text-blue-600" />
+          <SummaryCard title="Total Uploads" :isLoading="state.fetchStatusCount" :value=state.status.all value-class="text-xl font-semibold text-blue-600" />
+          <SummaryCard title="New Uploaded Images (24h)" :isLoading="state.totalUploadedCacaoTodayLoading" :value=state.totalUploadedCacaoToday value-class="text-xl font-semibold text-yellow-600" />
+          <SummaryCard title="Healthy" :isLoading="state.fetchStatusCount" :value=state.status.healthy value-class="text-xl font-semibold text-green-600" />
+          <SummaryCard title="Diseased" :isLoading="state.fetchStatusCount" :value=state.status.diseased value-class="text-xl font-semibold text-red-600" />
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -58,9 +61,15 @@ const isLargeScreen = ref(false)
 
 const state = reactive({
   user: {} as User,
+  status: {
+    healthy: 0,
+    diseased: 0,
+    all: 0
+  },
   totalUser: 0,
   totalUserLoading: true,
   totalUploadedCacaoTodayLoading:true,
+  fetchStatusCount: true,
   totalUploadedCacaoToday: 0
 })
 
@@ -74,7 +83,21 @@ onMounted(() => {
   window.addEventListener('resize', handleResize)
   fetchTotalUser()
   fetchTodayUpload()
+  fetchCacaoStatusCount()
 })
+
+async function fetchCacaoStatusCount() {
+  try{
+    const response = await cacaoServices.getStatusCount()
+    if(response.data){
+      state.status.healthy = response.data.healthy
+      state.status.diseased = response.data.diseased
+      state.status.all = response.data.all
+      state.fetchStatusCount = false
+    }
+  }catch(error: any){}
+}
+
 async function fetchTodayUpload() {
   try{
     const response = await cacaoServices.getUploadedToday()
