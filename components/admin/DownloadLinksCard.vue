@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-white shadow-md sm:rounded-lg">
+    <div class="bg-white shadow-md sm:rounded-lg hover:bg-green-100 transition-all duration-500">
       <div class="px-4 py-5 sm:p-6">
         <div class="sm:flex sm:items-start sm:justify-between">
-          <div>
+          <div @click="downloadApp(downloadLink.download_link)"  class="h-full w-full">
             <h3 class="text-base font-semibold text-gray-900">CacaoCare <span class="text-green-500">{{ props.downloadLink.version }}</span></h3>
             <div class="mt-2 max-w-xl text-sm text-gray-500">
               <p>{{ props.downloadLink.description }}</p>
@@ -17,7 +17,9 @@
   </template>
 
 <script setup lang="ts">
-
+    function downloadApp(downloadLink : string){
+        window.open(downloadLink, '_blank');
+    }
     const props = defineProps({
         downloadLink:{
             type: Object,

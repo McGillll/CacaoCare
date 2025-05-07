@@ -44,7 +44,7 @@
             :key="index"
             class="border-b pb-2"
             >
-            <DownloadLinksCard @click="downloadApp(downloadLink.download_link)" :downloadLink="downloadLink" class="hover:bg-green-100 transition-all duration-500"/>
+            <DownloadLinksCard :downloadLink="downloadLink"/>
           </li>
         </ul>
       </div>
@@ -138,9 +138,7 @@ const state = reactive({
   isSaved: false
 })
 
-function downloadApp(downloadLink : string){
-    window.open(downloadLink, '_blank');
-}
+
   
 onMounted(()=>{
   fetchAllDownloadLinks()
