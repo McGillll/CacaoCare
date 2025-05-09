@@ -12,7 +12,7 @@
 
       <div
         v-if="sidebarOpen && !isLargeScreen"
-        class="fixed inset-0 z-40 bg-black bg-opacity-30"
+        class="fixed inset-0 z-100 bg-black bg-opacity-30"
         @click="sidebarOpen = false"
       />
 
@@ -29,14 +29,26 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ChartCard title="Disease Heatmap" placeholder="Map Widget" />
+          <ChartCard title="Disease Heatmap" >
+            <div class="flex flex-col w-full">
+              <select 
+                @change="()=>{
+                  console.log('hello')
+                  fetchHeatMapData()
+                }"
+                v-model="state.selectedFilter" class=" focus:border-none transition-all duration-500 rounded p-2">
+                <option value="Diseases">Diseases</option>
+                <option value="Black Pod Rot">Black Pod Rot</option>
+                <option value="Frosty Pod Rot">Frosty Pod Rot</option>
+              </select>
+              <CacaoMap :heatPoints="state.heatpoints" class="z-0"/>
+            </div>
+          </ChartCard>
           <ChartCard title="Disease Trend - Black Pod Rot" placeholder="Line Chart" />
         </div>
-
         <RecentActions />
       </main>
     </div>
-
     <Footer />
   </div>
 </template>
@@ -55,22 +67,28 @@ import type { User } from '~/composables/model/User'
 import { userService } from '~/composables/api/sevices/UserService'
 import { cacaoServices } from '~/composables/api/sevices/CacaoService'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
+import type { HeatPoint } from '~/composables/model/HeatPoint'
+import { getBarangayBoundingBox } from '~/composables/api/sevices/openStreetMapApiService'
 
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)
 
 const state = reactive({
   user: {} as User,
+  heatpoints: [{} as HeatPoint
+],
   status: {
     healthy: 0,
     diseased: 0,
     all: 0
   },
   totalUser: 0,
+  selectedFilter: 'Diseases',
   totalUserLoading: true,
   totalUploadedCacaoTodayLoading:true,
   fetchStatusCount: true,
   totalUploadedCacaoToday: 0
+  
 })
 
 const handleResize = () => {
@@ -78,13 +96,34 @@ const handleResize = () => {
   if (isLargeScreen.value) sidebarOpen.value = true
 }
 
-onMounted(() => {
+onMounted(async() => {
   handleResize()
   window.addEventListener('resize', handleResize)
   fetchTotalUser()
   fetchTodayUpload()
-  fetchCacaoStatusCount()
+  await fetchCacaoStatusCount()
+  fetchHeatMapData()
 })
+
+async function fetchHeatMapData() {
+  try{
+    state.heatpoints.length = 0
+    const response = await cacaoServices.getHeatMapData(state.selectedFilter)
+    if(response.data){
+      response.data.forEach(async (data: {
+        barangay: string,
+        city: string,
+        count: number
+      })=> {
+        let heatpoint = {} as HeatPoint
+        heatpoint.intensity = (data.count / state.status.diseased) * 100
+        heatpoint.name = data.barangay
+        heatpoint.boundingbox = await getBarangayBoundingBox(data.barangay, data.city)
+        state.heatpoints.push(heatpoint)
+      });
+    }
+  }catch(error: any){}
+}
 
 async function fetchCacaoStatusCount() {
   try{

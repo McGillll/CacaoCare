@@ -22,7 +22,11 @@ class CacaoService extends BaseAPIService {
     }
 
     async getCacaoFeed(param: FormData) : Promise<any>{
-        return await this.request(`/cacao/feed/${param.get('order')}/${param.get('filter')} ?username=${param.get('username')}&page=${param.get('page')}`, 'GET')
+        return await this.request(`/cacao/feed/${param.get('order')}/${param.get('filter')}/?username=${param.get('username')}&page=${param.get('page')}`, 'GET')
+    }
+
+    async getHeatMapData(filter: string): Promise<any>{
+        return await this.request(`/cacao/heatmap/${filter}`, 'GET')
     }
 }
 
