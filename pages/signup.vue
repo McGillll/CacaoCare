@@ -21,7 +21,7 @@
                         id="username"
                         v-model="state.user.username"
                         class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        placeholder="Enter your email"
+                        placeholder="Enter your username"
                         required
                         />
                         <FormError v-if="state.errors?.username" :error="state.errors?.username?.[0]"/>
@@ -53,9 +53,9 @@
                         />
                         <FormError v-if="state.errors?.password" error="Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."/>
                     </div>
-                    
                     <!-- Checkbox -->
-                    <div class="mb-4 w-full">
+                    <div class="mb-4 flex w-full">
+                        <label class="block items-center text-gray-700 font-medium mr-auto" >Location of Farm</label>
                         <label @click="isFromDavao" class="inline-flex items-center text-gray-700 font-medium">
                             <span>From Davao?</span>
                             <input
@@ -271,7 +271,7 @@ async function handleSubmit(){
     
     try{
         const formData = new FormData();
-        formData.append('username', state.user.username);
+        formData.append('username', state.user.username + '');
         formData.append('email', state.user.email);
         formData.append('password', state.user.password);
         formData.append('region', state.user.region)
@@ -283,6 +283,8 @@ async function handleSubmit(){
         if(response){
             navigateTo('/verification')
             localStorage.setItem("email", state.user.email)
+            localStorage.setItem("_token", response.data.token)
+
             changeLoading()
         }
     }catch(error: any){
