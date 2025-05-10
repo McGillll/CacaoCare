@@ -1,7 +1,5 @@
 <template>
-  <HeadTitle title="CacaoCare" />
-  <NuxtLayout />
-  <AdminLayout >
+  <AdminLayout :user="state.user">
     <template #title>App Updates</template>
 
     <template #actions>
@@ -18,40 +16,21 @@
       <h2 class="text-lg font-medium mb-2">History</h2>
       <div class="mx-5">
         <div v-if="state.isFetching" class="w-full flex justify-center">
-          <div class="bg-white shadow-md sm:rounded-lg w-full">
-            <div class="px-4 py-5 sm:p-6">
-              <div class="sm:flex sm:items-start sm:justify-between">
-                <div>
-                  <!-- Skeleton for title -->
-                  <div class="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
-                  <!-- Skeleton for description -->
-                  <div class="mt-2 space-y-2">
-                    <div class="h-3 w-48 bg-gray-200 rounded animate-pulse"></div>
-                    <div class="h-3 w-40 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
-                </div>
-                <div class="mt-5 sm:mt-0 sm:ml-6 sm:flex sm:shrink-0 sm:items-center">
-                  <!-- Skeleton for button -->
-                  <div class="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <SpinnerElement :size="30"/>
         </div>
         <ul v-else class="space-y-5 mt-10">
-            <li
+          <li
             v-for="(downloadLink, index) in state.downloadLinks"
             :key="index"
             class="border-b pb-2"
-            >
-            <DownloadLinksCard :downloadLink="downloadLink"/>
+          >
+            <DownloadLinksCard :downloadLink="downloadLink" @edit="editDownloadLink(downloadLink)"/>
           </li>
         </ul>
       </div>
     </div>
 
-    <!-- Modal -->
-
+    <!-- Upload Modal -->
     <div
       v-if="showModal"
       class="fixed inset-0 z-50 bg-black bg-opacity-40 flex flex-col items-center justify-center px-4"
@@ -100,10 +79,7 @@
             <button
               type="button"
               class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-              @click="()=>{
-                showModal = false
-                state.isSaved = false
-                }"
+              @click="closeModal"
             >
               Cancel
             </button>
@@ -117,6 +93,53 @@
         </form>
       </div>
     </div>
+
+    <!-- Edit Modal -->
+    <div
+      v-if="showEditModal"
+      class="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center px-4"
+    >
+      <div class="bg-white p-6 rounded-lg w-full max-w-md shadow-lg">
+        <h3 class="text-lg font-semibold mb-4 text-center">Edit App Link</h3>
+        <form @submit.prevent="saveEditedLink" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Download URL</label>
+            <input
+              v-model="editableDownloadLink.download_link"
+              type="url"
+              required
+              class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-green-400"
+              placeholder="https://example.com"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              v-model="editableDownloadLink.description"
+              rows="3"
+              required
+              class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-green-400"
+              placeholder="Update details..."
+            ></textarea>
+          </div>
+          <div class="flex justify-end space-x-2 pt-2">
+            <button
+              type="button"
+              class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              @click="showEditModal = false"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </AdminLayout>
 </template>
 
@@ -125,7 +148,6 @@ import AdminLayout from '@/components/admin/AdminLayout.vue'
 import DownloadLinksCard from '~/components/admin/DownloadLinksCard.vue'
 import { downloadLinkService } from '~/composables/api/sevices/DownloadLinkService'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
-import { redirectService } from '~/composables/function/Redirect'
 import type { DownLoadLink } from '~/composables/model/DownloadLinks'
 import type { User } from '~/composables/model/User'
 
@@ -138,52 +160,92 @@ const state = reactive({
   isSaved: false
 })
 
+const showModal = ref(false)
+const showEditModal = ref(false)
 
-  
-onMounted(()=>{
+const editableDownloadLink = reactive({
+  id: null,
+  download_link: '',
+  description: ''
+})
+
+onMounted(() => {
+  fetchUser()
   fetchAllDownloadLinks()
 })
 
-async function fetchAllDownloadLinks(){
-  try{
-    const response = await downloadLinkService.getAllDownloadLink()
-    state.isFetching = false
-    if(response.data){
-      state.downloadLinks = response.data
-    }
-  }catch(error:any){}
+async function fetchUser() {
+  try {
+    state.user = await fetchCurrentUser(state.user)
+  } catch (error: any) {}
 }
 
-const showModal = ref(false)
-
-const links = ref<{ url: string; description: string }[]>([])
+async function fetchAllDownloadLinks() {
+  try {
+    const response = await downloadLinkService.getAllDownloadLink()
+    state.isFetching = false
+    if (response.data) {
+      state.downloadLinks = response.data
+    }
+  } catch (error: any) {}
+}
 
 async function submitForm() {
-  try{
+  try {
     state.isSaving = true
     const formData = new FormData()
-    formData.append('download_link', state.downloadLink.download_link);
-    formData.append('version', state.downloadLink.version);
-    formData.append('description', state.downloadLink.description);
+    formData.append('download_link', state.downloadLink.download_link)
+    formData.append('version', state.downloadLink.version)
+    formData.append('description', state.downloadLink.description)
 
     const response = await downloadLinkService.storeDownloadLink(formData)
     state.isSaving = false
-    if(response.data){
+    if (response.data) {
       const temp_data = [{} as DownLoadLink]
       temp_data[0] = response.data
       state.downloadLinks = [...temp_data, ...state.downloadLinks]
-      clearForm
+      clearForm()
       state.isSaved = true
     }
-
-  }catch(error:any){
+  } catch (error: any) {
     console.log(error)
   }
 }
 
-const clearForm = () =>{
+function clearForm() {
   state.downloadLink.download_link = ''
   state.downloadLink.description = ''
   state.downloadLink.version = ''
+}
+
+function closeModal() {
+  showModal.value = false
+  state.isSaved = false
+}
+
+function editDownloadLink(link: DownLoadLink) {
+  editableDownloadLink.id = link.id
+  editableDownloadLink.download_link = link.download_link
+  editableDownloadLink.description = link.description
+  showEditModal.value = true
+}
+
+async function saveEditedLink() {
+  try {
+    const formData = new FormData()
+    formData.append('download_link', editableDownloadLink.download_link)
+    formData.append('description', editableDownloadLink.description)
+
+    const response = await downloadLinkService.updateDownloadLink(editableDownloadLink.id, formData)
+    if (response.data) {
+      const index = state.downloadLinks.findIndex(dl => dl.id === editableDownloadLink.id)
+      if (index !== -1) {
+        state.downloadLinks[index] = { ...response.data }
+      }
+      showEditModal.value = false
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>

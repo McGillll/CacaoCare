@@ -51,6 +51,9 @@ importers:
       '@types/leaflet':
         specifier: ^1.9.17
         version: 1.9.17
+      nuxt3-leaflet:
+        specifier: ^1.0.13
+        version: 1.0.13(typescript@5.8.3)
 
 packages:
 
@@ -2879,6 +2882,9 @@ packages:
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
+
+  nuxt3-leaflet@1.0.13:
+    resolution: {integrity: sha512-uTcDVixwtSpBzkFD15S/njAPrlAJ48/g5/JfRgf2tsAVbQYCXN1VIlMvvjDMZw8bu2eKuO/1T3GeviS7S6QjcA==}
 
   nuxt@3.17.1:
     resolution: {integrity: sha512-RFUamVkXw86Kn9l3jeHLNnctsNf5Dp5pQY2bal9uZFiq1Wc9VyMdzou70DbMUjDe1yAoUbD6qz65FOEq+abesQ==}
@@ -7323,6 +7329,14 @@ snapshots:
   nth-check@2.1.1:
     dependencies:
       boolbase: 1.0.0
+
+  nuxt3-leaflet@1.0.13(typescript@5.8.3):
+    dependencies:
+      '@types/leaflet': 1.9.17
+      '@vue-leaflet/vue-leaflet': 0.10.1(@types/leaflet@1.9.17)(leaflet@1.9.4)(typescript@5.8.3)
+      leaflet: 1.9.4
+    transitivePeerDependencies:
+      - typescript
 
   nuxt@3.17.1(@netlify/blobs@8.2.0)(@parcel/watcher@2.5.1)(@types/node@22.15.3)(db0@0.3.2)(ioredis@5.6.1)(magicast@0.3.5)(rollup@4.40.1)(terser@5.39.0)(typescript@5.8.3)(vite@6.3.3(@types/node@22.15.3)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.1))(yaml@2.7.1):
     dependencies:
