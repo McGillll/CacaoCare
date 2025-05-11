@@ -8,16 +8,16 @@
     :use-global-leaflet="true"
     class="rounded"
     >
+    <!-- <LTileLayer
+      url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+      attribution="&copy; <a href='https://carto.com/'>CartoDB</a>"
+    /> -->
     <LTileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
         layer-type="base"
         name="OpenStreetMap"
       />
-    <LTileLayer
-      url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-      attribution="&copy; <a href='https://carto.com/'>CartoDB</a>"
-    />
     <div 
     v-for="(heatmap, index) in props.heatPoints"
     :key="index"
@@ -35,8 +35,8 @@
     </LRectangle>
     </div>
     <LControl position="bottomright">
-        <div class="w-full flex font-bold text-center">Total Disease on Upload</div>
-        <div class="flex flex-col items-center justify-center bg-neutral-50 p-2 rounded">
+        <div class="w-full flex font-bold text-center bg-neutral-50 rounded p-2 mb-1 text-neutral-900">Total Disease on Upload</div>
+        <div class="flex flex-col items-center justify-center bg-neutral-50 py-2 rounded">
             <div>
                 <div class="flex gap-3">
                     <div class="bg-neutral-400 h-full">
