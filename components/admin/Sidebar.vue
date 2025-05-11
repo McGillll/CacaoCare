@@ -27,15 +27,9 @@
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/user/treatment-library" class="sidebar-link">
+          <NuxtLink to="/admin/TreatmentLibrary" class="sidebar-link">
             <BookOpenIcon class="h-5 w-5 mr-3" />
             Treatment Library
-          </NuxtLink>
-        </li>
-        <li>
-          <NuxtLink to="/user/analytics" class="sidebar-link">
-            <ChartBarIcon class="h-5 w-5 mr-3" />
-            Analytics
           </NuxtLink>
         </li>
       </ul>
