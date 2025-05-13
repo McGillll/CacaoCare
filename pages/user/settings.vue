@@ -8,8 +8,7 @@
       <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
         <div class="flex items-center justify-between mb-6">
           <h1 class="text-2xl font-semibold text-gray-800">Account Settings</h1>
-          <button @click="goBack"
-            class="text-sm font-medium text-gray-600 px-4 py-2 rounded-md">
+          <button @click="goBack" class="text-sm font-medium text-gray-600 px-4 py-2 rounded-md">
             Back
           </button>
         </div>
@@ -17,8 +16,7 @@
         <form @submit.prevent="saveSettings" class="space-y-8">
           <!-- Profile Photo -->
           <div class="flex items-center gap-6">
-            <img :src="form.photo || '/placeholder-avatar.png'" class="w-16 h-16 rounded-full object-cover border"
-              alt="Profile Photo" />
+            <img :src="form.photo || ''" class="w-16 h-16 rounded-full object-cover border" alt="Profile Photo" />
             <div>
               <label class="block text-sm font-medium text-gray-700">Change Photo</label>
               <input type="file" @change="handlePhotoUpload" accept="image/*" class="mt-1 block text-sm text-gray-500
@@ -27,6 +25,12 @@
                        file:text-sm file:bg-green-50
                        file:text-green-700 hover:file:bg-green-100" />
             </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Username</label>
+            <input type="text" v-model="form.username"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
           </div>
 
           <div>
@@ -60,12 +64,14 @@ import Footer from '@/components/user/Footer.vue'
 
 interface FormData {
   photo: string
+  username: string
   email: string
   password: string
 }
 
 const form = ref<FormData>({
   photo: '',
+  username: 'user',
   email: 'user@example.com',
   password: ''
 })
