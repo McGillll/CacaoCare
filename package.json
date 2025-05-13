@@ -18,7 +18,7 @@
     "leaflet": "^1.9.4",
     "leaflet-heatmap": "^1.0.0",
     "leaflet.heat": "^0.2.0",
-    "nuxt": "^3.17.1",
+    "nuxt": "^3.17.3",
     "vue": "^3.5.13",
     "vue-leaflet": "^0.1.0",
     "vue-router": "^4.5.0"
