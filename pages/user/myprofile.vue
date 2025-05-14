@@ -16,14 +16,14 @@
                 <div class="max-w-5xl mx-auto">
                     <!-- Profile Info -->
                     <div class="flex items-center gap-4 sm:gap-10 mb-6 sm:mb-10">
-                        <img :src="user.photo || ''" alt="Profile Photo"
+                        <img :src="state.user.profile || ''" alt="Profile Photo"
                             class="w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover border" />
                         <div class="pl-4 sm:pl-0">
-                            <p class="text-lg sm:text-xl font-semibold text-gray-800">@{{ user.username }}</p>
+                            <p class="text-lg sm:text-xl font-semibold text-gray-800">@{{ state.user.username }}</p>
                             <div class="flex gap-4 mt-4 text-gray-700">
-                                <span><strong>{{ posts.length }}</strong> posts</span>
+                                <span><strong>{{ state.posts.length }}</strong> posts</span>
                             </div>
-                            <p class="text-sm sm:text-base text-gray-600 mt-2">{{ user.bio }}</p>
+                            <!-- <p class="text-sm sm:text-base text-gray-600 mt-2">{{ state.user.bio }}</p> -->
                         </div>
                     </div>
 
@@ -54,7 +54,7 @@
 
                     <!-- Posts Grid -->
                     <div class="grid grid-cols-3 gap-0.5">
-                        <div v-for="(post, index) in posts" :key="index"
+                        <div v-for="(post, index) in state.posts" :key="index"
                             class="aspect-square bg-gray-100 overflow-hidden" @click="openPostDetails(post)">
                             <img :src="post.photo || ''" alt="User post"
                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
@@ -76,27 +76,27 @@
                         </button>
                     </div>
                     <div class="w-full bg-neutral-100 shadow-inner">
-                        <img :src="selectedPost.photo || ''" class="w-full object-contain mt-4 h-[320px]" />
+                        <img :src="state.selectedPost.photo || ''" class="w-full object-contain mt-4 h-[320px]" />
                     </div>
                     <div class="p-4">
                         <div class="flex justify-between items-center mb-3">
                             <div>
-                                <p class="font-medium text-sm">{{ selectedPost.username || 'Anonymous Farmer' }}</p>
+                                <p class="font-medium text-sm">{{ state.selectedPost.username || 'Anonymous Farmer' }}</p>
                                 <p class="text-xs text-gray-500">
-                                    Uploaded on: {{ selectedPost.created_at ? formatDate(selectedPost.created_at) : ''
+                                    Uploaded on: {{ state.selectedPost.created_at ? formatDate(state.selectedPost.created_at) : ''
                                     }}
                                 </p>
                             </div>
                             <div class="px-2 py-1 rounded text-xs font-medium text-gray-800">
-                                {{ selectedPost.label }} <span v-if="selectedPost.confidence">({{
-                                    selectedPost.confidence }})</span>
+                                {{ state.selectedPost.label }} <span v-if="state.selectedPost.confidence">({{
+                                    state.selectedPost.confidence }})</span>
                             </div>
                         </div>
 
                         <p class="text-sm text-gray-600 font-medium mb-2 mt-7">Caption:</p>
                         <div class="p-6 border rounded-md">
                             <p class="text-sm text-gray-500">
-                                {{ selectedPost.caption || 'No caption provided.' }}
+                                {{ state.selectedPost.caption || 'No caption provided.' }}
                             </p>
                         </div>
                     </div>
@@ -111,18 +111,19 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import Header from '@/components/user/Header.vue'
 import Sidebar from '@/components/user/Sidebar.vue'
 import Footer from '@/components/user/Footer.vue'
+import type { Cacao } from '~/composables/model/Cacao'
+import type { User } from '~/composables/model/User'
+import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
+import { cacaoServices } from '~/composables/api/sevices/CacaoService'
 
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)
 const showModal = ref(false)
-const selectedPost = ref({
-    photo: '',
-    username: '',
-    created_at: '',
-    label: '',
-    confidence: '',
-    caption: ''
-})
+const state = reactive({
+    user: {} as User,
+    posts: [{} as Cacao],
+    selectedPost: {} as Cacao,
+ })
 
 const handleResize = () => {
     isLargeScreen.value = window.innerWidth >= 768
@@ -130,46 +131,28 @@ const handleResize = () => {
 }
 
 onMounted(() => {
+    fetchUser()
     handleResize()
     window.addEventListener('resize', handleResize)
 })
 
+async function fetchUser() {
+    state.user = await fetchCurrentUser(state.user)
+    fetchUserPosts()
+}
+
+async function fetchUserPosts() {
+    try{
+        const response = await cacaoServices.getCacaoUploadedByUser(state.user.id)
+        if(response.data){
+            state.posts = response.data
+        }
+    }catch(error:any){}
+}
+
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
 })
-
-const user = ref({
-    photo: '',
-    username: 'username',
-    bio: 'mycacao post'
-})
-
-const posts = ref([
-    {
-        photo: 'https://tse1.mm.bing.net/th?id=OIP.xIZfwbjtUchFiMotx2NC4wHaEK&pid=Api&P=0&h=220',
-        username: 'username',
-        created_at: new Date().toISOString(),
-        label: 'Healthy Pod',
-        confidence: '98%',
-        caption: 'My healthy cacao pod'
-    },
-    {
-        photo: 'https://tse1.mm.bing.net/th?id=OIP.mDwI2QVBrsX-XRmRj83euwHaFj&pid=Api&P=0&h=220',
-        username: 'username',
-        created_at: new Date().toISOString(),
-        label: 'Black Pod Rot',
-        confidence: '85%',
-        caption: ''
-    },
-    {
-        photo: '',
-        username: 'username',
-        created_at: new Date().toISOString(),
-        label: '',
-        confidence: '',
-        caption: ''
-    }
-])
 
 const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -177,7 +160,7 @@ const formatDate = (dateString: string) => {
 }
 
 const openPostDetails = (post: any) => {
-    selectedPost.value = post
+    state.selectedPost = post
     showModal.value = true
 }
 
