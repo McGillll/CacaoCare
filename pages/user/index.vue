@@ -56,7 +56,7 @@
             class="border rounded-lg shadow-md overflow-hidden min-w-full md:min-w-[280px] flex-shrink-0 bg-white hover:scale-105 transition-all duration-500">
               <!-- Profile -->
               <div class="flex items-center p-3 border-b">
-                <img :src="cacao.profile || ''" class="w-8 h-8 rounded-full mr-3" :alt="`${cacao.username}'s avatar`" />
+                <img :src="cacao.profile || ''" class="w-8 h-8 rounded-full object-cover mr-3" :alt="`${cacao.username}'s avatar`" />
                 <div>
                   <p class="font-medium text-sm">{{ cacao.username || 'Anonymous Farmer' }}</p>
                   <p class="text-xs text-gray-500">{{ formatDate(cacao.created_at) }} • {{ cacao.barangay + " " + cacao.city || 'Unknown Location' }}</p>

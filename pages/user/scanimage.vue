@@ -94,7 +94,7 @@
                 <div class="flex items-center p-4 border-b">
                   <img 
                     :src="post.profile" 
-                    class="w-8 h-8 rounded-full mr-3" 
+                    class="w-8 h-8 rounded-full mr-3 object-cover" 
                     :alt="`${post.username}'s avatar`" 
                   />
                   <div>
