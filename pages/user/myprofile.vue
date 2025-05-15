@@ -52,8 +52,15 @@
                         </div>
                     </div>
 
+                    <!-- Skeleton Post Grid -->
+                    <div v-if="state.fetchingPost" class="grid grid-cols-3 gap-0.5">
+                        <div v-for="post in 3"
+                            class="aspect-square bg-gray-100 overflow-hidden">
+                            <div class="w-full h-full bg-gray-200 animate-pulse transition-all" />
+                        </div>
+                    </div>
                     <!-- Posts Grid -->
-                    <div class="grid grid-cols-3 gap-0.5">
+                    <div v-if="!state.fetchingPost" class="grid grid-cols-3 gap-0.5">
                         <div v-for="(post, index) in state.posts" :key="index"
                             class="aspect-square bg-gray-100 overflow-hidden" @click="openPostDetails(post)">
                             <img :src="post.photo || ''" alt="User post"
@@ -123,6 +130,7 @@ const state = reactive({
     user: {} as User,
     posts: [{} as Cacao],
     selectedPost: {} as Cacao,
+    fetchingPost: true
  })
 
 const handleResize = () => {
@@ -144,10 +152,13 @@ async function fetchUser() {
 async function fetchUserPosts() {
     try{
         const response = await cacaoServices.getCacaoUploadedByUser(state.user.id)
+        state.fetchingPost = false
         if(response.data){
             state.posts = response.data
         }
-    }catch(error:any){}
+    }catch(error:any){
+        state.fetchingPost = false
+    }
 }
 
 onUnmounted(() => {
