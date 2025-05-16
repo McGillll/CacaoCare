@@ -3,21 +3,27 @@
     <nav>
       <ul class="space-y-2">
         <li>
+          <NuxtLink to="/admin/" class="sidebar-link">
+            <HomeIcon class="h-5 w-5 mr-3" />
+            Home
+          </NuxtLink>
+        </li>
+        <li>
           <NuxtLink to="/admin/UserManagement" class="sidebar-link">
-            <UserCircleIcon class="h-5 w-5 mr-3" />
+            <UserGroupIcon class="h-5 w-5 mr-3" />
             User Management
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/user/reports" class="sidebar-link">
+          <NuxtLink to="/user/scanimage" class="sidebar-link">
             <DocumentTextIcon class="h-5 w-5 mr-3" />
-            Disease Reports
+            User Reports
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/user/images" class="sidebar-link">
-            <PhotoIcon class="h-5 w-5 mr-3" />
-            Image Database
+          <NuxtLink to="/admin/region-reports" class="sidebar-link">
+            <MapPinIcon class="h-5 w-5 mr-3" />
+            Regional Reports
           </NuxtLink>
         </li>
         <li>
@@ -39,9 +45,10 @@
 
 <script setup>
 import {
-  UserCircleIcon,
+  HomeIcon,
+  UserGroupIcon,
   DocumentTextIcon,
-  PhotoIcon,
+  MapPinIcon,
   ArrowUpTrayIcon,
   BookOpenIcon,
   ChartBarIcon

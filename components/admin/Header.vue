@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white shadow px-10 py-4 flex justify-between items-center relative">
+  <header class="bg-white shadow px-4 md:px-10 py-4 flex justify-between items-center relative">
     <div class="flex items-center gap-4">
       <!-- Mobile Menu Button -->
       <button class="md:hidden text-gray-600" @click="$emit('toggle-sidebar')">
@@ -13,15 +13,6 @@
       <div class="mr-auto">
           <img class="object-cover h-10 w-auto md:ml-0" :src="Logo" alt="Logo" />
       </div>
-
-      <!-- Back to Dashboard Button -->
-      <router-link
-        v-if="$route.path !== '/admin'"
-        to="/admin"
-        class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md text-gray-800"
-      >
-        ← Back to Dashboard
-      </router-link>
     </div>
 
     <!-- Admin Dropdown -->

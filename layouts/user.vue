@@ -1,11 +1,29 @@
 <template>
-    <div class="min-h-screen bg-gray-50 flex flex-col">
+    <div v-if="state.user.role==='admin'" class="min-h-screen bg-gray-50 flex flex-col">
+        <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+
+        <div class="flex flex-1 relative">
+        <!-- Sidebar & Overlay -->
+        <transition name="sidebar">
+            <AdminSidebar v-if="sidebarOpen || isLargeScreen" class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64" />
+        </transition>
+
+        <div
+            v-if="sidebarOpen && !isLargeScreen"
+            class="fixed inset-0 z-100 bg-black bg-opacity-30"
+            @click="sidebarOpen = false"
+        />
+            <slot />
+        </div>
+        <AdminFooter />
+    </div>
+    <div v-else class="min-h-screen bg-gray-50 flex flex-col">
         <UserHeader @currentUser="handleUser" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
         <div class="flex flex-1 relative">
             <transition name="sidebar">
             <UserSidebar
             v-if="sidebarOpen || isLargeScreen"
-            class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64"
+            class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-lg w-64"
             />
             </transition>
             <div v-if="sidebarOpen && !isLargeScreen" class="fixed inset-0 z-40 bg-black bg-opacity-30"
@@ -18,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+import AdminLayout from '~/components/admin/AdminLayout.vue';
 import type { User } from '~/composables/model/User'
 
 const emit = defineEmits<{

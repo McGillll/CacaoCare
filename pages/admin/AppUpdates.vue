@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout :user="state.user">
+  <AdminLayout>
     <template #title>App Updates</template>
 
     <template #actions>
@@ -15,8 +15,31 @@
     <div class="bg-white p-4 rounded-lg shadow">
       <h2 class="text-lg font-medium mb-2">History</h2>
       <div class="mx-5">
-        <div v-if="state.isFetching" class="w-full flex justify-center">
-          <SpinnerElement :size="30"/>
+        <div v-if="state.isFetching">
+          <!-- Skeleton Loader -->
+          <div class="bg-white animate-pulse shadow-md sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="sm:flex sm:items-start sm:justify-between">
+                <div class="h-full w-full cursor-pointer">
+                  <div class="flex gap-1"> 
+                    <h3 class="text-base rounded font-semibold text-gray-900 bg-gray-300 w-20 h-6">
+                    </h3>
+                    <span class="w-10 h-6 rounded bg-gray-300"></span>
+                  </div>
+                  <div class="mt-2 flex flex-col max-w-xl gap-1 text-sm text-gray-500">
+                    <p v-for="n in 3" class="bg-gray-300 rounded h-4"></p>
+                  </div>
+                </div>
+                <div class="mt-5 sm:mt-0 sm:ml-6 sm:flex sm:shrink-0 sm:items-center">
+                  <button
+                    type="button"
+                    class="inline-flex w-12 h-8 items-center rounded-md bg-gray-300 px-3 py-2 text-sm font-semibold text-white shadow-xs"
+                  >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <ul v-else class="space-y-5 mt-10">
           <li
@@ -224,28 +247,28 @@ function closeModal() {
 }
 
 function editDownloadLink(link: DownLoadLink) {
-  editableDownloadLink.id = link.id
-  editableDownloadLink.download_link = link.download_link
-  editableDownloadLink.description = link.description
-  showEditModal.value = true
+  // editableDownloadLink.id = link.id
+  // editableDownloadLink.download_link = link.download_link
+  // editableDownloadLink.description = link.description
+  // showEditModal.value = true
 }
 
 async function saveEditedLink() {
-  try {
-    const formData = new FormData()
-    formData.append('download_link', editableDownloadLink.download_link)
-    formData.append('description', editableDownloadLink.description)
+  // try {
+  //   const formData = new FormData()
+  //   formData.append('download_link', editableDownloadLink.download_link)
+  //   formData.append('description', editableDownloadLink.description)
 
-    const response = await downloadLinkService.updateDownloadLink(editableDownloadLink.id, formData)
-    if (response.data) {
-      const index = state.downloadLinks.findIndex(dl => dl.id === editableDownloadLink.id)
-      if (index !== -1) {
-        state.downloadLinks[index] = { ...response.data }
-      }
-      showEditModal.value = false
-    }
-  } catch (error) {
-    console.error(error)
-  }
+  //   const response = await downloadLinkService.updateDownloadLink(editableDownloadLink.id, formData)
+  //   if (response.data) {
+  //     const index = state.downloadLinks.findIndex(dl => dl.id === editableDownloadLink.id)
+  //     if (index !== -1) {
+  //       state.downloadLinks[index] = { ...response.data }
+  //     }
+  //     showEditModal.value = false
+  //   }
+  // } catch (error) {
+  //   console.error(error)
+  // }
 }
 </script>
