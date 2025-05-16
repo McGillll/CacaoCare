@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white shadow py-4 px-10 flex justify-between items-center">
+  <header class="bg-white shadow py-4 px-4 md:px-10 flex justify-between items-center">
     <div class="flex items-center gap-4">
       <button v-if="showSidebarToggle" class="md:hidden text-gray-600" @click="$emit('toggle-sidebar')">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,6 +67,11 @@ defineProps({
   }
 })
 
+const emit = defineEmits<{
+  (e: 'currentUser', value: {}): void,
+  (e: 'toggle-sidebar'): any
+}>()
+
 const state = reactive({
   user: {} as User
 })
@@ -100,6 +105,11 @@ onMounted(() => {
 async function fetchUser() {
   try{
     state.user = await fetchCurrentUser(state.user) 
+    if(state.user.username){
+      localStorage.setItem('username', state.user.username)
+      localStorage.setItem('profile', state.user.profile)
+      emit('currentUser', state.user)
+    }
   } catch(error: any){}
 }
 

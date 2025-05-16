@@ -1,23 +1,6 @@
 <template>
   <HeadTitle title="CacaoCare" />
-  <NuxtLayout />
-  <div class="min-h-screen bg-gray-50 flex flex-col">
-    <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-
-    <div class="flex flex-1 relative">
-      <transition name="sidebar">
-        <Sidebar
-          v-if="sidebarOpen || isLargeScreen"
-          class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64"
-        />
-      </transition>
-
-      <div
-        v-if="sidebarOpen && !isLargeScreen"
-        class="fixed inset-0 z-40 bg-black bg-opacity-30"
-        @click="sidebarOpen = false"
-      />
-      
+  <NuxtLayout name="user">
       <main
         :class="[ 'flex-1 p-4 sm:p-6 overflow-y-auto transition-all', selectedTreatment ? 'blur-sm' : '' ]"
       >
@@ -139,10 +122,7 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <Footer />
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
@@ -166,9 +146,6 @@ interface Treatment {
   imageUrl: string;
   updatedAt: string;
 }
-
-const sidebarOpen = ref(false);
-const isLargeScreen = ref(false);
 const selectedTreatment = ref<Treatment | null>(null);
 
 const treatments = ref<Treatment[]>([
@@ -304,20 +281,6 @@ const treatments = ref<Treatment[]>([
     updatedAt: '2025-04-18',
   },
 ]);
-
-const handleResize = () => {
-  isLargeScreen.value = window.innerWidth >= 768;
-  if (isLargeScreen.value) sidebarOpen.value = true;
-};
-
-onMounted(() => {
-  handleResize();
-  window.addEventListener('resize', handleResize);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-});
 
 const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString('en-US', {

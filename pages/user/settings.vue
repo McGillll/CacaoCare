@@ -1,9 +1,7 @@
 <template>
   <HeadTitle title="CacaoCare" />
-  <NuxtLayout />
-  <div class="min-h-screen bg-gray-50 flex flex-col">    
+  <NuxtLayout @currentUser="handleUser" name="user">
     <Spinner v-if="state.updating" :size="35"/>
-    <Header :showSidebarToggle="false" />
     <main class="flex-1 p-4 md:p-6">
       <div v-if="state.updated" class="max-w-3xl mx-auto flex items-center bg-green-500 text-white px-4 py-2 rounded mb-4">
         <span class="flex-grow">Account updated successfully </span>
@@ -19,7 +17,8 @@
         <form @submit.prevent="saveSettings" class="space-y-8">
           <!-- Profile Photo -->
           <div class="flex flex-col md:flex-row items-center gap-6">
-            <img :src="state.newInfo.profile || ''" class="w-16 h-16 rounded-full object-cover border" alt="Profile Photo" />
+            <div v-if="!state.newInfo.profile" class="w-16 h-16 rounded-full bg-gray-300 animate-pulse object-cover border" />
+            <img v-else :src="state.newInfo.profile || ''" class="w-16 h-16 rounded-full object-cover border" alt="Profile Photo" />
             <div class="flex-1">
               <label class="block pl-1 text-sm font-medium text-gray-700">Change Photo</label>
               <input id="profile" type="file" @change="handlePhotoUpload" accept="image/*" class="mt-1 block text-sm text-gray-500
@@ -39,7 +38,9 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-700">Username</label>
-            <input @keyup="(()=>{
+            <input 
+            @disabled="!state.newInfo.username"
+            @keyup="(()=>{
               checkChange()
             })()" 
             type="text" v-model="state.newInfo.username"
@@ -71,19 +72,13 @@
         </form>
       </div>
     </main>
-
-    <Footer />
-  </div>
+  </NuxtLayout>
 </template>
 
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import Header from '@/components/user/Header.vue'
-import Footer from '@/components/user/Footer.vue'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
 import type { User } from '~/composables/model/User'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { userService } from '~/composables/api/sevices/UserService'
 
 const state = reactive({
@@ -170,19 +165,15 @@ async function saveSettings(){
 
 }
 
+const handleUser = (value: {}) => {
+  state.user = value as User
+  state.newInfo.profile = state.user.profile
+  if(state.user.username)
+  state.newInfo.username = state.user.username
+}
+
 const goBack = () => {
   window.history.back()
 }
 
-onMounted(()=>{
-  fetchUser()
-})
-
-async function fetchUser() {
-  state.user = await fetchCurrentUser(state.user)
-  state.newInfo.profile = state.user.profile
-  if(state.user.username){
-    state.newInfo.username = state.user.username
-  }
-}
 </script>

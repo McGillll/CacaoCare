@@ -5,7 +5,7 @@
                 <path fill="currentColor"
                     d="M9.5 3a6.5 6.5 0 0 1 5.184 10.461l4.327 4.326-1.414 1.414-4.326-4.327A6.5 6.5 0 1 1 9.5 3zm0 2a4.5 4.5 0 1 0 0 9a4.5 4.5 0 0 0 0-9z" />
             </svg>
-            <input :value="searchTerm" type="text" placeholder="Search"
+            <input :value="searchTerm" type="text" placeholder="Search by username"
                 @input="handleSearchInput" />
         </div>
 
