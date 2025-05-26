@@ -35,16 +35,19 @@
       </div>
 
         <div v-if="dropdownOpen"
-          class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+          class="absolute right-0 mt-2 w-36 flex flex-col bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
           <NuxtLink to="/user/myprofile"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full flex gap-2 text-left">
+            <UserIcon class="size-5"/>
             My Profile
           </NuxtLink>
           <NuxtLink to="/user/settings"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full flex gap-2 text-left">
+            <Cog6ToothIcon class="size-5" />
             Settings
           </NuxtLink>
-          <button @click="logout" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+          <button @click="logout" class="block w-full text-left px-4 py-2 text-sm flex gap-2 text-red-600 hover:bg-gray-100">
+            <ArrowLeftStartOnRectangleIcon class="size-5" />
             Logout
           </button>
         </div>
@@ -56,6 +59,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
+import { UserIcon, Cog6ToothIcon, ArrowLeftStartOnRectangleIcon} from '@heroicons/vue/16/solid';
 import type { User } from '~/composables/model/User'
 import Logo from '~/assets/img/cacao_care_logo1.jpg';
 import { authService } from '~/composables/api/sevices/AuthService';

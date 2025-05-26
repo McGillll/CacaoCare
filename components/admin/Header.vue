@@ -40,15 +40,17 @@
       >
         <router-link
           to="/admin/settings"
-          class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+          class="block px-4 py-2 text-gray-700 flex gap-2 items-center hover:bg-gray-100"
         >
-          ⚙️ Settings
+        <Cog6ToothIcon class="size-5" />
+          Settings
         </router-link>
         <button
-          class="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100"
+          class="w-full text-left px-4 py-2 text-red-500 flex gap-2 items-center hover:bg-red-100"
           @click="logout"
         >
-          🚪 Logout
+        <ArrowLeftStartOnRectangleIcon class="size-5" />
+          Logout
         </button>
       </div>
     </div>
@@ -63,6 +65,7 @@ import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
 import { redirectService } from '~/composables/function/Redirect'
 import type { User } from '~/composables/model/User'
 import Logo from '~/assets/img/cacao_care_logo1.jpg'
+import { ArrowLeftStartOnRectangleIcon, Cog6ToothIcon } from '@heroicons/vue/16/solid'
 
 const $route = useRoute()
 const dropdownOpen = ref(false)

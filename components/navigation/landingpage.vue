@@ -41,10 +41,11 @@
     <div class="fixed top-15 left-0 w-full h-full transition-opacity duration-300 ease-in-out"
       :class="{ 'opacity-100': menuOpen, 'opacity-0 pointer-events-none': !menuOpen }">
       <div class="absolute inset-0 bg-black opacity-50 z-80"></div>
-      <div class="absolute z-10 flex py-2 w-full flex-col gap-2 top-0 right-0 h-fit w-full bg-neutral-200 shadow-inner transform transition-transform duration-300 ease-in-out"
+      <div class="absolute z-10 flex py-2 bg-green-400 w-full flex-col gap-2 top-0 right-0 h-fit w-full shadow-inner transform transition-transform duration-300 ease-in-out"
         :class="{ 'translate-y-0': menuOpen, '-translate-y-full': !menuOpen }">
-        <NuxtLink to="/" class="text-base font-semibold w-full hover:bg-green-500 hover:text-neutral-50 transition-all duration-300" @click="menuOpen = false">Home</NuxtLink>
-        <NuxtLink to="/signin" class="text-base font-semibold w-full hover:bg-green-500 hover:text-neutral-50 transition-all duration-300" @click="menuOpen = false">Sign in</NuxtLink>
+        <NuxtLink to="/" class="px-4 text-neutral-50 text-base font-semibold w-full hover:bg-neutral-50 hover:text-green-400 transition-all duration-300" @click="menuOpen = false">Home</NuxtLink>
+        <div class="bg-neutral-50 h-[1px] w-full"/>
+        <NuxtLink to="/signin" class="px-4 text-neutral-50 text-base font-semibold w-full hover:bg-neutral-50 hover:text-green-400 transition-all duration-300" @click="menuOpen = false">Sign in</NuxtLink>
       </div>
     </div>
   </template>

@@ -41,13 +41,12 @@
               <CacaoMap :heatPoints="state?.heatpoints" class="z-0"/>
             </div>
           </ChartCard>
-          <ChartCard title="Disease Trend - Black Pod Rot" placeholder="Line Chart">
-            <div class="container bg-gray-200 flex justify-center">
-              <div class="container w-fit h-fit bg-gray-100 shadow-lg px-5 pb-5 rounded-lg mt-10">
-                <DotLottieVue class="size-72 object-contain" autoplay loop src="https://lottie.host/1718e1f2-49de-4d20-ba6f-ac9c215b7b51/5XIqL84FUg.lottie" />
-                <h1 class="font-black text-amber-900/70 tracking-wider text-center">Coming Soon</h1>
-              </div>
-            </div>
+          <div v-if="state.isFetchingCacaoTrend" class="bg-white flex flex-col gap-4 p-4 shadow rounded-lg">
+            <div class="bg-gray-300 w-full h-12 rounded animate-pulse"/>
+            <div class="bg-gray-300 w-full h-full rounded animate-pulse"/>
+          </div>
+          <ChartCard v-else :title="state.trend.trend" :is-trend="true" placeholder="Line Chart" >
+            <ChartBar :data="state.trend"/>
           </ChartCard>
         </div>
         <RecentActions />
@@ -71,6 +70,7 @@ import { userService } from '~/composables/api/sevices/UserService'
 import { cacaoServices } from '~/composables/api/sevices/CacaoService'
 import type { HeatPoint } from '~/composables/model/HeatPoint'
 import { getBarangayBoundingBox } from '~/composables/api/sevices/openStreetMapApiService'
+import { ChartBar } from '#components'
 
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)
@@ -83,11 +83,18 @@ const state = reactive({
     diseased: 0,
     all: 0
   },
+  trend: {
+    blackpod: 0,
+    frostypod: 0,
+    total: 0,
+    trend: ""
+  },
   totalUser: 0,
   selectedFilter: 'Diseases',
   totalUserLoading: true,
   totalUploadedCacaoTodayLoading:true,
   fetchStatusCount: true,
+  isFetchingCacaoTrend: true,
   totalUploadedCacaoToday: 0
 })
 
@@ -99,11 +106,30 @@ const handleResize = () => {
 onMounted(async () => {
   handleResize()
   window.addEventListener('resize', handleResize)
-  await fetchTotalUser()
-  await fetchTodayUpload()
+  fetchTotalUser()
+  fetchTodayUpload()
+  fetchHeatMapData()
   await fetchCacaoStatusCount()
-  await fetchHeatMapData()
+  fetchCacaoTrend()
 })
+
+async function fetchCacaoTrend() {
+  try{
+    const response = await cacaoServices.getCacaoTrend()
+    if(response.data){
+      state.trend = response.data
+      state.trend.total = state.status.all
+      if(state.trend.blackpod > state.trend.frostypod){
+        state.trend.trend = "Disease Trend - Black Pod Rot"
+      }else if (state.trend.blackpod < state.trend.frostypod){
+        state.trend.trend = "Disease Trend - Frosty Pod Rot"
+      }else{
+        state.trend.trend = "Disease Trend - Black Pod Rot & Frosty Pod Rot "
+      }
+    }
+    state.isFetchingCacaoTrend = false
+  }catch(error: any){}
+}
 
 async function fetchHeatMapData() {
   try {
