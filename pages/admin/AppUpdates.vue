@@ -12,7 +12,7 @@
     </template>
 
     <!-- History of Uploaded Links -->
-    <div class="bg-white p-4 rounded-lg shadow">
+    <div class="bg-white mt-4 p-4 rounded-lg shadow">
       <h2 class="text-lg font-medium mb-2">History</h2>
       <div class="mx-5">
         <div v-if="state.isFetching">
