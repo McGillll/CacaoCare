@@ -2,14 +2,14 @@
     <NuxtLayout name="app">
 
         <HeadTitle title="CacaoCare - Signup" />
-        <section class="relative min-h-screen py-20 flex items-center bg-gradient-to-r from-green-400 to-teal-500 text-white py-16 px-8">
-            <div class="absolute inset-0 w-full h-full z-0">
-                <img class="object-cover w-full h-full" :src="Background" alt="">
+        <section class="relative min-h-screen flex items-center bg-gradient-to-r overflow-x-hidden from-green-400 to-teal-500 text-white py-24 sm:py-16 px-8">
+            <div class="absolute flex inset-0 w-[200%] h-full z-0">
+                <img id="animated-image" class="object-cover w-[60%] h-full" :src="Background" alt="">
             </div>
             <div class="bg-black opacity-40 absolute inset-0 w-full h-full z-0"/>
             <div class="bg-green-700 opacity-5 absolute inset-0 w-full h-full z-0" />
             <div class="bg-yellow-900 opacity-5 absolute inset-0 w-full h-full z-0" />
-            <div class="z-20 container mx-auto bg-white text-gray-700 p-10 rounded-lg shadow-lg max-w-lg">
+            <div class="z-20 container mx-auto bg-white text-gray-700 p-10  rounded-lg shadow-lg max-w-lg">
                 <Spinner v-if="state.isLoading" :size="35"/>
                 <h1 class="text-3xl font-bold text-center text-green-700 mb-6">Sign Up</h1>
                 <form @submit.prevent="handleSubmit">
@@ -157,6 +157,7 @@
 </template>
 
 <script setup lang="ts">
+import gsap from 'gsap';
 import { reactive, ref, onMounted } from 'vue';
 import { authService } from '~/composables/api/sevices/AuthService';
 import { getBarangays, getCities, getProvinces, getRegions, type Barangay, type City, type Province, type Region } from '~/composables/api/sevices/psgcApiService';
@@ -230,6 +231,14 @@ const fetchBarangays = async () => {
 
 
 onMounted(async () => {
+    gsap.to("#animated-image", {
+        x: -60, // Moves 50 pixels to the right
+        duration: 5, // Slower animation (3s)
+        ease: "power1.inOut", // Smooth easing
+        repeat: -1, // Infinite movement
+        yoyo: true, // Moves back and forth
+    });
+
     try {
         barangays.value = await getBarangays('1130700000');
     } catch (error) {

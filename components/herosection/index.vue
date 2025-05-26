@@ -1,7 +1,7 @@
 <template>
     <header class="relative bg-gradient-to-r overflow-hidden from-green-400 to-teal-500 text-white py-16 px-6">
-        <div class="absolute inset-0 w-full h-full z-0">
-            <img class="object-cover w-full h-full" :src="Background" alt="">
+        <div class="absolute flex inset-0 w-[200%] h-full z-0">
+            <img id="animated-image" class="object-cover w-[60%] h-full" :src="Background" alt="">
         </div>
         <div class="bg-black opacity-40 absolute inset-0 w-full h-full z-0"/>
         <div class="bg-green-700 opacity-5 absolute inset-0 w-full h-full z-0" />
@@ -37,6 +37,7 @@
     </header>
 </template>
 <script setup lang="ts">
+import gsap from 'gsap';
 import { downloadLinkService } from '~/composables/api/sevices/DownloadLinkService';
 import type { DownLoadLink } from '~/composables/model/DownloadLinks';
 import Background from '~/assets/img/herosection_background.jpg'
@@ -51,6 +52,13 @@ function downloadApp(){
 }
 
 onMounted(async()=>{
+    gsap.to("#animated-image", {
+        x: -60, // Moves 50 pixels to the right
+        duration: 5, // Slower animation (3s)
+        ease: "power1.inOut", // Smooth easing
+        repeat: -1, // Infinite movement
+        yoyo: true, // Moves back and forth
+    });
     try{
         const response = await downloadLinkService.getLatestVersion();
         if(response.data){
