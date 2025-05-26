@@ -5,7 +5,7 @@
     :zoom="10"
     :max-zoom="22"
     :center="[7.1907, 125.4553]"
-    :use-global-leaflet="true"
+    :use-global-leaflet="false"
     class="rounded"
     >
     <!-- <LTileLayer
