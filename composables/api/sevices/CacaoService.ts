@@ -21,8 +21,8 @@ class CacaoService extends BaseAPIService {
         return await this.request(`/cacao/upload/trend`, 'GET')
     }
     
-    async getCacaoUploadedByUser(id: Object):Promise<any>{
-        return await this.request(`/cacao/user/upload/${id}`, 'GET')
+    async getCacaoUploadedByUser(id: Object, page: number):Promise<any>{
+        return await this.request(`/cacao/user/upload/${id}/?page=${page}`, 'GET')
     }
     
     async getHighestDiseaseWithinTheWeek():Promise<any>{

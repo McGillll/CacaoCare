@@ -3,8 +3,8 @@
     <NuxtLayout
     @currentUser="handleUser"
     name="user">
-        <main :class="['flex-1 p-4 sm:p-6 overflow-y-auto', showModal ? 'blur-sm' : '']">
-            <div class="max-w-5xl mx-auto">
+        <main :class="[' flex-1 p-4 sm:p-6 overflow-y-auto', showModal ? 'blur-sm' : '']">
+            <div class="max-w-5xl mx-auto mb-auto h-full">
                 <!-- Skeleton Profile Info -->
                 <div v-if="!state.user.username" class="flex animate-pulse items-center gap-4 sm:gap-10 mb-6 sm:mb-10">
                     <div class="bg-gray-300 w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover border" />
@@ -59,21 +59,23 @@
                         <span>Posts</span>
                     </div>
                 </div>
-
                 <!-- Skeleton Post Grid -->
-                <div v-if="state.fetchingPost" class="grid grid-cols-3 gap-0.5">
+                <div v-if="state.fetchingPost && state.page === 1" class="grid grid-cols-3 gap-0.5">
                     <div v-for="post in 3"
-                        class="aspect-square bg-gray-100 overflow-hidden">
+                        class="aspect-[3/4] bg-gray-100 overflow-hidden">
                         <div class="w-full h-full bg-gray-200 animate-pulse transition-all" />
                     </div>
                 </div>
                 <!-- Posts Grid -->
-                <div v-if="!state.fetchingPost" class="grid grid-cols-3 gap-0.5">
+                <div v-else class="grid grid-cols-3 gap-0.5">
                     <div v-for="(post, index) in state.posts" :key="index"
-                        class="aspect-square bg-gray-100 overflow-hidden" @click="openPostDetails(post)">
-                        <img :src="post.photo || ''" alt="User post"
-                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        class="aspect-[3/4] bg-gray-100 overflow-hidden" @click="openPostDetails(post)">
+                        <img :src="post.photo"
+                        class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
                     </div>
+                </div>
+                <div class="mt-4 w-full flex justify-center">
+                    <SpinnerElement v-if="state.fetchingPost && state.page !== 1 && state.page <= state.postMeta.total_pages" :size="36" />
                 </div>
             </div>
         </main>
@@ -87,12 +89,12 @@
                         </button>
                     </div>
                     <div class="w-full bg-neutral-100 shadow-inner">
-                        <img :src="state.selectedPost.photo || ''" class="w-full object-contain mt-4 h-[320px]" />
+                        <img :src="state.selectedPost.photo" class="w-full object-contain mt-4 h-[320px]" />
                     </div>
                     <div class="p-4">
                         <div class="flex justify-between items-center mb-3">
                             <div>
-                                <p class="font-medium text-sm">{{ state.selectedPost.username || 'Anonymous Farmer' }}</p>
+                                <p class="font-medium text-sm">{{ state.selectedPost.username }}</p>
                                 <p class="text-xs text-gray-500">
                                     Uploaded on: {{ state.selectedPost.created_at ? formatDate(state.selectedPost.created_at) : ''
                                     }}
@@ -115,6 +117,7 @@
             </div>
         </transition>
     </NuxtLayout>
+    <div id="scroll-loader" class="mt-auto bg-black flex justify-center items-center"/>
 </template>
 
 <script setup lang="ts">
@@ -127,20 +130,45 @@ const state = reactive({
     user: {} as User,
     posts: [{} as Cacao],
     selectedPost: {} as Cacao,
-    fetchingPost: true
+    fetchingPost: true,
+    page: 1,
+    postMeta: [{}] as any
  })
 
 const handleUser = (value: {})=>{
     state.user = value as User
     fetchUserPosts()
+    state.posts.pop()
 }
+
+const observer = ref<IntersectionObserver | null>(null);
+
+onMounted(() => {
+    const loader = document.getElementById("scroll-loader");
+    observer.value = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !state.fetchingPost) {
+        state.fetchingPost = true
+        setTimeout(()=>{
+            fetchUserPosts();
+        },1000)
+      }
+    },
+    { rootMargin: "10px" }
+  );
+
+  if (loader) observer.value.observe(loader);
+});
 
 async function fetchUserPosts() {
     try{
-        const response = await cacaoServices.getCacaoUploadedByUser(state.user.id)
+        const response = await cacaoServices.getCacaoUploadedByUser(state.user.id, state.page)
         state.fetchingPost = false
-        if(response.data){
-            state.posts = response.data
+        if(response.data.data){
+            state.posts.push(...response.data.data)
+            state.postMeta = response.meta
+            console.log(state.postMeta)
+            state.page++
         }
     }catch(error:any){
         state.fetchingPost = false

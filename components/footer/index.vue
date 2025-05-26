@@ -1,5 +1,5 @@
 <template>
-    <footer class="bg-neutral-50 text-yellow-900/90 py-6">
+    <footer class="bg-neutral-50 text-yellow-900/90 py-6 z-20">
         <div class="container mx-auto text-center">
             <p class="text-sm">© 2025 CacaoCare. All rights reserved.</p>
             <p class="text-sm text-yellow-900/90">
