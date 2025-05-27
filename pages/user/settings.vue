@@ -2,11 +2,10 @@
   <HeadTitle title="CacaoCare" />
   <NuxtLayout @currentUser="handleUser" name="user">
     <Spinner v-if="state.updating" :size="35"/>
+      <NotificationSuccessfull :show="state.updated" @close="()=>{
+        state.updated = false
+      }"/>
     <main class="flex-1 p-4 md:p-6">
-      <div v-if="state.updated" class="max-w-3xl mx-auto flex items-center bg-green-500 text-white px-4 py-2 rounded mb-4">
-        <span class="flex-grow">Account updated successfully </span>
-        <button @click="()=>{state.updated = false}" class="text-white font-bold">X</button>
-      </div>
       <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
         <div class="flex items-center justify-between mb-6">
           <h1 class="text-2xl font-semibold text-gray-800">Account Settings</h1>
@@ -151,12 +150,16 @@ async function saveSettings(){
   try{
     const response = await userService.updateUser(state.user.id, formData)
     if(response.data){
+      state.profileData = {} as File
+      state.hasChange = false
       state.updating = false
       state.updated = true
       state.user = response.data
       localStorage.setItem('username' , state.user.username ?? '')
       localStorage.setItem('profile', state.user.profile) 
-      window.location.reload()
+      setTimeout(()=>{
+        state.updated = false
+      },5000)
     }
   }catch(error:any){
     state.errors = error
