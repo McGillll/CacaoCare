@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
+import { debounce } from 'lodash';
 
 const props = defineProps<{
   searchTerm: string;
@@ -30,12 +31,13 @@ const emit = defineEmits<{
   (event: 'update:filterStatus', value: string): void;
 }>();
 
-const handleSearchInput = (event: Event) => {
+
+const handleSearchInput = debounce((event: Event) => {
   const target = event.target as HTMLInputElement | null;
   if (target) {
     emit('update:searchTerm', target.value);
   }
-};
+}, 500); // Adjust the delay as needed
 
 const handleStatusChange = (event: Event) => {
   const target = event.target as HTMLSelectElement | null;
