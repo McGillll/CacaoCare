@@ -28,7 +28,7 @@
           <img
           :src=state.user.profile
           alt="Admin Avatar"
-          class="w-8 h-8 rounded-full cover"
+          class="w-8 h-8 rounded-full object-cover"
           />
         </button>
       </div>
