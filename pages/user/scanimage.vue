@@ -208,14 +208,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import Header from '@/components/user/Header.vue'
-import Sidebar from '@/components/user/Sidebar.vue'
-import Footer from '@/components/user/Footer.vue'
 import SearchBar from '@/components/user/podscans/PodSearchBar.vue'
 import FilterControls from '@/components/user/podscans/FilterControls.vue'
 import type { Cacao } from '~/composables/model/Cacao'
 import { cacaoServices } from '~/composables/api/sevices/CacaoService'
-import { fetchCurrentUser } from '~/composables/function/GetCurrentUser'
+import { formatDate } from '~/composables/function/FormatDate'
 
 interface Scan {
   id: number
@@ -289,9 +286,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
-
-const formatDate = (d: string) =>
-  new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
 const showModal = ref(false)
 

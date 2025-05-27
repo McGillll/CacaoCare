@@ -148,6 +148,7 @@ import Card from '@/components/user/SummaryCards.vue'
 import type { Cacao } from '~/composables/model/Cacao'
 import { cacaoServices } from '~/composables/api/sevices/CacaoService'
 import type { User } from '~/composables/model/User'
+import { formatDate } from '~/composables/function/FormatDate'
 
 const state = reactive({
   cacaos: [{} as Cacao],
@@ -179,14 +180,6 @@ const priorityAlert = computed<Alert>(() => {
     severity: 'info'
   }
 })
-
-const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  })
-}
 
 const openModal = (cacao: Cacao) => {
   state.selected = cacao

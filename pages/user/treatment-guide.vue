@@ -126,10 +126,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import Header from '@/components/user/Header.vue';
-import Sidebar from '@/components/user/Sidebar.vue';
-import Footer from '@/components/user/Footer.vue';
+import { ref } from 'vue';
+import { formatDate } from '~/composables/function/FormatDate';
 
 interface TreatmentStep {
   title: string;
@@ -281,14 +279,6 @@ const treatments = ref<Treatment[]>([
     updatedAt: '2025-04-18',
   },
 ]);
-
-const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-};
 
 const openTreatment = (treatment: Treatment) => {
   selectedTreatment.value = treatment;
