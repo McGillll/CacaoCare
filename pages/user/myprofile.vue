@@ -147,7 +147,7 @@ onMounted(() => {
     const loader = document.getElementById("scroll-loader");
     observer.value = new IntersectionObserver(
     (entries) => {
-      if (entries[0].isIntersecting && !state.fetchingPost) {
+      if (entries[0].isIntersecting && !state.fetchingPost && state.page <= state.postMeta.total_pages) {
         state.fetchingPost = true
         setTimeout(()=>{
             fetchUserPosts();
@@ -167,7 +167,6 @@ async function fetchUserPosts() {
         if(response.data.data){
             state.posts.push(...response.data.data)
             state.postMeta = response.meta
-            console.log(state.postMeta)
             state.page++
         }
     }catch(error:any){
