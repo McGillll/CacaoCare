@@ -123,23 +123,35 @@
           </div>
 
           <!-- Pagination -->
-          <div class="flex justify-center items-center space-x-4 mt-10">
-            <button 
-              @click="prevPage" 
-              :disabled="state.currentPage === 1"
-              class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-            <span class="text-gray-600 text-sm">Page {{ state.currentPage }} of {{ state.total_pages }}</span>
-            <button 
-              @click="nextPage" 
-              :disabled="state.currentPage === state.total_pages"
-              class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
-          </div>
+          <ol class="flex justify-center text-xs font-medium space-x-1">
+            <li>
+              <button :disabled="!isSecondPage()" @click="firstPage()" class="inline-flex items-center justify-center size-8 border border-gray-100 rounded disabled:opacity-30 enabled:hover:bg-green-400 enabled:hover:text-neutral-50 transition-all duration-500">
+                <ChevronDoubleLeftIcon class="size-3 font-bold"/>
+              </button>
+            </li>
+            <li>
+              <button :disabled="isFirstPage()" @click="prevPage()" class="inline-flex items-center justify-center size-8 border border-gray-100 rounded disabled:opacity-30 enabled:hover:bg-green-400 enabled:hover:text-neutral-50 transition-all duration-500">
+                <ChevronLeftIcon class="size-3 font-bold"/>
+              </button>
+            </li>
+            <li v-if="!isFirstPage()">
+              <button @click="prevPage()" class="block size-8 text-center border border-gray-100 rounded leading-8 enabled:hover:bg-green-400 enabled:hover:text-neutral-50 transition-all duration-500"> {{state.currentPage - 1}} </button>
+            </li>
+            <li class="block size-8 text-center text-white bg-green-600 border-blue-600 rounded leading-8">{{ state.currentPage }}</li>
+            <li v-if="!isLastPage()">
+              <button @click="nextPage()" class="block size-8 text-center border border-gray-100 rounded leading-8 enabled:hover:bg-green-400 enabled:hover:text-neutral-50 transition-all duration-500"> {{state.currentPage + 1}} </button>
+            </li>
+            <li>
+              <button :disabled="isLastPage()" @click="nextPage()" class="inline-flex items-center justify-center size-8 border border-gray-100 rounded disabled:opacity-30 enabled:hover:bg-green-400 enabled:hover:text-neutral-50 transition-all duration-500">
+                <ChevronRightIcon class="size-3 font-bold"/>
+              </button>
+            </li>
+            <li>
+              <button :disabled="isSecondToTheLastPage()" @click="lastPage()" class="inline-flex items-center justify-center size-8 border border-gray-100 rounded disabled:opacity-30 enabled:hover:bg-green-400 enabled:hover:text-neutral-50 transition-all duration-500">
+                <ChevronDoubleRightIcon class="size-3 font-bold"/>
+              </button>
+            </li>
+          </ol>
         </div>
 
         <!-- If Empty -->
@@ -165,7 +177,6 @@
     <!-- Modal for scan details -->
   <transition name="fade">
     <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-
         <div class="bg-white overflow-hidden shadow-lg w-11/12 max-w-md relative rounded">
           <div class="w-full flex justify-end">
             <button @click="closeModal" class="mx-3 my-1">
@@ -213,6 +224,7 @@ import FilterControls from '@/components/user/podscans/FilterControls.vue'
 import type { Cacao } from '~/composables/model/Cacao'
 import { cacaoServices } from '~/composables/api/sevices/CacaoService'
 import { formatDate } from '~/composables/function/FormatDate'
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/16/solid'
 
 interface Scan {
   id: number
@@ -242,12 +254,37 @@ const state = reactive({
 
 const diseaseStatuses = ['Black Pod', 'Frosty Pod']
 
+const isSecondPage = () =>{
+  return ((state.currentPage - 1) > 1)
+}
+
+const isSecondToTheLastPage = () =>{
+  return ((state.currentPage + 1) >= state.total_pages)
+}
+
+const isLastPage = () =>{
+  return state.currentPage === state.total_pages
+} 
+
+const isFirstPage = () =>{
+  return state.currentPage === 1
+}
+
 const nextPage = () => {
   state.currentPage < state.total_pages && state.currentPage++
   fetchCacaoFeed()
 }
 const prevPage = () => {
   state.currentPage > 1 && state.currentPage--
+  fetchCacaoFeed()
+}
+
+const firstPage = () =>{
+  state.currentPage = 1
+  fetchCacaoFeed()
+}
+const lastPage = () =>{
+  state.currentPage = state.total_pages
   fetchCacaoFeed()
 }
 const handleResize = () => {
