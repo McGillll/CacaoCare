@@ -84,10 +84,10 @@ async function downloadApp(){
 
 <style scoped>
 .sidebar-link {
-  @apply flex items-center p-2 text-gray-600 hover:text-green-800 rounded-md hover:bg-green-50;
+  @apply flex items-center p-2 font-medium text-gray-600 hover:text-green-800 rounded-md hover:bg-green-50;
 }
 
 .sidebar-link.active {
-  @apply text-green-800 font-medium bg-green-50;
+  @apply text-green-500 font-medium bg-green-200/50;
 }
 </style>
