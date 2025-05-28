@@ -30,22 +30,25 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ChartCard title="Disease Heatmap">
-            <div class="flex flex-col w-full">
-              <select 
+            <template #filter>
+              <select
                 @change="fetchHeatMapData"
-                v-model="state.selectedFilter" class="focus:border-none transition-all duration-500 rounded p-2">
-                <option value="Diseases">Diseases</option>
-                <option value="Black Pod Rot">Black Pod Rot</option>
-                <option value="Frosty Pod Rot">Frosty Pod Rot</option>
+                v-model="state.selectedFilter"
+                class="appearance-none ml-auto rounded-tr px-3 py-2 font-semibold text-gray-700 bg-white border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-300 hover:bg-gray-50"
+              >
+                <option class="font-medium text-gray-600" value="Diseases">Diseases</option>
+                <option class="font-medium text-gray-600" value="Black Pod Rot">Black Pod Rot</option>
+                <option class="font-medium text-gray-600" value="Frosty Pod Rot">Frosty Pod Rot</option>
               </select>
-              <CacaoMap :heatPoints="state?.heatpoints" class="z-0"/>
-            </div>
+            </template>
+            <CacaoMap :heatPoints="state?.heatpoints" class="z-0"/>
           </ChartCard>
           <div v-if="state.isFetchingCacaoTrend" class="bg-white flex flex-col gap-4 p-4 shadow rounded-lg">
             <div class="bg-gray-300 w-full h-12 rounded animate-pulse"/>
             <div class="bg-gray-300 w-full h-full rounded animate-pulse"/>
           </div>
           <ChartCard v-else :title="state.trend.trend" :is-trend="true" placeholder="Line Chart" >
+            <template #filter></template>
             <ChartBar :data="state.trend"/>
           </ChartCard>
         </div>
@@ -57,7 +60,6 @@
 </template>
 
 <script setup lang="ts">
-import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import Header from '@/components/admin/Header.vue'
 import Sidebar from '@/components/admin/Sidebar.vue'
@@ -108,8 +110,8 @@ onMounted(async () => {
   window.addEventListener('resize', handleResize)
   fetchTotalUser()
   fetchTodayUpload()
-  fetchHeatMapData()
   await fetchCacaoStatusCount()
+  fetchHeatMapData()
   fetchCacaoTrend()
 })
 
@@ -120,11 +122,11 @@ async function fetchCacaoTrend() {
       state.trend = response.data
       state.trend.total = state.status.all
       if(state.trend.blackpod > state.trend.frostypod){
-        state.trend.trend = "Disease Trend - Black Pod Rot"
+        state.trend.trend = "Black Pod Rot"
       }else if (state.trend.blackpod < state.trend.frostypod){
-        state.trend.trend = "Disease Trend - Frosty Pod Rot"
+        state.trend.trend = "Frosty Pod Rot"
       }else{
-        state.trend.trend = "Disease Trend - Black Pod Rot & Frosty Pod Rot "
+        state.trend.trend = "Black Pod Rot & Frosty Pod Rot "
       }
     }
     state.isFetchingCacaoTrend = false
