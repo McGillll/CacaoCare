@@ -610,7 +610,7 @@ const getWeatherIcon = (condition: string) => {
 // Fetch weather
 onMounted(async () => {
     try {
-        const lat = 8
+        const lat = 2
         const lon = 125
 
         // Input actual API key
