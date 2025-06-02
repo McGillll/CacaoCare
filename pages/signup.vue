@@ -50,8 +50,34 @@
                         class="transition-all duration-500 w-full border border-green-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Create a password"
                         required
+                        @input="checkPasswordValidity()"
                         />
-                        <FormError v-if="state.errors?.password" error="Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."/>
+                        <div class="flex flex-col">
+                            <span :class="{'text-green-400' : isUpperValid, 'text-red-400' : !isUpperValid}" 
+                            class="flex transition-all duration-500 items-center gap-1">
+                                <CheckCircleIcon :class="isUpperValid ? 'opacity-100' : 'hidden'" class="size-4 transition-all duration-500"/>
+                                <MinusCircleIcon :class="!isUpperValid ? 'opacity-100' : 'hidden'" class="size-4 transition-all duration-500" /> 
+                                At least 1 uppercase
+                            </span>
+                            <span :class="{'text-green-400' : isLowerValid, 'text-red-400' : !isLowerValid}" 
+                            class="flex transition-all duration-500 items-center gap-1">
+                                <CheckCircleIcon :class="isLowerValid ? 'opacity-100' : 'hidden'" class="size-4 transition-all duration-500"/>
+                                <MinusCircleIcon :class="!isLowerValid ? 'opacity-100' : 'hidden'" class="size-4 transition-all duration-500" /> 
+                                At least 1 lowercase
+                            </span>
+                            <span :class="{'text-green-400' : isSpecialCharValid, 'text-red-400' : !isSpecialCharValid}" 
+                            class="flex transition-all duration-500 items-center gap-1">
+                                <CheckCircleIcon :class="isSpecialCharValid ? 'opacity-100' : 'hidden'" class="size-4 transition-all duration-500"/>
+                                <MinusCircleIcon :class="!isSpecialCharValid ? 'opacity-100' : 'hidden'" class="size-4 transition-all duration-500" /> 
+                                At least 1 special character
+                            </span>
+                            <span :class="{'text-green-400' : isLengthValid, 'text-red-400' : !isLengthValid}" 
+                            class="flex transition-all duration-500 items-center gap-1">
+                                <CheckCircleIcon :class="isLengthValid ? 'opacity-100' : 'hidden'" class="size-4 transition-all duration-500"/>
+                                <MinusCircleIcon :class="!isLengthValid ? 'opacity-100' : 'hidden'" class="size-4 transition-all duration-500" /> 
+                                8 characters length
+                            </span>
+                        </div>
                     </div>
                     <!-- Checkbox -->
                     <div class="mb-4 flex w-full">
@@ -163,6 +189,7 @@ import { authService } from '~/composables/api/sevices/AuthService';
 import { getBarangays, getCities, getProvinces, getRegions, type Barangay, type City, type Province, type Region } from '~/composables/api/sevices/psgcApiService';
 import type { User } from '~/composables/model/User';
 import Background from '~/assets/img/herosection_background.jpg'
+import { CheckCircleIcon, MinusCircleIcon } from '@heroicons/vue/24/outline';
 
 
 const state = reactive({
@@ -171,6 +198,18 @@ const state = reactive({
     errors: {} as any,
     isLoading: false
 });
+
+const isUpperValid = ref(false)
+const isLowerValid = ref(false)
+const isSpecialCharValid = ref(false)
+const isLengthValid = ref(false)
+
+const checkPasswordValidity = () => {
+    isUpperValid.value = /[A-Z]/.test(state.user.password)
+    isLowerValid.value = /[a-z]/.test(state.user.password)
+    isSpecialCharValid.value = /[!@#$%^&*_]/.test(state.user.password)
+    isLengthValid.value = state.user.password.trim().length >= 8 
+}
 
 const regions = ref([{} as Region]);
 const provinces = ref([{} as Province]);
@@ -272,9 +311,12 @@ function isFromDavao(){
 
 // Handle form submission
 async function handleSubmit(){
-    changeLoading()
-    state.user.region = selectedRegion.value.name
-    state.user.province = selectedProvince.value.name
+    if(!(isUpperValid.value && isLowerValid.value && isSpecialCharValid.value && isLengthValid.value)){
+        return
+    }
+        changeLoading()
+        state.user.region = selectedRegion.value.name
+        state.user.province = selectedProvince.value.name
     state.user.city = selectedCity.value.name
     state.user.barangay = selectedBarangay.value.name;
     
