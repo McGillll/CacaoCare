@@ -41,7 +41,7 @@
                 <option class="font-medium text-gray-600" value="Frosty Pod Rot">Frosty Pod Rot</option>
               </select>
             </template>
-            <CacaoMap :heatPoints="state?.heatpoints" class="z-0"/>
+            <CacaoMap :heatPoints="state?.heatpoints" :total-uploaders="state.totalUserUpload" class="z-0"/>
           </ChartCard>
           <div v-if="state.isFetchingCacaoTrend" class="bg-white flex flex-col gap-4 p-4 shadow rounded-lg">
             <div class="bg-gray-300 w-full h-12 rounded animate-pulse"/>
@@ -73,6 +73,7 @@ import { cacaoServices } from '~/composables/api/sevices/CacaoService'
 import type { HeatPoint } from '~/composables/model/HeatPoint'
 import { getBarangayBoundingBox } from '~/composables/api/sevices/openStreetMapApiService'
 import { ChartBar } from '#components'
+import { format } from 'date-fns'
 
 const sidebarOpen = ref(false)
 const isLargeScreen = ref(false)
@@ -97,7 +98,8 @@ const state = reactive({
   totalUploadedCacaoTodayLoading:true,
   fetchStatusCount: true,
   isFetchingCacaoTrend: true,
-  totalUploadedCacaoToday: 0
+  totalUploadedCacaoToday: 0,
+  totalUserUpload: 0
 })
 
 const handleResize = () => {
@@ -111,7 +113,7 @@ onMounted(async () => {
   fetchTotalUser()
   fetchTodayUpload()
   await fetchCacaoStatusCount()
-  fetchHeatMapData()
+  await fetchHeatMapData()
   fetchCacaoTrend()
 })
 
@@ -135,15 +137,20 @@ async function fetchCacaoTrend() {
 
 async function fetchHeatMapData() {
   try {
+    const dateNow = format(new Date(), 'yyyy-MM')
     state.heatpoints = [] // Clear previous heatpoints
-    const response = await cacaoServices.getHeatMapData(state.selectedFilter)
+    const response = await cacaoServices.getHeatMapData(state.selectedFilter, dateNow)
     if (response.data && state.status.diseased > 0) {
-      for (const data of response.data) {
+      for (const data of response.data.uploaded) {
         let heatpoint = {} as HeatPoint
-        heatpoint.intensity = (data.count / state.status.diseased) * 100
+        heatpoint.intensity = (data.count/ response.data.total ) * 100
         heatpoint.name = data.barangay
+        heatpoint.count = data.count
         heatpoint.boundingbox = await getBarangayBoundingBox(data.barangay, data.city)
         state.heatpoints.push(heatpoint)
+        state.totalUserUpload = response.data.total
+        state.trend.total = response.data.total
+        console.log(heatpoint)
       }
     }
   } catch (error: any) {
