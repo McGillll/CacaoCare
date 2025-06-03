@@ -17,6 +17,7 @@
     "@nuxtjs/leaflet": "1.2.6",
     "axios": "^1.8.4",
     "chart.js": "^4.4.9",
+    "date-fns": "^4.1.0",
     "gsap": "^3.13.0",
     "leaflet": "^1.9.4",
     "leaflet-heatmap": "^1.0.0",
