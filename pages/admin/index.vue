@@ -29,7 +29,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ChartCard title="Disease Heatmap">
+          <ChartCard title="Monthky Uploader Heatmap">
             <template #filter>
               <select
                 @change="fetchHeatMapData"
@@ -122,7 +122,6 @@ async function fetchCacaoTrend() {
     const response = await cacaoServices.getCacaoTrend()
     if(response.data){
       state.trend = response.data
-      state.trend.total = state.status.all
       if(state.trend.blackpod > state.trend.frostypod){
         state.trend.trend = "Black Pod Rot"
       }else if (state.trend.blackpod < state.trend.frostypod){

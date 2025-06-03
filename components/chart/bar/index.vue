@@ -60,6 +60,10 @@ const chartOptions = ref({
         padding: {bottom: 5 },
       },
       suggestedMax: props.data.total,
+      ticks: {
+      stepSize: 1,
+      precision: 0
+    }
     },
   },
     plugins: {
