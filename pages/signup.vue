@@ -1,6 +1,5 @@
 <template> 
     <NuxtLayout name="app">
-
         <HeadTitle title="CacaoCare - Signup" />
         <section class="relative min-h-screen flex items-center bg-gradient-to-r overflow-x-hidden from-green-400 to-teal-500 text-white py-24 sm:py-16 px-8">
             <div class="absolute flex inset-0 w-[200%] h-full z-0">

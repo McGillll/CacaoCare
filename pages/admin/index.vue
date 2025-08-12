@@ -19,17 +19,42 @@
       <!-- Main Content -->
       <main class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
         <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
-
-        <div class="flex flex-wrap w-full justify-between gap-4">
-          <SummaryCard @click="navigateTo('admin/UserManagement')" title="Total Registered Farmers" :isLoading="state.totalUserLoading" :value="state.totalUser" value-class="text-xl font-semibold text-blue-600" />
-          <SummaryCard title="Total Uploads" :isLoading="state.fetchStatusCount" :value="state.status.all" value-class="text-xl font-semibold text-blue-600" />
-          <SummaryCard title="New Uploaded Images (24h)" :isLoading="state.totalUploadedCacaoTodayLoading" :value="state.totalUploadedCacaoToday" value-class="text-xl font-semibold text-yellow-600" />
-          <SummaryCard title="Healthy" :isLoading="state.fetchStatusCount" :value="state.status.healthy" value-class="text-xl font-semibold text-green-600" />
-          <SummaryCard title="Diseased" :isLoading="state.fetchStatusCount" :value="state.status.diseased" value-class="text-xl font-semibold text-red-600" />
+        <div class="flex flex-wrap w-full gap-4">
+          <SummaryCard 
+            @click="navigateTo('/admin/UserManagement')" 
+            title="Total Registered Farmers" 
+            :isLoading="state.totalUserLoading" 
+            :value="state.totalUser" 
+            class="text-xl font-semibold text-blue-600 flex-1 min-w-64" 
+          />
+          <SummaryCard 
+            title="Total Uploads" 
+            :isLoading="state.fetchStatusCount" 
+            :value="state.status.all" 
+            class="text-xl font-semibold text-blue-600 flex-1 min-w-64" 
+          />
+          <SummaryCard 
+            title="New Uploaded Images (24h)" 
+            :isLoading="state.totalUploadedCacaoTodayLoading" 
+            :value="state.totalUploadedCacaoToday" 
+            class="text-xl font-semibold text-yellow-600 flex-1 min-w-64" 
+          />
+          <SummaryCard 
+            title="Healthy" 
+            :isLoading="state.fetchStatusCount" 
+            :value="state.status.healthy" 
+            class="text-xl font-semibold text-green-600 flex-1 min-w-64" 
+          />
+          <SummaryCard 
+            title="Diseased" 
+            :isLoading="state.fetchStatusCount" 
+            :value="state.status.diseased" 
+            class="text-xl font-semibold text-red-600 flex-1 min-w-64" 
+          />
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ChartCard title="Monthky Uploader Heatmap">
+          <ChartCard title="Monthly Uploader Heatmap">
             <template #filter>
               <select
                 @change="fetchHeatMapData"

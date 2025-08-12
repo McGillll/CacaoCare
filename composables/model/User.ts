@@ -10,5 +10,5 @@ export interface User{
     city: string,
     barangay: string,
     role: string,
-    active: string
+    email_verified_at: string | null
 }
