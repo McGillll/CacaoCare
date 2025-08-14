@@ -12,10 +12,12 @@
           <p v-else>
              {{state.totalSignUps}} new farmer sign-ups today
           </p> </li>
-        <li class="flex items-center">⚠️
+        <li class="flex items-center">
           <div v-if="state.fetchingMostDisease" class="w-full h-6 rounded animate-pulse bg-gray-200"/>
           <p v-else>
-             Urgent Alert: {{ state.mostDisease.label }} outbreak in {{ state.mostDisease.city }}
+            <p v-if="state.mostDisease">
+              ⚠️ Urgent Alert: {{ state?.mostDisease?.label }} outbreak in {{ state?.mostDisease?.city }}
+            </p>
           </p></li>
       </ul>
     </div>
