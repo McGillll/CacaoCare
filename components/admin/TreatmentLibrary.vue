@@ -8,17 +8,66 @@
 			</div>
 			<h2 class="text-2xl font-bold text-gray-900">Treatment Library</h2>
 		</div>
-		<p class="text-gray-600">Comprehensive collection of cacao disease treatments and management protocols</p>
+		<p class="font-semibold text-gray-600">Comprehensive collection of cacao disease treatments and management protocols</p>
 	</div>
 
-	<!-- Loading State -->
-	<div v-if="state.loading" class="flex flex-col items-center justify-center py-20">
-		<div class="relative">
-			<div class="animate-spin rounded-full h-12 w-12 border-4 border-green-200"></div>
-			<div class="animate-spin rounded-full h-12 w-12 border-4 border-green-600 border-t-transparent absolute top-0"></div>
+	<!-- Skeleton Loading State -->
+	<div v-if="state.loading">
+		<!-- Statistics Bar Skeleton -->
+		<SkeletonloaderStatisticsLoader />
+
+		<!-- Treatment Cards Skeleton -->
+		<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+			<div v-for="i in 2" :key="i" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+				<!-- Image Skeleton -->
+				<div class="h-48 bg-gray-200 animate-pulse"></div>
+				
+				<!-- Content Skeleton -->
+				<div class="p-6">
+					<!-- Disease Name Skeleton -->
+					<div class="flex items-start gap-3 mb-4">
+						<div class="w-7 h-7 bg-gray-200 rounded-lg animate-pulse flex-shrink-0"></div>
+						<div class="flex-1">
+							<div class="h-5 bg-gray-200 rounded animate-pulse mb-2"></div>
+							<div class="h-3 w-20 bg-gray-200 rounded animate-pulse"></div>
+						</div>
+					</div>
+					
+					<!-- Description Skeleton -->
+					<div class="space-y-2 mb-5">
+						<div class="h-3 bg-gray-200 rounded animate-pulse"></div>
+						<div class="h-3 bg-gray-200 rounded animate-pulse w-3/4"></div>
+					</div>
+					
+					<!-- Key Steps Skeleton -->
+					<div>
+						<div class="flex items-center gap-2 mb-3">
+							<div class="w-5 h-5 bg-gray-200 rounded animate-pulse"></div>
+							<div class="h-3 w-16 bg-gray-200 rounded animate-pulse"></div>
+						</div>
+						<div class="space-y-2">
+							<div v-for="j in 2" :key="j" class="flex items-center gap-2">
+								<div class="w-1.5 h-1.5 bg-gray-200 rounded-full animate-pulse"></div>
+								<div class="h-3 bg-gray-200 rounded animate-pulse flex-1"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Action Buttons Skeleton -->
+				<div class="p-6">
+					<div class="flex gap-2">
+						<div class="flex-1 h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+						<div class="w-10 h-10 bg-gray-200 rounded-xl animate-pulse"></div>
+					</div>
+				</div>
+				
+				<!-- Footer Skeleton -->
+				<div class="bg-gray-50 border-t border-gray-100 px-6 py-3">
+					<div class="h-3 w-24 bg-gray-200 rounded animate-pulse"></div>
+				</div>
+			</div>
 		</div>
-		<p class="mt-4 text-gray-600 font-medium">Loading treatment database...</p>
-		<p class="text-sm text-gray-500">Please wait while we fetch the latest treatments</p>
 	</div>
 
 	<!-- Error State -->

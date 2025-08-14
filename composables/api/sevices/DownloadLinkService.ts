@@ -14,6 +14,12 @@ class DownloadLinkService extends BaseAPIService {
     async storeDownloadLink(param: Object): Promise<any>{
         return await this.request(`download_link`, `POST`, param)
     }
+    async updateDownloadLink(id: Object, param: Object): Promise<any>{
+        return await this.request(`download_link/${id}?_method=PUT`, `POST`, param)
+    }
+    async deleteDownloadLink(id: Object): Promise<any>{
+        return await this.request(`download_link/${id}`, `DELETE`)
+    }
 }
 
 export const downloadLinkService= new DownloadLinkService();

@@ -151,7 +151,7 @@ import { formatDate } from '~/composables/function/FormatDate'
 
 // Props
 interface Props {
-	treatment: Treatment
+	treatment: Treatment 
 }
 
 defineProps<Props>()

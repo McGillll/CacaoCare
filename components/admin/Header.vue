@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white shadow px-4 md:px-10 py-4 flex justify-between items-center relative">
+  <header class="fixed md:relative top-0 left-0 right-0 z-50 bg-white shadow px-4 md:px-10 py-4 flex justify-between items-center">
     <div class="flex items-center gap-4">
       <!-- Mobile Menu Button -->
       <button class="md:hidden text-gray-600" @click="$emit('toggle-sidebar')">
