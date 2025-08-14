@@ -25,8 +25,8 @@
     </div>
   </template>
   
-  <script setup lang="ts">
-  import { ref } from 'vue';
+<script setup lang="ts">
+  import { ref, onMounted, onUnmounted } from 'vue';
   import Header from '@/components/admin/Header.vue';
   import Sidebar from '@/components/admin/Sidebar.vue';
   import Footer from '@/components/admin/Footer.vue';
