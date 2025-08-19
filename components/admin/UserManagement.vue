@@ -6,37 +6,84 @@
     state.isUpdated = false
   }"
   @close="()=>{state.isUpdated = false}"/>
+
+  <!-- Header Section -->
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-2">
+      <div class="p-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg">
+        <UsersIcon class="h-6 w-6 text-white" />
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900">User Management</h2>
+    </div>
+    <p class="font-semibold text-gray-600">Manage and monitor user accounts, verification status, and access control</p>
+  </div>
+
+  <!-- Statistics Bar -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-blue-500 rounded-lg">
+          <UsersIcon class="h-5 w-5 text-white" />
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-blue-900">{{ filteredData.length }}</p>
+          <p class="text-sm text-blue-700">Total Users</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-green-500 rounded-lg">
+          <CheckBadgeIcon class="h-5 w-5 text-white" />
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-green-900">{{ filteredData.filter(user => user.email_verified_at).length }}</p>
+          <p class="text-sm text-green-700">Verified Users</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl p-4 border border-purple-200">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-purple-500 rounded-lg">
+          <MapPinIcon class="h-5 w-5 text-white" />
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-purple-900">{{ [...new Set(state.userData.map(user => user.city))].length }}</p>
+          <p class="text-sm text-purple-700">Unique Locations</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
     <!-- Header with Search and Filter -->
     <div class="p-6 border-b border-gray-200 bg-gray-50/50">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 class="text-xl font-semibold text-gray-900">Users</h2>
-          <p class="text-sm text-gray-600 mt-1">
-            Manage user accounts and verification status
-          </p>
+        <div class="flex items-center gap-3">
+          <h3 class="text-lg font-semibold text-gray-900">User Directory</h3>
+          <span class="px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+            {{ filteredData.length }} users
+          </span>
         </div>
         
         <div class="flex flex-col sm:flex-row gap-3">
           <!-- Search Input -->
           <div class="relative w-full sm:w-auto">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" />
             </div>
             <input
               v-model="searchTerm"
               type="text"
-              placeholder="Search users..."
-              class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Search by email, username, or location..."
+              class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             />
           </div>
           
           <!-- Status Filter -->
           <select
             v-model="statusFilter"
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            class="px-4 py-2 pl-3 pr-10 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white appearance-none"
           >
             <option value="all">All Status</option>
             <option value="verified">Verified</option>
@@ -46,7 +93,34 @@
       </div>
     </div>
 
-    <div class="overflow-x-auto">
+    <div v-if="state.isFetchingUser" class="p-8">
+      <div class="grid grid-cols-1 gap-4">
+        <div v-for="n in 3" :key="n" class="animate-pulse flex gap-4 p-4 rounded-xl bg-gray-50">
+          <div class="h-12 w-12 rounded-full bg-gray-200"></div>
+          <div class="flex-1 space-y-2">
+            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/3"></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="h-8 w-24 bg-gray-200 rounded-lg"></div>
+            <div class="h-8 w-8 bg-gray-200 rounded-lg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else-if="!filteredData.length" class="text-center py-20">
+      <div class="bg-gray-100 rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+        <UsersIcon class="h-10 w-10 text-gray-400" />
+      </div>
+      <h3 class="text-2xl font-semibold text-gray-800 mb-3">No Users Found</h3>
+      <p class="text-gray-600 max-w-md mx-auto leading-relaxed">
+        Try adjusting your search filters or try a different search term.
+      </p>
+    </div>
+
+    <div v-else class="overflow-x-auto">
       <table class="w-full">
         <thead class="bg-gray-50 border-b border-gray-200">
           <tr>
@@ -134,10 +208,7 @@
               <!-- Location Column -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center text-sm text-gray-900">
-                  <svg class="mr-2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                  <MapIcon class="mr-2 h-4 w-4 text-gray-400" />
                   {{ user.barangay }}, {{ user.city }}
                 </div>
               </td>
@@ -145,18 +216,14 @@
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <div class="flex items-center justify-end space-x-2">
                   <button @click="toggleVerification(user)" class="transition-all flex items-center gap-1" :title="user.email_verified_at ? 'Unverify user' : 'Verify user'">
-                    <svg v-if="!user.email_verified_at" class="h-5 w-5 text-green-400 hover:text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg v-else class="h-5 w-5 text-red-400 hover:text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span :class="user.email_verified_at ? 'text-red-400' : 'text-green-400'">{{ user.email_verified_at ? 'Unverify user' : 'Verify user' }}</span>
+                        <CheckCircleIcon v-if="!user.email_verified_at" class="h-5 w-5 text-green-400 hover:text-green-700" />
+                    <XCircleIcon v-else class="h-5 w-5 text-red-400 hover:text-red-700" />
+                    <span :class="user.email_verified_at ? 'text-red-400 hover:text-red-700' : 'text-green-400 hover:text-green-700'" class="font-medium">
+                      {{ user.email_verified_at ? 'Unverify' : 'Verify' }}
+                    </span>
                   </button>
-                  <button class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                    </svg>
+                  <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
+                    <EllipsisVerticalIcon class="h-5 w-5" />
                   </button>
                 </div>
               </td>
@@ -212,6 +279,18 @@
 import { userService } from '~/composables/api/sevices/UserService'
 import type { User } from '~/composables/model/User'
 
+import { 
+  UsersIcon,
+  CheckBadgeIcon,
+  MapPinIcon,
+  MagnifyingGlassIcon,
+  ChevronUpDownIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  EllipsisVerticalIcon,
+  MapIcon
+} from '@heroicons/vue/24/outline'
+
 const searchTerm = ref('')
 const statusFilter = ref<'all' | 'verified' | 'unverified'>('all')
 const sortBy = ref<keyof User>('email')
@@ -219,7 +298,6 @@ const sortOrder = ref<'asc' | 'desc'>('asc')
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 
-// Fixed: Initialize with empty array instead of array with empty object
 const state = reactive({
   userData: [] as User[],
   selectedUser: {} as User,

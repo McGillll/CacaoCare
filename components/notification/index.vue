@@ -1,5 +1,5 @@
 <template>
-<div class="fixed w-screen max-h-screen bg-black/10 inset-0 z-10">
+<div class="fixed w-screen max-h-screen bg-black/10 top-14 right-0 z-10">
     <div class="rounded-md absolute w-1/4 right-0 top-5 z-10 bg-green-50 p-4">
         <div class="flex">
             <div class="shrink-0">

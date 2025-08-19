@@ -29,7 +29,7 @@
                     <SpinnerElement v-if="state.linkNotReady" :size=25 />
                     <div v-else>
                         <p class="text-bold text-2xl">Download the App</p>
-                        <span class='font-light'>CacaoCare {{ state.downloadLink.version }}</span>
+                        <span class='font-light'>CacaoCare v{{ state.downloadLink.version }}</span>
                     </div>
                 </button>
             </div>

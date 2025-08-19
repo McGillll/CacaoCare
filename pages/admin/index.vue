@@ -83,13 +83,13 @@
                                         </svg>
                                     </div>
                                 </button>
-                                <button class="group bg-white bg-opacity-20 hover:bg-opacity-30 rounded-2xl p-4 text-white transition-all duration-300 backdrop-blur-sm border border-white border-opacity-20 hover:border-opacity-40">
+                                <button @click="navigateTo('/admin/AppUpdates')" class="group bg-white bg-opacity-20 hover:bg-opacity-30 rounded-2xl p-4 text-white transition-all duration-300 backdrop-blur-sm border border-white border-opacity-20 hover:border-opacity-40">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                                             </svg>
-                                            <span class="font-semibold text-sm">Export Data</span>
+                                            <span class="font-semibold text-sm">App Updates</span>
                                         </div>
                                         <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
@@ -286,7 +286,7 @@
                                     <select
                                         @change="fetchHeatMapData"
                                         v-model="state.selectedFilter"
-                                        class="bg-white bg-opacity-20 text-white placeholder-green-200 border border-white border-opacity-30 rounded-2xl px-6 py-3 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 backdrop-blur-sm transition-all duration-300 hover:bg-opacity-30"
+                                        class="bg-white bg-opacity-20 text-white placeholder-green-200 border border-white border-opacity-30 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 backdrop-blur-sm transition-all duration-300 hover:bg-opacity-30"
                                     >
                                         <option class="text-gray-900 bg-white" value="Diseases">All Diseases</option>
                                         <option class="text-gray-900 bg-white" value="Black Pod Rot">Black Pod Rot</option>
@@ -302,7 +302,7 @@
                             </div>
                             
                             <!-- Map legend -->
-                            <div class="mt-6 flex flex-wrap gap-4">
+                            <!-- <div class="mt-6 flex flex-wrap gap-4">
                                 <div class="flex items-center space-x-2">
                                     <div class="w-4 h-4 bg-red-500 rounded-full"></div>
                                     <span class="text-sm font-medium text-gray-600">High Risk</span>
@@ -315,7 +315,7 @@
                                     <div class="w-4 h-4 bg-green-500 rounded-full"></div>
                                     <span class="text-sm font-medium text-gray-600">Low Risk</span>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
@@ -342,33 +342,43 @@
                                         </div>
                                         <div>
                                             <h3 class="text-2xl font-bold text-white mb-2">Trend Analysis</h3>
-                                            <p class="text-blue-100 text-lg mb-2">Monthly disease patterns</p>
-                                            <div class="inline-flex items-center bg-white bg-opacity-20 rounded-full px-4 py-2 backdrop-blur-sm">
-                                                <svg class="w-4 h-4 text-blue-200 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"/>
-                                                </svg>
-                                                <span class="text-blue-100 font-semibold text-sm">{{ state.trend.trend }}</span>
-                                            </div>
+                                            <p class="text-blue-100 text-lg">Monthly disease patterns</p>
                                         </div>
                                     </div>
                                     
                                     <!-- Trend indicators -->
                                     <div class="flex space-x-3">
                                         <div class="text-center">
-                                            <div class="text-2xl font-bold text-white">{{ state.trend.blackpod }}</div>
+                                            <div class="text-2xl font-bold text-white">{{ state.trend.blackpod[state.trend.blackpod.length - 1] }}</div>
                                             <div class="text-blue-200 text-xs">Black Pod</div>
                                         </div>
                                         <div class="text-center">
-                                            <div class="text-2xl font-bold text-white">{{ state.trend.frostypod }}</div>
+                                            <div class="text-2xl font-bold text-white">{{ state.trend.blackpod[state.trend.frostypod.length - 1] }}</div>
                                             <div class="text-blue-200 text-xs">Frosty Pod</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="p-6 lg:p-8 bg-gradient-to-br from-gray-50 to-blue-50">
+                            <div class=" p-6 lg:p-8">
                                 <div class="h-80 lg:h-96 rounded-2xl overflow-hidden shadow-inner bg-white p-4">
-                                    <ChartBar :data="state.trend" class="h-full w-full" />
+                                    <ChartLine :data="state.trend" class="h-full w-full" />
+                                </div>
+                                
+                                <!-- Chart Legend -->
+                                <div class="mt-6 flex flex-wrap justify-center gap-6">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-4 h-4 bg-red-500 rounded-full"></div>
+                                            <span class="text-sm font-medium text-gray-700">Black Pod Rot</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                                            <span class="text-sm font-medium text-gray-700">Frosty Pod Rot</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -431,8 +441,6 @@
     import { ref, reactive, onMounted, onUnmounted } from 'vue'
     import Header from '@/components/admin/Header.vue'
     import Sidebar from '@/components/admin/Sidebar.vue'
-    import SummaryCard from '@/components/admin/SummaryCard.vue'
-    import ChartCard from '@/components/admin/ChartCard.vue'
     import RecentActions from '@/components/admin/RecentActions.vue'
     import Footer from '@/components/admin/Footer.vue'
     import type { User } from '~/composables/model/User'
@@ -440,7 +448,7 @@
     import { cacaoServices } from '~/composables/api/sevices/CacaoService'
     import type { HeatPoint } from '~/composables/model/HeatPoint'
     import { getBarangayBoundingBox } from '~/composables/api/sevices/openStreetMapApiService'
-    import { ChartBar } from '#components'
+    import { ChartLine } from '#components'
     import { format } from 'date-fns'
 
     const sidebarOpen = ref(false)
@@ -455,10 +463,9 @@
             all: 0
         },
         trend: {
-            blackpod: 0,
-            frostypod: 0,
+            blackpod: [],
+            frostypod: [],
             total: 0,
-            trend: ""
         },
         totalUser: 0,
         selectedFilter: 'Diseases',
@@ -490,13 +497,6 @@
             const response = await cacaoServices.getCacaoTrend()
             if (response.data) {
                 state.trend = response.data
-                if (state.trend.blackpod > state.trend.frostypod) {
-                    state.trend.trend = "Black Pod Rot"
-                } else if (state.trend.blackpod < state.trend.frostypod) {
-                    state.trend.trend = "Frosty Pod Rot"
-                } else {
-                    state.trend.trend = "Black Pod Rot & Frosty Pod Rot "
-                }
             }
             state.isFetchingCacaoTrend = false
         } catch (error: any) { }
