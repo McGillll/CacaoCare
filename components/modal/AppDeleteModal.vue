@@ -2,7 +2,7 @@
     <!-- Delete Confirmation Modal -->
     <div
         v-if="isVisible"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm"
+        class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black bg-opacity-50 backdrop-blur-sm"
         @click.self="handleCancel"
     >
         <!-- Success Toast -->
@@ -23,7 +23,7 @@
             </div>
         </Transition>
         <!-- Modal Card -->
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-2 sm:mx-4 overflow-hidden">
             <!-- Loading Overlay -->
             <div
                 v-if="isDeleting"
@@ -40,15 +40,15 @@
             </div>
 
             <!-- Header -->
-            <div class="bg-gradient-to-r from-red-50 to-rose-50 px-8 py-6 border-b border-red-100">
+            <div class="bg-gradient-to-r from-red-50 to-rose-50 px-4 sm:px-8 py-4 sm:py-6 border-b border-red-100">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="p-3 bg-gradient-to-r from-red-500 to-red-600 rounded-xl">
-                            <ExclamationTriangleIcon class="h-6 w-6 text-white" />
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div class="p-2 sm:p-3 bg-gradient-to-r from-red-500 to-red-600 rounded-xl">
+                            <ExclamationTriangleIcon class="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-900">Delete App Version</h3>
-                            <p class="text-sm text-gray-600">This action cannot be undone</p>
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-900">Delete App Version</h3>
+                            <p class="text-xs sm:text-sm text-gray-600">This action cannot be undone</p>
                         </div>
                     </div>
                     <button
@@ -62,13 +62,13 @@
             </div>
 
             <!-- Content -->
-            <div class="p-8">
+            <div class="p-4 sm:p-8">
                 <!-- App Info Display -->
-                <div v-if="item" class="bg-gray-50 rounded-xl p-4 mb-6">
-                    <div class="flex items-center gap-4">
+                <div v-if="item" class="bg-gray-50 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+                    <div class="flex items-center gap-3 sm:gap-4">
                         <div class="flex-shrink-0">
-                            <div class="w-12 h-12 bg-gradient-to-br from-red-100 to-rose-200 rounded-xl flex items-center justify-center">
-                                <DevicePhoneMobileIcon class="h-6 w-6 text-red-600" />
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-100 to-rose-200 rounded-xl flex items-center justify-center">
+                                <DevicePhoneMobileIcon class="h-5 w-5 sm:h-6 sm:w-6 text-red-600" />
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
@@ -90,7 +90,7 @@
                 </div>
 
                 <!-- Warning Message -->
-                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
                     <div class="flex items-start gap-3">
                         <ExclamationTriangleIcon class="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
                         <div>
@@ -105,14 +105,14 @@
                 </div>
 
                 <!-- Confirmation Text -->
-                <div class="space-y-3 mb-6">
-                    <label class="block text-sm font-semibold text-gray-700">
+                <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                    <label class="block text-xs sm:text-sm font-semibold text-gray-700">
                         Type <code class="px-2 py-1 bg-gray-100 rounded text-red-600 font-mono">{{ item?.version }}</code> to confirm deletion:
                     </label>
                     <input
                         v-model="confirmationText"
                         type="text"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200"
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200"
                         :placeholder="`Enter ${item?.version} to confirm`"
                         :disabled="isDeleting"
                         @keyup.enter="isConfirmationValid && handleDelete()"
@@ -120,11 +120,11 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex items-center justify-end gap-4">
+                <div class="flex items-center justify-end gap-3 sm:gap-4">
                     <button
                         type="button"
                         @click="handleCancel"
-                        class="px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition-all duration-200 focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
+                        class="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition-all duration-200 focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
                         :disabled="isDeleting"
                     >
                         Cancel
@@ -132,7 +132,7 @@
                     <button
                         type="button"
                         @click="handleDelete"
-                        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        class="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                         :disabled="isDeleting || !isConfirmationValid"
                     >
                         <TrashIcon class="h-4 w-4" />
