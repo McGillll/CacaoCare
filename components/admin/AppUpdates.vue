@@ -25,7 +25,7 @@
     </div>
 
 <!-- Statistics Bar -->
-    <div v-if="!state.isFetching && state.downloadLinks.length" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div v-if="!state.isFetching && state.downloadLinks.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-blue-500 rounded-lg">
@@ -124,9 +124,9 @@
                 :key="index"
                 class="group relative bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-green-200 transform hover:-translate-y-1"
             >
-                <div class="flex items-center p-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center p-6 gap-6">
                     <!-- App Icon and Info Section -->
-                    <div class="flex items-center flex-1 min-w-0">
+                    <div class="flex items-start sm:items-center flex-1 min-w-0 gap-4 sm:gap-6">
                         <!-- App Icon -->
                         <div class="relative flex-shrink-0">
                             <div class="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-200 rounded-2xl flex items-center justify-center">
@@ -139,7 +139,7 @@
                         </div>
 
                         <!-- App Details -->
-                        <div class="ml-6 flex-1 min-w-0">
+                        <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-3 mb-2">
                                 <h3 class="text-xl font-bold text-gray-900 truncate">
                                     CacaoCare
@@ -164,30 +164,32 @@
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="flex items-center gap-3 ml-6">
+                    <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
                         <button
                             @click="downloadApp(downloadLink.download_link)"
-                            class="flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-5 py-2.5 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                            class="flex-1 sm:flex-initial flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-5 py-2.5 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         >
                             <ArrowDownTrayIcon class="h-4 w-4" />
-                            Download
+                            <span class="sm:inline">Download</span>
                         </button>
                         
-                        <button
-                            @click="editDownloadLink(downloadLink)"
-                            class="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors duration-200 group/edit"
-                            :title="'Edit version ' + downloadLink.version"
-                        >
-                            <PencilSquareIcon class="h-4 w-4 text-gray-600 group-hover/edit:text-gray-800" />
-                        </button>
-                        
-                        <button
-                            @click="confirmDelete(downloadLink)"
-                            class="p-2.5 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 rounded-xl transition-colors duration-200 group/delete"
-                            :title="'Delete version ' + downloadLink.version"
-                        >
-                            <TrashIcon class="h-4 w-4 text-red-500 group-hover/delete:text-red-700" />
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button
+                                @click="editDownloadLink(downloadLink)"
+                                class="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors duration-200 group/edit"
+                                :title="'Edit version ' + downloadLink.version"
+                            >
+                                <PencilSquareIcon class="h-4 w-4 text-gray-600 group-hover/edit:text-gray-800" />
+                            </button>
+                            
+                            <button
+                                @click="confirmDelete(downloadLink)"
+                                class="p-2.5 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 rounded-xl transition-colors duration-200 group/delete"
+                                :title="'Delete version ' + downloadLink.version"
+                            >
+                                <TrashIcon class="h-4 w-4 text-red-500 group-hover/delete:text-red-700" />
+                            </button>
+                        </div>
                     </div>
                 </div>
                 

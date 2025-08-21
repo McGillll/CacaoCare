@@ -1,5 +1,5 @@
 <template>
-  <HeadTitle title="CacaoCare" />
+  <HeadTitle title="CacaoCare - Treatment Library" />
   <NuxtLayout />
   <AdminLayout >
     <TreatmentLibrary />

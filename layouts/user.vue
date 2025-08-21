@@ -1,21 +1,8 @@
 <template>
     <div v-if="state.user.role==='admin'" class="min-h-screen bg-gray-50 flex flex-col">
-        <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-
-        <div class="flex flex-1 relative">
-        <!-- Sidebar & Overlay -->
-        <transition name="sidebar">
-            <AdminSidebar v-if="sidebarOpen || isLargeScreen" class="fixed md:static z-50 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64" />
-        </transition>
-
-        <div
-            v-if="sidebarOpen && !isLargeScreen"
-            class="fixed inset-0 z-100 bg-black bg-opacity-30"
-            @click="sidebarOpen = false"
-        />
+        <AdminLayout>
             <slot />
-        </div>
-        <AdminFooter />
+        </AdminLayout>
     </div>
     <div v-else class="min-h-screen bg-gray-50 flex flex-col">
         <UserHeader @currentUser="handleUser" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
@@ -31,8 +18,8 @@
         
             <slot />
         </div>
+        <UserFooter />
     </div>
-    <UserFooter />
 </template>
 
 <script setup lang="ts">

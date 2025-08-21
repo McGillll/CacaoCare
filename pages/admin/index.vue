@@ -1,5 +1,5 @@
 <template>
-    <HeadTitle title="CacaoCare Admin" />
+    <HeadTitle title="CacaoCare - Admin" />
     <NuxtLayout />
     <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col">
         <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />

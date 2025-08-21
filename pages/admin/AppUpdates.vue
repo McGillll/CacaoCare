@@ -1,5 +1,5 @@
 <template>
-    <HeadTitle title="CacaoCare" />
+    <HeadTitle title="CacaoCare - App Updates" />
     <NuxtLayout />
     <AdminLayout>
         <AppUpdates />
