@@ -300,22 +300,6 @@
                             <div class="h-96 lg:h-[400px] rounded-2xl overflow-hidden shadow-inner bg-white">
                                 <CacaoMap :heatPoints="state?.heatpoints" :total-uploaders="state.totalUserUpload" class="w-full h-full" />
                             </div>
-                            
-                            <!-- Map legend -->
-                            <!-- <div class="mt-6 flex flex-wrap gap-4">
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-4 h-4 bg-red-500 rounded-full"></div>
-                                    <span class="text-sm font-medium text-gray-600">High Risk</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
-                                    <span class="text-sm font-medium text-gray-600">Medium Risk</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-4 h-4 bg-green-500 rounded-full"></div>
-                                    <span class="text-sm font-medium text-gray-600">Low Risk</span>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
 
@@ -353,7 +337,7 @@
                                             <div class="text-blue-200 text-xs">Black Pod</div>
                                         </div>
                                         <div class="text-center">
-                                            <div class="text-2xl font-bold text-white">{{ state.trend.blackpod[state.trend.frostypod.length - 1] }}</div>
+                                            <div class="text-2xl font-bold text-white">{{ state.trend.frostypod[state.trend.frostypod.length - 1] }}</div>
                                             <div class="text-blue-200 text-xs">Frosty Pod</div>
                                         </div>
                                     </div>
