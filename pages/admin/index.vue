@@ -277,7 +277,7 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h3 class="text-2xl font-bold text-white mb-2">Disease Distribution</h3>
+                                        <h3 class="text-2xl font-bold text-white mb-2">Weekly Disease Distribution</h3>
                                         <p class="text-green-100 text-lg">Geographic insights and hotspots</p>
                                     </div>
                                 </div>

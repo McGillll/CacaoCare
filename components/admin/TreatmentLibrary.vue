@@ -6,9 +6,9 @@
 			<div class="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg">
 				<BeakerIcon class="h-6 w-6 text-white" />
 			</div>
-			<h2 class="text-2xl font-bold text-gray-900">Treatment Library</h2>
+			<h2 class="text-2xl font-bold text-gray-900">{{ props.header }}</h2>
 		</div>
-		<p class="font-semibold text-gray-600">Comprehensive collection of cacao disease treatments and management protocols</p>
+		<p class="font-semibold text-gray-600">{{ props.description }}</p>
 	</div>
 
 	<!-- Skeleton Loading State -->
@@ -213,6 +213,7 @@
 						 View Protocol
 						</button>
 						<button
+						v-if="props.userRole !== 'user'"
 						@click="openEditModal(treatment)"
 							class="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors duration-200 group/edit"
 							:title="'Edit ' + treatment.disease"
@@ -259,7 +260,6 @@ import {
 	EyeIcon, 
 	PencilSquareIcon, 
 	ClipboardDocumentListIcon,
-	ExclamationCircleIcon,
 	ExclamationTriangleIcon,
 	CheckCircleIcon,
 	ClockIcon,
@@ -273,6 +273,21 @@ import type { Treatment } from '~/composables/model/TreatmentModel'
 import { treatmentService } from '~/composables/api/sevices/TreatmentService'
 import { formatDate } from '~/composables/function/FormatDate'
 
+const props = defineProps({
+	userRole: {
+		type: String,
+		required: false 
+	},
+	header: {
+		type: String,
+		default: 'Treatment Library'
+	},
+	description: {
+		type: String,
+		default: 'Comprehensive collection of cacao disease treatments and management protocols'
+	}
+})
+
 // Using reactive state object as per conventions
 const state = reactive({
 	treatments: [] as Treatment[],
@@ -280,8 +295,10 @@ const state = reactive({
 	isEditModalOpen: false,
 	isViewModalOpen: false,
 	loading: true,
-	error: null as string | null
+	error: null as string | null,
 })
+
+
 
 // Fetch treatments from API
 const fetchTreatments = async () => {

@@ -1,4 +1,6 @@
 <template>
+    <AdminLayout>
+
         <main class="flex-1 p-4 sm:p-6 overflow-y-auto bg-[#f8faf7] space-y-6">
             <section class="space-y-2">
                 <div class="flex items-start justify-between">
@@ -310,6 +312,7 @@
                 </div>
             </div>
         </main>
+    </AdminLayout>
 </template>
 
 <script setup lang="ts">

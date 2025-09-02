@@ -16,7 +16,10 @@
             <div v-if="sidebarOpen && !isLargeScreen" class="fixed inset-0 z-40 bg-black bg-opacity-30"
             @click="sidebarOpen = false" />
         
-            <slot />
+            <main class="flex-1 p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 overflow-y-auto pt-20 md:pt-4 w-full">
+                <!-- Main slot content -->
+                <slot />
+            </main>
         </div>
         <UserFooter />
     </div>
