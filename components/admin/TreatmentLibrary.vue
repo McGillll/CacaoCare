@@ -150,6 +150,7 @@
 				<!-- Image Section with Overlay -->
 				<div class="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-2xl">
 					<img
+						loading="lazy"
 						:src="treatment.img_url || '/images/treatment-placeholder.jpg'"
 						:alt="treatment.disease"
 						class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
