@@ -143,7 +143,7 @@
                         </th>
                         <th @click="handleSort('barangay')" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center space-x-1">
-                                <span>Location</span>
+                                <span>Farm Location</span>
                                 <svg v-if="sortBy === 'barangay'" class="h-4 w-4 transition-transform" :class="{ 'rotate-180': sortOrder === 'desc' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                                 </svg>

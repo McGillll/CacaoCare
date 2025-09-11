@@ -1,12 +1,12 @@
 <template>
-  <div class="h-full w-full rounded">
+  <div class=" h-full w-full rounded">
     <LMap
       ref="map"
       :zoom="10"
       :max-zoom="22"
       :center="[7.1907, 125.4553]"
       :use-global-leaflet="false"
-      class="rounded"
+      class="z-0 rounded"
     >
       <LTileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

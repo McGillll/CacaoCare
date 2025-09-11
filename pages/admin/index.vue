@@ -434,6 +434,7 @@
     import { getBarangayBoundingBox } from '~/composables/api/sevices/openStreetMapApiService'
     import { ChartLine } from '#components'
     import { format } from 'date-fns'
+import { fetchBaranggayBoundingBox } from '~/composables/function/GetHeatMapData'
 
     const sidebarOpen = ref(false)
     const isLargeScreen = ref(false)
@@ -488,24 +489,15 @@
 
     async function fetchHeatMapData() {
         try {
-            const dateNow = format(new Date(), 'yyyy-MM')
             state.heatpoints = [] // Clear previous heatpoints
-            const response = await cacaoServices.getHeatMapData(state.selectedFilter, dateNow)
+            const response = await cacaoServices.getWeeklyHeatMapData(state.selectedFilter)
             if (response.data && state.status.diseased > 0) {
-                for (const data of response.data.uploaded) {
-                    let heatpoint = {} as HeatPoint
-                    heatpoint.intensity = (data.count / response.data.total) * 100
-                    heatpoint.name = data.barangay
-                    heatpoint.count = data.count
-                    heatpoint.boundingbox = await getBarangayBoundingBox(data.barangay, data.city)
-                    state.heatpoints.push(heatpoint)
-                    state.totalUserUpload = response.data.total
-                    state.trend.total = response.data.total
-                    console.log(heatpoint)
-                }
+                state.heatpoints = await fetchBaranggayBoundingBox(response)
+                state.totalUserUpload = response.data.total
+                state.trend.total = response.data.total    
             }
         } catch (error: any) {
-            console.error("Error fetching heat map data:", error)
+            alert("Error fetching heatmap data: " + error.message)
         }
     }
 
