@@ -91,7 +91,6 @@
                                             required
                                         />
                                     </div>
-                                    <FormError v-if="state.errors?.username" :error="state.errors?.username?.[0]"/>
                                 </div>
 
                                 <!-- Email Field -->
@@ -113,7 +112,6 @@
                                             required
                                         />
                                     </div>
-                                    <FormError v-if="state.errors?.email" :error="state.errors?.email?.[0]"/>
                                 </div>
                             </div>
 
@@ -362,60 +360,57 @@
                         <!-- Step 3: Review & Submit -->
                         <div v-if="currentStep === 3" class="space-y-6">
                             <div class="text-center mb-8">
-                                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl mb-4">
-                                    <CheckIcon class="w-8 h-8 text-white" />
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl mb-4">
+                                    <RocketLaunchIcon class="w-8 h-8 text-white" />
                                 </div>
-                                <h2 class="text-3xl font-bold text-gray-900 mb-2">Almost There!</h2>
-                                <p class="text-gray-600">Please review your information before creating your account</p>
+                                <h2 class="text-3xl font-bold text-gray-900 mb-2">Review & Submit</h2>
+                                <p class="text-gray-600">Double-check your details before creating your account</p>
                             </div>
 
-                            <!-- Review Cards -->
-                            <div class="space-y-4">
-                                <div class="p-6 bg-gradient-to-r from-green-50 to-teal-50 rounded-2xl border border-green-100">
-                                    <h3 class="flex items-center font-bold text-gray-900 mb-4">
-                                        <UserIcon class="w-5 h-5 mr-2 text-green-500" />
-                                        Personal Information
-                                    </h3>
-                                    <div class="grid md:grid-cols-2 gap-4">
-                                        <div>
-                                            <p class="text-sm text-gray-600">Username</p>
-                                            <p class="font-semibold text-gray-900">{{ state.user.username }}</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Email</p>
-                                            <p class="font-semibold text-gray-900">{{ state.user.email }}</p>
-                                        </div>
+                            <!-- Error Display Box -->
+                            <div v-if="Object.keys(state.errors).length" class="mb-6">
+                                <div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-left shadow-lg">
+                                    <div class="flex items-center mb-3">
+                                        <XMarkIcon class="w-6 h-6 text-red-500 mr-2" />
+                                        <span class="text-lg font-semibold text-red-700">Please fix the following errors:</span>
                                     </div>
+                                    <ul class="list-disc pl-6 space-y-2">
+                                        <li v-for="(messages, field) in state.errors" :key="field" class="text-red-600">
+                                            <span v-if="Array.isArray(messages)">
+                                                <span v-for="msg in messages" :key="msg">{{ msg }}</span>
+                                            </span>
+                                            <span v-else>{{ messages }}</span>
+                                        </li>
+                                    </ul>
                                 </div>
+                            </div>
 
-                                <div class="p-6 bg-gradient-to-r from-teal-50 to-blue-50 rounded-2xl border border-teal-100">
-                                    <h3 class="flex items-center font-bold text-gray-900 mb-4">
-                                        <MapPinIcon class="w-5 h-5 mr-2 text-teal-500" />
-                                        Farm Location
-                                    </h3>
-                                    <div class="grid md:grid-cols-2 gap-4">
-                                        <div v-if="!state.fromDavao">
-                                            <p class="text-sm text-gray-600">Region</p>
-                                            <p class="font-semibold text-gray-900">{{ selectedRegion.name }}</p>
-                                        </div>
-                                        <div v-if="!state.fromDavao">
-                                            <p class="text-sm text-gray-600">Province</p>
-                                            <p class="font-semibold text-gray-900">{{ selectedProvince.name }}</p>
-                                        </div>
-                                        <div v-if="!state.fromDavao">
-                                            <p class="text-sm text-gray-600">City</p>
-                                            <p class="font-semibold text-gray-900">{{ selectedCity.name }}</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Barangay</p>
-                                            <p class="font-semibold text-gray-900">{{ selectedBarangay.name }}</p>
-                                        </div>
-                                        <div v-if="state.fromDavao" class="md:col-span-2">
-                                            <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                <CheckIcon class="w-3 h-3 mr-1" />
-                                                Davao City Quick Setup
-                                            </div>
-                                        </div>
+                            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border border-gray-200 p-6">
+                                <h3 class="text-xl font-bold text-gray-900 mb-4">Your Details</h3>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <p class="text-sm text-gray-600">Username</p>
+                                        <p class="font-semibold text-gray-900">{{ state.user.username }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Email</p>
+                                        <p class="font-semibold text-gray-900">{{ state.user.email }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Region</p>
+                                        <p class="font-semibold text-gray-900">{{ state.user.region }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Province</p>
+                                        <p class="font-semibold text-gray-900">{{ state.user.province }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">City</p>
+                                        <p class="font-semibold text-gray-900">{{ state.user.city }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Barangay</p>
+                                        <p class="font-semibold text-gray-900">{{ state.user.barangay }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -686,15 +681,25 @@ async function handleSubmit(){
         formData.append('barangay', state.user.barangay);
 
         const response = await authService.createUser(formData);
-        if(response){
+        console.log("Registration response:", response);
+        if(response.status === 200){
             navigateTo('/verification')
             localStorage.setItem("email", state.user.email)
             localStorage.setItem("_token", response.data.token)
-
+            state.errors = {} // Clear errors on success
+            changeLoading()
+        } else if(response && response.data && response.data.errors) {
+            // Backend returned validation errors
+            state.errors = response.data.errors;
+            changeLoading()
+        } else {
+            // Unexpected error format
+            state.errors = { general: [response?.data?.message || 'Registration failed. Please try again.'] };
             changeLoading()
         }
     }catch(error: any){
-        state.errors = error.errors
+
+        state.errors = error?.errors || { general: ['An unexpected error occurred. Please try again.'] };
         changeLoading()
     }
 };
