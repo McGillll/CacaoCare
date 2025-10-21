@@ -1,53 +1,228 @@
 <template>
     <NuxtLayout name="app">
         <HeadTitle title="CacaoCare - Sign In" />
-        <section class="relative min-h-screen flex items-center bg-gradient-to-r overflow-x-hidden from-green-400 to-teal-500 text-white py-24 sm:py-16 px-8">
+        <section
+            class="relative min-h-screen flex items-center bg-gradient-to-r overflow-x-hidden from-green-400 to-teal-500 text-white py-24 sm:py-16 px-8"
+        >
             <div class="absolute flex inset-0 w-[200%] h-full z-0">
-                <img id="animated-image" class="object-cover w-[60%] h-full" :src="Background" alt="">
+                <img
+                    id="animated-image"
+                    class="object-cover w-[60%] h-full"
+                    :src="Background"
+                    alt=""
+                />
             </div>
-            <div class="bg-black opacity-40 absolute inset-0 w-full h-full z-0"/>
-            <div class="bg-green-700 opacity-5 absolute inset-0 w-full h-full z-0" />
-            <div class="bg-yellow-900 opacity-5 absolute inset-0 w-full h-full z-0" />
+            <div
+                class="bg-black opacity-40 absolute inset-0 w-full h-full z-0"
+            />
+            <div
+                class="bg-green-700 opacity-5 absolute inset-0 w-full h-full z-0"
+            />
+            <div
+                class="bg-yellow-900 opacity-5 absolute inset-0 w-full h-full z-0"
+            />
+
+            <!-- FORGOT PASSWORD MODAL -->
+            <div
+                v-if="state.showForgotPasswordModal"
+                class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            >
+                <div
+                    class="relative bg-white/95 backdrop-blur-xl text-gray-800 p-8 md:p-10 rounded-3xl shadow-2xl border border-white/20 max-w-md w-full"
+                >
+                    <!-- Loading Overlay -->
+                    <div
+                        v-if="state.forgotPasswordLoading"
+                        class="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-3xl flex items-center justify-center z-50"
+                    >
+                        <div class="text-center">
+                            <Spinner :size="50" />
+                            <p class="mt-4 text-lg font-semibold text-gray-900">
+                                Sending Reset Link
+                            </p>
+                            <p class="text-sm text-gray-600">Please wait...</p>
+                        </div>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div v-if="state.forgotPasswordSuccess" class="text-center">
+                        <div
+                            class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl mb-4"
+                        >
+                            <CheckIcon class="w-8 h-8 text-white" />
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                            Check Your Email
+                        </h2>
+                        <p class="text-gray-600 mb-6">
+                            A password reset link has been sent to
+                            <span class="font-semibold">{{
+                                state.forgotPasswordEmail
+                            }}</span>
+                            if the account exists.
+                        </p>
+                        <button
+                            @click="closeForgotPasswordModal"
+                            class="w-full px-8 py-3 bg-gray-200 text-gray-800 font-bold rounded-xl hover:bg-gray-300 transition-all"
+                        >
+                            Close
+                        </button>
+                    </div>
+
+                    <!-- Forgot Password Form -->
+                    <div v-else>
+                        <div class="text-center mb-8">
+                            <div
+                                class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl mb-4"
+                            >
+                                <EnvelopeIcon class="w-8 h-8 text-white" />
+                            </div>
+                            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                                Reset Password
+                            </h1>
+                            <p class="text-gray-600">
+                                Enter your email to receive a reset link.
+                            </p>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div
+                            v-if="state.forgotPasswordError"
+                            class="mb-6 p-4 bg-red-100 border border-red-200 rounded-xl text-center"
+                        >
+                            <p class="text-sm text-red-600">
+                                {{ state.forgotPasswordError }}
+                            </p>
+                        </div>
+
+                        <form
+                            @submit.prevent="handleSendResetLink"
+                            class="space-y-6"
+                        >
+                            <div class="space-y-2">
+                                <label
+                                    class="flex items-center text-sm font-medium text-gray-700 mb-2"
+                                    for="forgot-email"
+                                >
+                                    <EnvelopeIcon
+                                        class="w-4 h-4 mr-2 text-green-500"
+                                    />
+                                    Email Address
+                                </label>
+                                <div class="relative">
+                                    <div
+                                        class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                                    >
+                                        <AtSymbolIcon
+                                            class="h-5 w-5 text-gray-400"
+                                        />
+                                    </div>
+                                    <input
+                                        type="email"
+                                        id="forgot-email"
+                                        v-model="state.forgotPasswordEmail"
+                                        class="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 transition-all bg-gray-50"
+                                        placeholder="Enter your email address"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <button
+                                    type="button"
+                                    @click="closeForgotPasswordModal"
+                                    class="w-full px-8 py-4 bg-gray-200 text-gray-800 font-bold rounded-2xl hover:bg-gray-300 transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    :disabled="
+                                        !state.forgotPasswordEmail ||
+                                        state.forgotPasswordLoading
+                                    "
+                                    class="w-full flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold rounded-2xl hover:from-green-600 hover:to-teal-600 transition-all disabled:opacity-50"
+                                >
+                                    <PaperAirplaneIcon class="w-5 h-5" />
+                                    <span>Send Link</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             <!-- FORM - Modern Clean Design -->
             <div class="z-20 container mx-auto mt-8 max-w-md">
                 <!-- Form Card -->
-                <div class="relative bg-white/95 backdrop-blur-xl text-gray-800 p-8 md:p-10 rounded-3xl shadow-2xl border border-white/20">
+                <div
+                    class="relative bg-white/95 backdrop-blur-xl text-gray-800 p-8 md:p-10 rounded-3xl shadow-2xl border border-white/20"
+                >
                     <!-- Loading Overlay -->
-                    <div v-if="state.isLoading" class="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-3xl flex items-center justify-center z-50">
+                    <div
+                        v-if="state.isLoading"
+                        class="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-3xl flex items-center justify-center z-50"
+                    >
                         <div class="text-center">
                             <div class="relative">
-                                <Spinner :size="50"/>
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <ArrowRightOnRectangleIcon class="w-6 h-6 text-green-500 animate-pulse" />
+                                <Spinner :size="50" />
+                                <div
+                                    class="absolute inset-0 flex items-center justify-center"
+                                >
+                                    <ArrowRightOnRectangleIcon
+                                        class="w-6 h-6 text-green-500 animate-pulse"
+                                    />
                                 </div>
                             </div>
-                            <p class="mt-4 text-lg font-semibold text-gray-900">Signing You In</p>
-                            <p class="text-sm text-gray-600">Please wait while we authenticate your account...</p>
+                            <p class="mt-4 text-lg font-semibold text-gray-900">
+                                Signing You In
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                Please wait while we authenticate your
+                                account...
+                            </p>
                         </div>
                     </div>
 
                     <!-- Welcome Section -->
                     <div class="text-center mb-8">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl mb-4">
-                            <ArrowRightOnRectangleIcon class="w-8 h-8 text-white" />
+                        <div
+                            class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl mb-4"
+                        >
+                            <ArrowRightOnRectangleIcon
+                                class="w-8 h-8 text-white"
+                            />
                         </div>
-                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back!</h1>
-                        <p class="text-gray-600">Sign in to your CacaoCare farming account</p>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                            Welcome Back!
+                        </h1>
+                        <p class="text-gray-600">
+                            Sign in to your CacaoCare farming account
+                        </p>
                     </div>
 
                     <!-- Error Message -->
-                    <div v-if="state.showError" class="mb-6 p-4 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-2xl">
+                    <div
+                        v-if="state.showError"
+                        class="mb-6 p-4 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-2xl"
+                    >
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0"
+                            >
                                 <XMarkIcon class="w-4 h-4 text-white" />
                             </div>
                             <div class="flex-grow">
-                                <h4 class="font-semibold text-red-800">Authentication Failed</h4>
-                                <p class="text-sm text-red-600">Incorrect email or password. Please try again.</p>
+                                <h4 class="font-semibold text-red-800">
+                                    Authentication Failed
+                                </h4>
+                                <p class="text-sm text-red-600">
+                                    Incorrect email or password. Please try
+                                    again.
+                                </p>
                             </div>
-                            <button 
-                                @click="closeError" 
+                            <button
+                                @click="closeError"
                                 class="w-6 h-6 text-red-500 hover:text-red-700 transition-colors duration-200"
                             >
                                 <XMarkIcon class="w-full h-full" />
@@ -56,17 +231,26 @@
                     </div>
 
                     <!-- Success Message -->
-                    <div v-if="state.login" class="mb-6 p-4 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-2xl">
+                    <div
+                        v-if="state.login"
+                        class="mb-6 p-4 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-2xl"
+                    >
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0"
+                            >
                                 <CheckIcon class="w-4 h-4 text-white" />
                             </div>
                             <div class="flex-grow">
-                                <h4 class="font-semibold text-green-800">Login Successful!</h4>
-                                <p class="text-sm text-green-600">Welcome back to CacaoCare.</p>
+                                <h4 class="font-semibold text-green-800">
+                                    Login Successful!
+                                </h4>
+                                <p class="text-sm text-green-600">
+                                    Welcome back to CacaoCare.
+                                </p>
                             </div>
-                            <button 
-                                @click="loginClose" 
+                            <button
+                                @click="loginClose"
                                 class="w-6 h-6 text-green-500 hover:text-green-700 transition-colors duration-200"
                             >
                                 <XMarkIcon class="w-full h-full" />
@@ -77,13 +261,22 @@
                     <form @submit.prevent="handleLogin" class="space-y-6">
                         <!-- Email Field -->
                         <div class="space-y-2">
-                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2" for="email">
-                                <EnvelopeIcon class="w-4 h-4 mr-2 text-green-500" />
+                            <label
+                                class="flex items-center text-sm font-medium text-gray-700 mb-2"
+                                for="email"
+                            >
+                                <EnvelopeIcon
+                                    class="w-4 h-4 mr-2 text-green-500"
+                                />
                                 Email Address
                             </label>
                             <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <AtSymbolIcon class="h-5 w-5 text-gray-400" />
+                                <div
+                                    class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                                >
+                                    <AtSymbolIcon
+                                        class="h-5 w-5 text-gray-400"
+                                    />
                                 </div>
                                 <input
                                     type="email"
@@ -95,15 +288,22 @@
                                 />
                             </div>
                         </div>
-                        
+
                         <!-- Password Field -->
                         <div class="space-y-2">
-                            <label class="flex items-center text-sm font-medium text-gray-700 mb-2" for="password">
-                                <LockClosedIcon class="w-4 h-4 mr-2 text-green-500" />
+                            <label
+                                class="flex items-center text-sm font-medium text-gray-700 mb-2"
+                                for="password"
+                            >
+                                <LockClosedIcon
+                                    class="w-4 h-4 mr-2 text-green-500"
+                                />
                                 Password
                             </label>
                             <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <div
+                                    class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                                >
                                     <KeyIcon class="h-5 w-5 text-gray-400" />
                                 </div>
                                 <input
@@ -119,7 +319,10 @@
                                     @click="togglePasswordVisibility"
                                     class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
                                 >
-                                    <EyeIcon v-if="!showPassword" class="h-5 w-5" />
+                                    <EyeIcon
+                                        v-if="!showPassword"
+                                        class="h-5 w-5"
+                                    />
                                     <EyeSlashIcon v-else class="h-5 w-5" />
                                 </button>
                             </div>
@@ -135,7 +338,7 @@
                                 Forgot your password?
                             </button>
                         </div>
-                        
+
                         <!-- Submit Button -->
                         <button
                             type="submit"
@@ -146,12 +349,12 @@
                             <span>Sign In to CacaoCare</span>
                         </button>
                     </form>
-                    
+
                     <!-- Don't Have Account Link -->
                     <div class="text-center mt-8 pt-8 border-t border-gray-200">
                         <p class="text-gray-600 mb-3">New to CacaoCare?</p>
-                        <NuxtLink 
-                            to="/signup" 
+                        <NuxtLink
+                            to="/signup"
                             class="inline-flex items-center space-x-2 text-green-600 hover:text-green-700 font-semibold transition-colors duration-200 px-4 py-2 rounded-xl hover:bg-green-50"
                         >
                             <UserPlusIcon class="w-4 h-4" />
@@ -167,12 +370,12 @@
 
 <script setup lang="ts">
 import { gsap } from "gsap";
-import { reactive, ref, onMounted, computed } from 'vue';
-import { authService } from '~/composables/api/sevices/AuthService';
-import { reverseValue } from '~/composables/function/ReverseValue';
-import type { User } from '~/composables/model/User';
-import Background from '~/assets/img/herosection_background.jpg'
-import { redirectService } from '~/composables/function/Redirect';
+import { reactive, ref, onMounted, computed } from "vue";
+import { authService } from "~/composables/api/sevices/AuthService";
+import { reverseValue } from "~/composables/function/ReverseValue";
+import type { User } from "~/composables/model/User";
+import Background from "~/assets/img/herosection_background.jpg";
+import { redirectService } from "~/composables/function/Redirect";
 import {
     ArrowRightOnRectangleIcon,
     XMarkIcon,
@@ -183,14 +386,21 @@ import {
     KeyIcon,
     EyeIcon,
     EyeSlashIcon,
-    UserPlusIcon
-} from '@heroicons/vue/24/outline';
+    UserPlusIcon,
+    PaperAirplaneIcon,
+} from "@heroicons/vue/24/outline";
 
 const state = reactive({
     user: {} as User,
     showError: false,
     login: false,
-    isLoading: true
+    isLoading: true,
+    // Forgot Password State
+    showForgotPasswordModal: false,
+    forgotPasswordEmail: "",
+    forgotPasswordLoading: false,
+    forgotPasswordSuccess: false,
+    forgotPasswordError: "",
 });
 
 // Password visibility toggle
@@ -202,42 +412,57 @@ const isFormValid = computed(() => {
 });
 
 async function handleLogin() {
-    try{
-        state.isLoading = true
-        state.showError = false
+    try {
+        state.isLoading = true;
+        state.showError = false;
         const formData = new FormData();
-        formData.append('email', state.user.email)
-        formData.append('password', state.user.password)
+        formData.append("email", state.user.email);
+        formData.append("password", state.user.password);
         const response = await authService.login(formData);
-        if(response.data){
-            if(response.data.email_verified_at){
-                state.isLoading = false
-                localStorage.setItem("_token", response?.token) 
+        if (response.data) {
+            if (response.data.email_verified_at) {
+                state.isLoading = false;
+                localStorage.setItem("_token", response?.token);
                 localStorage.setItem("username", response.data.username);
-                localStorage.setItem("profile", response.data.profile)
+                localStorage.setItem("profile", response.data.profile);
                 loginClose();
-                if(response.data.role === 'admin'){
-                    navigateTo('admin')
-                }else{
-                    navigateTo('user')
+                if (response.data.role === "admin") {
+                    navigateTo("admin");
+                } else {
+                    navigateTo("user");
                 }
-            }else{
+            } else {
                 const response = await authService.resendVerification(formData);
-                state.isLoading = reverseValue.reverseBool(state.isLoading)
-                if(response){
-                    navigateTo('verification');
+                state.isLoading = reverseValue.reverseBool(state.isLoading);
+                if (response) {
+                    navigateTo("verification");
                 }
             }
         }
-    }catch(error: any){
-        state.showError = true
+    } catch (error: any) {
+        state.showError = true;
         state.isLoading = false;
     }
 }
 
+async function handleSendResetLink() {
+    state.forgotPasswordLoading = true;
+    state.forgotPasswordError = "";
+    try {
+        const formData = new FormData();
+        formData.append("email", state.forgotPasswordEmail);
+        const response = await authService.forgotPassword(formData);
+        if(response.status === 200){
+            state.forgotPasswordSuccess = true;
+        }
+    } catch (error: any) {
+        state.forgotPasswordError = error.message
+    } finally {
+        state.forgotPasswordLoading = false;
+    }
+}
 
-
-onMounted(async()=>{
+onMounted(async () => {
     gsap.to("#animated-image", {
         x: -60, // Moves 50 pixels to the right
         duration: 5, // Slower animation (3s)
@@ -246,21 +471,20 @@ onMounted(async()=>{
         yoyo: true, // Moves back and forth
     });
 
-
-    if(!localStorage.getItem('_token')){
-        state.isLoading = false
-        return
+    if (!localStorage.getItem("_token")) {
+        state.isLoading = false;
+        return;
     }
-    try{
-        const response = await authService.getCurrentUser()
-        if(response.data){
-            redirectService.checkAdminPrevillage(response.data.role)
-            redirectService.checkUserPrevillage(response.data.role)
+    try {
+        const response = await authService.getCurrentUser();
+        if (response.data) {
+            redirectService.checkAdminPrevillage(response.data.role);
+            redirectService.checkUserPrevillage(response.data.role);
         }
-    }catch(error: any){
-        state.isLoading = false
+    } catch (error: any) {
+        state.isLoading = false;
     }
-})
+});
 // Toggle password visibility
 function togglePasswordVisibility() {
     showPassword.value = !showPassword.value;
@@ -268,16 +492,21 @@ function togglePasswordVisibility() {
 
 // Handle forgot password
 function handleForgotPassword() {
-    // TODO: Implement forgot password functionality
-    // This could navigate to a forgot password page or show a modal
-    console.log('Forgot password clicked');
-    // Example: navigateTo('/forgot-password');
+    state.showForgotPasswordModal = true;
 }
 
-function closeError(){
-    state.showError = !state.showError
+function closeForgotPasswordModal() {
+    state.showForgotPasswordModal = false;
+    state.forgotPasswordEmail = "";
+    state.forgotPasswordLoading = false;
+    state.forgotPasswordSuccess = false;
+    state.forgotPasswordError = "";
 }
-function loginClose(){
-    state.login = !state.login
+
+function closeError() {
+    state.showError = !state.showError;
+}
+function loginClose() {
+    state.login = !state.login;
 }
 </script>
