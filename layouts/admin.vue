@@ -1,6 +1,8 @@
 <template>
     <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col">
-        <Header @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+        <Header 
+        @currentUser="handleUser"
+        @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
         <div class="flex flex-1 relative">
             <!-- Sidebar & Overlay -->
@@ -33,6 +35,16 @@
     import Header from '@/components/admin/Header.vue'
     import Sidebar from '@/components/admin/Sidebar.vue'
     import Footer from '@/components/admin/Footer.vue'
+    import type { User } from "~/composables/model/User";
+
+    const emit = defineEmits<{
+        (e: "currentUser", value: {}): void;
+    }>();
+
+    const state = reactive({
+        user: {} as User,
+    });
+
 
     const sidebarOpen = ref(false)
     const isLargeScreen = ref(false)
@@ -41,6 +53,11 @@
         isLargeScreen.value = window.innerWidth >= 768
         if (isLargeScreen.value) sidebarOpen.value = true
     }
+
+    const handleUser = (value: {}) => {
+        state.user = value as User;
+        emit("currentUser", state.user);
+    };
 
     onMounted(() => {
         handleResize()

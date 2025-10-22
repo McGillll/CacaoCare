@@ -74,6 +74,12 @@ const state = reactive({
   user: {} as User
 })
 
+const emit = defineEmits<{
+  (e: 'currentUser', value: {}): void,
+  (e: 'toggle-sidebar'): any
+}>()
+
+
 onMounted(()=>{
   state.user.username = localStorage.getItem('username') ?? ''
   state.user.profile = localStorage.getItem('profile') ?? ''
@@ -82,7 +88,11 @@ onMounted(()=>{
 
 async function fetchUser() {
   try{
-    state.user = await fetchCurrentUser(state.user) 
+    if(state.user.username){
+      localStorage.setItem('username', state.user.username)
+      localStorage.setItem('profile', state.user.profile)
+      emit('currentUser', state.user)
+    }
     redirectService.checkUserPrevillage(state.user.role)
   } catch(error: any){}
 }
