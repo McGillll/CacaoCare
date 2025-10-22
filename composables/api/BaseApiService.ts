@@ -7,7 +7,7 @@ class BaseAPIService {
         method: string,
         params: object = []
     ): Promise<any> {
-        const baseUrl = 'https://cacaocareapi-production-server.up.railway.app/api/';
+        const baseUrl = 'https://cacaocareapi-main-nucwsb.laravel.cloud/api/';
         // const baseUrl = 'http://127.0.0.1:8000/api/';
         let config: any = null;
         if (method === "GET") {
