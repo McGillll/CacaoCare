@@ -1137,7 +1137,6 @@ async function handleSubmit() {
         formData.append("barangay", state.user.barangay);
 
         const response = await authService.createUser(formData);
-        console.log("Registration response:", response);
         if (response.status === 200) {
             navigateTo("/verification");
             localStorage.setItem("email", state.user.email);
