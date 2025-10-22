@@ -1,17 +1,28 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxtjs/leaflet', '@nuxt/image'],
-  
+
   leaflet: {
     heat: true
   },
 
-  runtimeConfig:{
-    public:{
-      appName:"CacaoCare"
+  runtimeConfig: {
+    public: {
+      appName: "CacaoCare"
     }
   },
+
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: '/cacaocare.ico' 
+        }
+      ]
+    }
+  }
 })
