@@ -1,13 +1,11 @@
 <template>
   <HeadTitle title="CacaoCare - Treatment Library" />
-  <NuxtLayout />
-  <AdminLayout >
+  <NuxtLayout name="admin">
     <TreatmentLibrary />
-  </AdminLayout>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import AdminLayout from '@/components/admin/AdminLayout.vue'
 import TreatmentLibrary from '~/components/admin/TreatmentLibrary.vue'
 import type { User } from '~/composables/model/User';
 

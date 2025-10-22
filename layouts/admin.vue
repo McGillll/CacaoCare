@@ -4,7 +4,7 @@
 
         <div class="flex flex-1 relative">
             <!-- Sidebar & Overlay -->
-            <transition name="sidebar">
+            <transition :name="!isLargeScreen ? 'sidebar' : ''">
                 <Sidebar
                     v-if="sidebarOpen || isLargeScreen"
                     class="fixed md:static z-40 md:z-auto bg-white md:bg-transparent shadow md:shadow-none h-full w-64 top-16 md:top-auto"
