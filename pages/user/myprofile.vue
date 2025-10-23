@@ -126,7 +126,7 @@
                     </div>
                 </div>
 
-                <!-- Skeleton Post Grid -->
+                <!-- Skeleton Scan Grid -->
                 <div
                     v-if="state.fetchingPost && state.page === 1"
                     class="grid grid-cols-3 gap-0.5"
@@ -142,7 +142,7 @@
                     </div>
                 </div>
 
-                <!-- Posts Grid with Enhanced Hover Effects -->
+                <!-- Scans/Post Grid with Enhanced Hover Effects -->
                 <div v-else class="grid grid-cols-3 gap-0.5">
                     <div
                         v-for="(post, index) in state.posts"
@@ -191,111 +191,11 @@
         </main>
 
         <!-- Improved Modal -->
-        <transition name="fade">
-            <div v-if="showModal" class="fixed inset-0 z-50 overflow-y-auto">
-                <div class="min-h-screen px-4 text-center" @click="closeModal">
-                    <!-- Background Overlay -->
-                    <div class="fixed inset-0 bg-black/75 transition-opacity" />
-
-                    <!-- Modal Positioning -->
-                    <div
-                        class="inline-block align-bottom sm:align-middle my-8 sm:w-full max-w-2xl text-left transform transition-all"
-                    >
-                        <!-- Modal Content -->
-                        <div
-                            class="relative bg-white rounded-xl shadow-2xl"
-                            @click.stop
-                        >
-                            <!-- Modal Header -->
-                            <div
-                                class="flex items-center justify-between px-4 py-3 border-b border-gray-100"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-full overflow-hidden"
-                                    >
-                                        <img
-                                            :src="state.selectedPost.profile"
-                                            class="w-full h-full object-cover"
-                                            alt="Profile"
-                                        />
-                                    </div>
-                                    <span class="font-medium text-gray-900">{{
-                                        state.selectedPost.username
-                                    }}</span>
-                                </div>
-                                <button
-                                    @click="closeModal"
-                                    class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
-                                >
-                                    <XMarkIcon class="w-5 h-5" />
-                                </button>
-                            </div>
-
-                            <!-- Modal Image Container -->
-                            <div class="bg-gray-900">
-                                <img
-                                    :src="state.selectedPost.photo"
-                                    class="w-full aspect-[3/4] object-contain"
-                                    :alt="state.selectedPost.label"
-                                />
-                            </div>
-
-                            <!-- Modal Content -->
-                            <div class="p-4 space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-sm text-gray-500">
-                                            {{
-                                                state.selectedPost.created_at
-                                                    ? formatDate(
-                                                          state.selectedPost
-                                                              .created_at,
-                                                      )
-                                                    : ""
-                                            }}
-                                        </p>
-                                    </div>
-                                    <div
-                                        class="px-3 py-1.5 rounded-full text-sm font-medium"
-                                        :class="{
-                                            'bg-green-100 text-green-800':
-                                                state.selectedPost.label ===
-                                                'Healthy Pod',
-                                            'bg-red-100 text-red-800':
-                                                state.selectedPost.label ===
-                                                'Black Pod Rot',
-                                            'bg-blue-100 text-blue-800':
-                                                state.selectedPost.label ===
-                                                'Frosty Pod Rot',
-                                        }"
-                                    >
-                                        {{ state.selectedPost.label }}
-                                        <span class="opacity-75"
-                                            >({{
-                                                state.selectedPost.confidence
-                                            }})</span
-                                        >
-                                    </div>
-                                </div>
-
-                                <!-- Caption with Subtle Border -->
-                                <div
-                                    class="bg-gray-50 rounded-xl p-4 border border-gray-200"
-                                >
-                                    <p class="text-sm text-gray-800">
-                                        {{
-                                            state.selectedPost.caption ||
-                                            "No caption provided."
-                                        }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </transition>
+        <ModalScanDetailsModal 
+        :show="showModal"
+        :post="state.selectedPost"
+        @close="closeModal"
+        />
     </NuxtLayout>
     <div id="scroll-loader" class="mt-auto" />
 </template>

@@ -204,113 +204,11 @@
         </div>
 
         <!-- Scan Details Modal -->
-        <transition name="fade">
-            <div v-if="showModal" class="fixed inset-0 z-50">
-                <!-- Full screen modal for mobile -->
-                <div class="sm:flex sm:items-center sm:justify-center h-full">
-                    <!-- Backdrop -->
-                    <div class="fixed inset-0 bg-black bg-opacity-50" @click="closeModal"></div>
-                    
-                    <!-- Modal Container -->
-                    <div class="relative w-full h-full sm:h-auto sm:w-auto sm:max-w-4xl sm:max-h-[95vh] bg-white sm:rounded-2xl shadow-2xl overflow-hidden">
-                        <!-- Modal Header -->
-                        <div class="sticky top-0 z-10 bg-gradient-to-r from-green-600 to-emerald-700 px-4 sm:px-6 py-3 sm:py-4">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <div class="p-1.5 sm:p-2 bg-white/20 rounded-lg">
-                                        <PhotoIcon class="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <h2 class="text-lg sm:text-xl font-bold text-white">Scan Details</h2>
-                                        <p class="text-green-100 text-xs sm:text-sm">Complete analysis information</p>
-                                    </div>
-                                </div>
-                                <button
-                                    @click="closeModal"
-                                    class="p-1.5 sm:p-2 hover:bg-white/20 rounded-lg transition-colors duration-200"
-                                >
-                                    <XMarkIcon class="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Modal Content -->
-                        <div class="h-[calc(100vh-56px)] sm:h-auto sm:max-h-[calc(95vh-64px)] overflow-y-auto">
-                            <div class="p-4 sm:p-6">
-                                <!-- Image Section -->
-                                <div class="bg-gray-100 rounded-xl overflow-hidden mb-4 sm:mb-6">
-                                    <img 
-                                        :src="state.selectedPost?.photo" 
-                                        class="w-full object-contain max-h-[40vh] sm:max-h-[400px]" 
-                                        :alt="state.selectedPost?.label"
-                                    />
-                                </div>
-
-                                <!-- Details Section -->
-                                <div class="space-y-4 sm:space-y-6">
-                                    <!-- User Info -->
-                                    <div class="flex items-start gap-3 sm:gap-4">
-                                        <img 
-                                            :src="state.selectedPost?.profile" 
-                                            class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover" 
-                                            :alt="state.selectedPost?.username" 
-                                        />
-                                        <div>
-                                            <h3 class="font-semibold text-gray-900">{{ state.selectedPost?.username }}</h3>
-                                            <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mt-1">
-                                                <CalendarDaysIcon class="h-4 w-4" />
-                                                <span>{{ state.selectedPost ? formatDate(state.selectedPost.created_at) : '' }}</span>
-                                                <MapPinIcon class="h-4 w-4" />
-                                                <span>{{ state.selectedPost?.barangay }} {{ state.selectedPost?.city }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Analysis Results -->
-                                    <div class="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200">
-                                        <div class="flex items-center gap-3 mb-4">
-                                            <div class="p-2 bg-green-100 rounded-lg">
-                                                <ChartBarSquareIcon class="h-5 w-5 text-green-600" />
-                                            </div>
-                                            <div>
-                                                <h4 class="font-semibold text-gray-900">Analysis Results</h4>
-                                                <p class="text-xs sm:text-sm text-gray-500">AI-powered disease detection</p>
-                                            </div>
-                                        </div>
-                                        <div 
-                                            class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium"
-                                            :class="{
-                                                'bg-green-100 text-green-800': state.selectedPost?.label === 'Healthy Pod',
-                                                'bg-red-100 text-red-800': state.selectedPost?.label === 'Black Pod Rot',
-                                                'bg-blue-100 text-blue-800': state.selectedPost?.label === 'Frosty Pod Rot'
-                                            }"
-                                        >
-                                            {{ state.selectedPost?.label }} ({{ state.selectedPost?.confidence }})
-                                        </div>
-                                    </div>
-
-                                    <!-- Caption -->
-                                    <div class="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200">
-                                        <div class="flex items-center gap-3 mb-4">
-                                            <div class="p-2 bg-blue-100 rounded-lg">
-                                                <ChatBubbleBottomCenterTextIcon class="h-5 w-5 text-blue-600" />
-                                            </div>
-                                            <div>
-                                                <h4 class="font-semibold text-gray-900">Caption</h4>
-                                                <p class="text-xs sm:text-sm text-gray-500">User provided description</p>
-                                            </div>
-                                        </div>
-                                        <p class="text-sm sm:text-base text-gray-700">
-                                            {{ state.selectedPost?.caption || 'No caption provided.' }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </transition>
+        <ModalScanDetailsModal 
+        :show="showModal" 
+        :post="state.selectedPost"
+        @close="closeModal"
+        />
     </NuxtLayout>
 </template>
 
@@ -319,12 +217,9 @@
     import { 
         CameraIcon,
         PhotoIcon,
-        XMarkIcon,
         EyeIcon,
         CalendarDaysIcon,
         MapPinIcon,
-        ChartBarSquareIcon,
-        ChatBubbleBottomCenterTextIcon,
         ChevronDoubleLeftIcon,
         ChevronDoubleRightIcon,
         ChevronLeftIcon,
