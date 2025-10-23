@@ -35,7 +35,6 @@ import CommentForm from "./CommentForm.vue";
 import CommentItem from "./CommentItem.vue";
 import { commentService } from "@/composables/api/sevices/CommentService";
 import type { User } from "~/composables/model/User";
-import { fetchCurrentUser } from "~/composables/function/GetCurrentUser";
 
 interface Comment {
     id: number;

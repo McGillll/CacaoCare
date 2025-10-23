@@ -4,7 +4,7 @@
             <img
                 :src="comment.user.profile"
                 alt="User avatar"
-                class="w-10 h-10 rounded-full"
+                class="w-10 h-10 rounded-full object-cover"
             />
             <div class="ml-3 flex-1 w-full">
                 <div class="flex items-center justify-between">

@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit" class="p-4 border-t border-neutral-200">
     <div class="flex items-start gap-4">
-      <img :src="currentUser.avatar || ''" alt="User avatar" class="w-10 h-10 rounded-full" />
+      <img :src="currentUser.avatar || ''" alt="User avatar" class="w-10 h-10 rounded-full object-cover" />
       <div class="flex-1">
         <textarea
           v-model="body"
