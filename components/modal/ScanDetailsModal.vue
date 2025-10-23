@@ -133,7 +133,7 @@
                                 <!-- Comments (Mobile only) -->
                                 <div class="sm:hidden bg-gray-50 rounded-xl p-4 border border-gray-200">
                                     <h4 class="font-semibold text-gray-900 mb-4">Comments</h4>
-                                    <CommentList :cacaoId="post?.id" />
+                                    <CommentList :user="user" :cacaoId="post?.id" />
                                 </div>
                             </div>
 
@@ -142,7 +142,7 @@
                                 class="hidden sm:flex sm:flex-col sm:w-[360px] sm:min-w-[320px] sm:max-w-sm sm:h-full sm:overflow-y-auto sm:p-6"
                             >
                                 <h4 class="font-semibold text-gray-900 mb-4">Comments</h4>
-                                <CommentList :cacaoId="post?.id" />
+                                <CommentList :user="user" :cacaoId="post?.id" />
                             </div>
                         </div>
                     </div>
@@ -163,6 +163,8 @@ import {
 import CommentList from "@/components/comment/CommentList.vue";
 import type { Cacao } from "~/composables/model/Cacao";
 import { formatDate } from "~/composables/function/FormatDate";
+import type { User } from "~/composables/model/User";
+import { fetchCurrentUser } from "~/composables/function/GetCurrentUser";
 
 const props = defineProps({
     show: {
@@ -175,11 +177,17 @@ const props = defineProps({
     },
 });
 
+const user = ref({} as User)
+
 const emit = defineEmits(["close"]);
 
 const close = () => {
     emit("close");
 };
+
+onMounted(async()=>{
+    user.value = await fetchCurrentUser(user.value)
+})
 </script>
 
 <style scoped>

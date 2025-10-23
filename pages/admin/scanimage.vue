@@ -357,6 +357,7 @@ const closeModal = () => {
 // Lifecycle Hooks
 onMounted(() => {
     fetchCacaoFeed();
+    
 });
 </script>
 

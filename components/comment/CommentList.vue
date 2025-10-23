@@ -9,6 +9,9 @@
                 v-for="comment in comments"
                 :key="comment.id"
                 :comment="comment"
+                :currentUser="props.user"
+                @comment-deleted="handleCommentDeleted"
+                @comment-updated="handleCommentUpdated"
             />
             <div v-if="currentPage < lastPage" class="p-4 text-center">
                 <button
@@ -31,20 +34,20 @@ import { ref, onMounted } from "vue";
 import CommentForm from "./CommentForm.vue";
 import CommentItem from "./CommentItem.vue";
 import { commentService } from "@/composables/api/sevices/CommentService";
+import type { User } from "~/composables/model/User";
+import { fetchCurrentUser } from "~/composables/function/GetCurrentUser";
 
 interface Comment {
     id: number;
     body: string;
     created_at: string;
-    user: {
-        username: string;
-        profile: string;
-    };
+    user: User
 }
 
 const props = defineProps<{
-  cacaoId?: number
-}>()
+    cacaoId?: number;
+    user: User
+}>();
 
 const comments = ref<Comment[]>([]);
 const loading = ref(false);
@@ -56,7 +59,7 @@ const fetchComments = async () => {
     loading.value = true;
     error.value = false;
     try {
-        if(props.cacaoId){
+        if (props.cacaoId) {
             const response = await commentService.getComments(
                 props.cacaoId,
                 currentPage.value,
@@ -74,10 +77,13 @@ const fetchComments = async () => {
 
 const addComment = async (body: string) => {
     try {
-        if(props.cacaoId){
-            const newComment = await commentService.createComment(props.cacaoId, {
-                body,
-            });
+        if (props.cacaoId) {
+            const newComment = await commentService.createComment(
+                props.cacaoId,
+                {
+                    body,
+                },
+            );
             comments.value.unshift(newComment);
         }
     } catch (e) {
@@ -86,7 +92,23 @@ const addComment = async (body: string) => {
     }
 };
 
+const handleCommentDeleted = (commentId: number) => {
+    comments.value = comments.value.filter(
+        (comment) => comment.id !== commentId,
+    );
+};
+
+const handleCommentUpdated = (updatedComment: Comment) => {
+    const index = comments.value.findIndex(
+        (comment) => comment.id === updatedComment.id,
+    );
+    if (index !== -1) {
+        comments.value[index] = updatedComment;
+    }
+};
+
 onMounted(() => {
-    fetchComments();
+    fetchComments();    
 });
+
 </script>
