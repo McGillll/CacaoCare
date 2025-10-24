@@ -90,7 +90,7 @@
 
                                 <!-- Caption -->
                                 <p class="text-sm sm:text-base text-gray-700">
-                                    {{ post?.caption || "No caption provided." }}
+                                    {{ post?.caption }}
                                 </p>
 
                                 <!-- Image Section -->
