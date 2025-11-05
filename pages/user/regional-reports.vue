@@ -1,7 +1,5 @@
 <template>
-    <NuxtLayout name="admin">
+    <NuxtLayout name="user">
         <RegionalReport />
     </NuxtLayout>
 </template>
-
-

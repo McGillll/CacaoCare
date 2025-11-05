@@ -28,6 +28,18 @@
             Treatment Guide
           </NuxtLink>
         </li>
+
+        <li>
+            <NuxtLink
+                to="/user/regional-reports"
+                class="sidebar-link"
+                :class="{ active: isActive('/user/regional-reports') }"
+            >
+                <MapPinIcon class="h-5 w-5 mr-3" />
+                Regional Reports
+            </NuxtLink>
+        </li>
+
         <li>
           <a @click="downloadApp" class="sidebar-link cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
@@ -42,6 +54,7 @@
 </template>
 
 <script setup lang="ts">
+import { MapPinIcon } from '@heroicons/vue/24/solid'
 import { useRoute } from 'vue-router'
 import { downloadLinkService } from '~/composables/api/sevices/DownloadLinkService'
 import type { DownLoadLink } from '~/composables/model/DownloadLinks'
