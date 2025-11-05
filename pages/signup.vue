@@ -822,7 +822,7 @@
                                             Region
                                         </p>
                                         <p class="font-semibold text-gray-900">
-                                            {{ state.user.region }}
+                                            {{ selectedRegion.name }}
                                         </p>
                                     </div>
                                     <div>
@@ -830,7 +830,7 @@
                                             Province
                                         </p>
                                         <p class="font-semibold text-gray-900">
-                                            {{ state.user.province }}
+                                            {{ selectedProvince.name }}
                                         </p>
                                     </div>
                                     <div>
@@ -838,7 +838,7 @@
                                             City
                                         </p>
                                         <p class="font-semibold text-gray-900">
-                                            {{ state.user.city }}
+                                            {{ selectedCity.name }}
                                         </p>
                                     </div>
                                     <div>
@@ -846,7 +846,7 @@
                                             Barangay
                                         </p>
                                         <p class="font-semibold text-gray-900">
-                                            {{ state.user.barangay }}
+                                            {{ selectedBarangay.name }}
                                         </p>
                                     </div>
                                 </div>
