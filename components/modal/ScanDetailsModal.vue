@@ -69,21 +69,25 @@
                                         class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
                                         :alt="post?.username"
                                     />
-                                    <div>
+                                    <div class="container">
                                         <h3 class="font-semibold text-gray-900">
                                             {{ post?.username }}
                                         </h3>
                                         <div
-                                            class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mt-1"
+                                            class="justify-between flex flex-wrap items-center text-xs sm:text-sm text-gray-500 mt-1"
                                         >
-                                            <CalendarDaysIcon class="h-4 w-4" />
-                                            <span>{{
-                                                post
+                                            <div class="flex items-center">
+                                                <CalendarDaysIcon class="h-4 w-4" />
+                                                <span>{{
+                                                    post
                                                     ? formatDate(post.created_at)
                                                     : ""
-                                            }}</span>
-                                            <MapPinIcon class="h-4 w-4" />
-                                            <span>{{ post?.barangay }} {{ post?.city }}</span>
+                                                }}</span>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <MapPinIcon class="h-4 w-4" />
+                                                <span>{{ post?.barangay }} {{ post?.city }}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

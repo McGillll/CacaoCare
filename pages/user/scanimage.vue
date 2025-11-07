@@ -92,13 +92,17 @@
                     />
                     <div>
                         <p class="font-medium text-sm text-gray-900">{{ post.username }}</p>
-                        <div class="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-gray-500">
-                            <CalendarDaysIcon class="h-3.5 w-3.5" />
-                            <span>{{ formatDate(post.created_at) }}</span>
-                            <MapPinIcon class="h-3.5 w-3.5" />
-                            <span class="truncate max-w-[120px] sm:max-w-none">
-                                {{ post.barangay }} {{ post.city }}
-                            </span>
+                        <div class="flex flex-col flex-wrap text-xs text-gray-500">
+                            <div class="flex items-center">
+                                <CalendarDaysIcon class="h-3.5 w-3.5" />
+                                <span>{{ formatDate(post.created_at) }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <MapPinIcon class="h-3.5 w-3.5" />
+                                <span class="truncate max-w-[120px] sm:max-w-none">
+                                    {{ post.barangay }} {{ post.city }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
